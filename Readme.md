@@ -67,6 +67,10 @@ setInterval(function(){
 
   ![debug worker](http://f.cl.ly/items/1X413v1a3M0d3C2c1E0i/Screenshot.png)
 
+## Conventions
+
+ If you're using this in one or more of your libraries, you _should_ use the name of your library so that developers may toggle debugging as desired without guessing names. 
+
 ## License 
 
 (The MIT License)
