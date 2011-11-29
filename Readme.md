@@ -57,6 +57,10 @@ setInterval(function(){
 
  The __DEBUG__ environment variable is then used to enable these based on space or comma-delimited names. Here are some examples:
 
+  ![debug http and worker](http://f.cl.ly/items/18471z1H402O24072r1J/Screenshot.png)
+
+  ![debug worker](http://f.cl.ly/items/1X413v1a3M0d3C2c1E0i/Screenshot.png)
+
 ## License 
 
 (The MIT License)
