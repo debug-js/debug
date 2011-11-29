@@ -3,6 +3,12 @@
 
   tiny node.js debugging utility.
 
+## Installation
+
+```
+$ npm install debug
+```
+
 ## Example
 
   This module is modelled after node core's debugging technique, allowing you to enable one or more topic-specific debugging functions, for example core does the following within many modules:
