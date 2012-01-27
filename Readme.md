@@ -67,6 +67,12 @@ setInterval(function(){
 
   ![debug worker](http://f.cl.ly/items/1X413v1a3M0d3C2c1E0i/Screenshot.png)
 
+## Millisecond diff
+
+  When actively developing an application it can be useful to see when the time spent between one `debug()` call and the next. Suppose for example you invoke `debug()` before requesting a resource, and after as well, the "+NNNms" will show you how much time was spent between calls.
+
+  ![](http://f.cl.ly/items/112H3i0e0o0P0a2Q2r11/Screenshot.png)
+
 ## Conventions
 
  If you're using this in one or more of your libraries, you _should_ use the name of your library so that developers may toggle debugging as desired without guessing names. If you have more than one debuggers you _should_ prefix them with your library name and use ":" to separate features. For example "bodyParser" from Connect would then be "connect:bodyParser". 
