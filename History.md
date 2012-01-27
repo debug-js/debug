@@ -1,4 +1,9 @@
 
+0.3.0 / 2012-01-26 
+==================
+
+  * Added millisecond diff when isatty, otherwise UTC string
+
 0.2.0 / 2012-01-22 
 ==================
 
