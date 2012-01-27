@@ -71,7 +71,7 @@ setInterval(function(){
 
   When actively developing an application it can be useful to see when the time spent between one `debug()` call and the next. Suppose for example you invoke `debug()` before requesting a resource, and after as well, the "+NNNms" will show you how much time was spent between calls.
 
-  ![](http://f.cl.ly/items/112H3i0e0o0P0a2Q2r11/Screenshot.png)
+  ![](http://f.cl.ly/items/193R1n402g1E2c31433H/Screenshot.png)
 
   When stdout is not a TTY, `Date#toUTCString()` is used, making it more useful for logging the debug information as shown below:
   
