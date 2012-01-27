@@ -1,6 +1,9 @@
 
 var debug = require('../')('worker');
 
-setInterval(function(){
+function work() {
   debug('doing some work');
-}, 1000);
+  setTimeout(work, Math.random() * 1000);
+}
+
+work();
