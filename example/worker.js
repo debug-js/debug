@@ -1,4 +1,9 @@
 
+// DEBUG=* node example/worker
+// DEBUG=worker:* node example/worker
+// DEBUG=worker:a node example/worker
+// DEBUG=worker:b node example/worker
+
 var a = require('../')('worker:a')
   , b = require('../')('worker:b');
 
