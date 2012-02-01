@@ -6,6 +6,12 @@
  */
 
 /**
+ * The currently active debug mode names.
+ */
+
+var names = [];
+
+/**
  * Previous debug() call.
  */
 
@@ -20,11 +26,8 @@ var prev = {};
  */
 
 function debug(name) {
-  if (!debug.enable) {
-    throw new Error('You must set a function for `debug.enable`');
-  }
 
-  var enabled = debug.enable(name);
+  var enabled = debug.enabled(name);
 
   if (!enabled) return function(){};
 
@@ -43,4 +46,38 @@ function debug(name) {
   }
 
   return plain;
+}
+
+/**
+ * Enables a debug mode by name. This can include modes
+ * separated by a colon and wildcards.
+ *
+ * @param {String} name
+ * @api public
+ */
+
+debug.enable = function(name) {
+  var split = (name || '').split(/[\s,]+/)
+    , len = split.length
+  for (var i=0; i<len; i++) {
+    name = split[i].replace('*', '.*?');
+    names.push(new RegExp('^' + name + '$'));
+  }
+}
+
+/**
+ * Returns true if the given mode name is enabled, false otherwise.
+ *
+ * @param {String} name
+ * @return {Boolean}
+ * @api public
+ */
+
+debug.enabled = function(name) {
+  for (var i=0, l=names.length; i<l; i++) {
+    if (names[i].test(name)) {
+      return true;
+    }
+  }
+  return false;
 }
