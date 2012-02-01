@@ -26,9 +26,7 @@ var prev = {};
  */
 
 function debug(name) {
-  var enabled = debug.enabled(name);
-
-  if (!enabled) return function(){};
+  if (!debug.enabled(name)) return function(){};
 
   function plain(fmt) {
     var curr = new Date;
@@ -73,7 +71,8 @@ debug.pad = function(str, len) {
 debug.enable = function(name) {
   var split = (name || '').split(/[\s,]+/)
     , len = split.length;
-  for (var i=0; i<len; i++) {
+
+  for (var i = 0; i < len; i++) {
     name = split[i].replace('*', '.*?');
     names.push(new RegExp('^' + name + '$'));
   }
@@ -88,7 +87,7 @@ debug.enable = function(name) {
  */
 
 debug.enabled = function(name) {
-  for (var i=0, l=names.length; i<l; i++) {
+  for (var i = 0, len = names.length; i < len; i++) {
     if (names[i].test(name)) {
       return true;
     }
