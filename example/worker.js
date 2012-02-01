@@ -3,7 +3,7 @@ var a = require('../')('worker a')
   , b = require('../')('worker b');
 
 function work() {
-  a('doing some work');
+  a('doing some larger work');
   setTimeout(work, Math.random() * 1000);
 }
 
