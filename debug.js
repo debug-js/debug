@@ -6,17 +6,6 @@
  */
 
 /**
- * Enabled debuggers.
- */
-
-var names = (localStorage.debug || '')
-  .split(/[\s,]+/)
-  .map(function(name){
-    name = name.replace('*', '.*?');
-    return new RegExp('^' + name + '$');
-  });
-
-/**
  * Previous debug() call.
  */
 
@@ -31,11 +20,13 @@ var prev = {};
  */
 
 function debug(name) {
-  var match = names.some(function(re){
-    return re.test(name);
-  });
+  if (!debug.enable) {
+    throw new Error('You must set a function for `debug.enable`');
+  }
 
-  if (!match) return function(){};
+  var enabled = debug.enable(name);
+
+  if (!enabled) return function(){};
 
   function plain(fmt) {
     var curr = new Date;
