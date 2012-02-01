@@ -6,15 +6,10 @@
  */
 
 /**
- * Enabled debuggers.
+ * The currently active debug mode names.
  */
 
-var names = (localStorage.debug || '')
-  .split(/[\s,]+/)
-  .map(function(name){
-    name = name.replace('*', '.*?');
-    return new RegExp('^' + name + '$');
-  });
+var names = [];
 
 /**
  * Previous debug() call.
@@ -31,11 +26,10 @@ var prev = {};
  */
 
 function debug(name) {
-  var match = names.some(function(re){
-    return re.test(name);
-  });
 
-  if (!match) return function(){};
+  var enabled = debug.enabled(name);
+
+  if (!enabled) return function(){};
 
   function plain(fmt) {
     var curr = new Date;
@@ -46,8 +40,44 @@ function debug(name) {
       + ' +' + ms + 'ms '
       + fmt;
 
-    console.log.apply(console, arguments);
+    // This hackery is required for IE8, where `console.log` doesn't have 'apply'
+    window.console && console.log &&
+      Function.prototype.apply.call(console.log, console, arguments);
   }
 
   return plain;
+}
+
+/**
+ * Enables a debug mode by name. This can include modes
+ * separated by a colon and wildcards.
+ *
+ * @param {String} name
+ * @api public
+ */
+
+debug.enable = function(name) {
+  var split = (name || '').split(/[\s,]+/)
+    , len = split.length;
+  for (var i=0; i<len; i++) {
+    name = split[i].replace('*', '.*?');
+    names.push(new RegExp('^' + name + '$'));
+  }
+}
+
+/**
+ * Returns true if the given mode name is enabled, false otherwise.
+ *
+ * @param {String} name
+ * @return {Boolean}
+ * @api public
+ */
+
+debug.enabled = function(name) {
+  for (var i=0, l=names.length; i<l; i++) {
+    if (names[i].test(name)) {
+      return true;
+    }
+  }
+  return false;
 }
