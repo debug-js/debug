@@ -16,7 +16,7 @@
 function debug(name) {
   if (!debug.enabled(name)) return function(){};
 
-  function plain(fmt) {
+  return function(fmt){
     var curr = new Date;
     var ms = curr - (debug[name] || curr);
     debug[name] = curr;
@@ -27,12 +27,12 @@ function debug(name) {
       + ' ' + debug.pad(ms, 40 - fmt.length)
       + 'ms';
 
-    // This hackery is required for IE8, where `console.log` doesn't have 'apply'
-    window.console && console.log &&
-      Function.prototype.apply.call(console.log, console, arguments);
+    // This hackery is required for IE8
+    // where `console.log` doesn't have 'apply'
+    window.console
+      && console.log
+      && Function.prototype.apply.call(console.log, console, arguments);
   }
-
-  return plain;
 }
 
 /**
