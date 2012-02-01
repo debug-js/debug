@@ -1,6 +1,6 @@
 
-var a = require('../')('worker a')
-  , b = require('../')('worker b');
+var a = require('../')('worker:a')
+  , b = require('../')('worker:b');
 
 function work() {
   a('doing lots of uninteresting work');
