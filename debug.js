@@ -37,7 +37,9 @@ function debug(name) {
       + ' +' + ms + 'ms '
       + fmt;
 
-    console.log.apply(console, arguments);
+    // This hackery is required for IE8, where `console.log` doesn't have 'apply'
+    window.console && console.log &&
+      Function.prototype.apply.call(console.log, console, arguments);
   }
 
   return plain;
