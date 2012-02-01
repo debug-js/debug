@@ -1,4 +1,11 @@
 
+0.4.0 / 2012-02-01 
+==================
+
+  * Added browser variant support for older browsers [TooTallNate]
+  * Added `debug.enable('project:*')` to browser variant [TooTallNate]
+  * Added padding to diff (moved it to the right)
+
 0.3.0 / 2012-01-26 
 ==================
 
