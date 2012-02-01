@@ -6,18 +6,6 @@
  */
 
 /**
- * The currently active debug mode names.
- */
-
-var names = [];
-
-/**
- * Previous debug() call.
- */
-
-var prev = {};
-
-/**
  * Create a debugger with the given `name`.
  *
  * @param {String} name
@@ -30,8 +18,8 @@ function debug(name) {
 
   function plain(fmt) {
     var curr = new Date;
-    var ms = curr - (prev[name] || curr);
-    prev[name] = curr;
+    var ms = curr - (debug[name] || curr);
+    debug[name] = curr;
 
     fmt = name
       + ' '
@@ -46,6 +34,12 @@ function debug(name) {
 
   return plain;
 }
+
+/**
+ * The currently active debug mode names.
+ */
+
+debug.names = [];
 
 /**
  * Pad the given `str` to `len`.
@@ -74,7 +68,7 @@ debug.enable = function(name) {
 
   for (var i = 0; i < len; i++) {
     name = split[i].replace('*', '.*?');
-    names.push(new RegExp('^' + name + '$'));
+    debug.names.push(new RegExp('^' + name + '$'));
   }
 };
 
@@ -87,8 +81,8 @@ debug.enable = function(name) {
  */
 
 debug.enabled = function(name) {
-  for (var i = 0, len = names.length; i < len; i++) {
-    if (names[i].test(name)) {
+  for (var i = 0, len = debug.names.length; i < len; i++) {
+    if (debug.names[i].test(name)) {
       return true;
     }
   }
