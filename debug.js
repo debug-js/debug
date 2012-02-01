@@ -26,7 +26,6 @@ var prev = {};
  */
 
 function debug(name) {
-
   var enabled = debug.enabled(name);
 
   if (!enabled) return function(){};
@@ -37,8 +36,10 @@ function debug(name) {
     prev[name] = curr;
 
     fmt = name
-      + ' +' + ms + 'ms '
-      + fmt;
+      + ' '
+      + fmt
+      + ' ' + debug.pad(ms, 40 - fmt.length)
+      + 'ms';
 
     // This hackery is required for IE8, where `console.log` doesn't have 'apply'
     window.console && console.log &&
@@ -47,6 +48,19 @@ function debug(name) {
 
   return plain;
 }
+
+/**
+ * Pad the given `str` to `len`.
+ * 
+ * @param {String} str
+ * @param {String} len
+ * @return {String}
+ * @api private
+ */
+
+debug.pad = function(str, len) {
+  return Array(Math.max(len, 1)).join(' ') + str;
+};
 
 /**
  * Enables a debug mode by name. This can include modes
@@ -63,7 +77,7 @@ debug.enable = function(name) {
     name = split[i].replace('*', '.*?');
     names.push(new RegExp('^' + name + '$'));
   }
-}
+};
 
 /**
  * Returns true if the given mode name is enabled, false otherwise.
@@ -80,4 +94,4 @@ debug.enabled = function(name) {
     }
   }
   return false;
-}
+};
