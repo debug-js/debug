@@ -58,7 +58,7 @@ function debug(name) {
 
 debug.enable = function(name) {
   var split = (name || '').split(/[\s,]+/)
-    , len = split.length
+    , len = split.length;
   for (var i=0; i<len; i++) {
     name = split[i].replace('*', '.*?');
     names.push(new RegExp('^' + name + '$'));
