@@ -4,6 +4,17 @@
     <script src="../debug.js"></script>
     <script>
       debug.enable('*');
+
+      a = debug('worker:a');
+      b = debug('worker:b');
+
+      setInterval(function(){
+        a('doing some work');
+      }, 1000);
+
+      setInterval(function(){
+        a('doing some work');
+      }, 1200);
     </script>
   </head>
   <body>
