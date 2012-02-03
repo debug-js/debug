@@ -24,8 +24,7 @@ function debug(name) {
     fmt = name
       + ' '
       + fmt
-      + ' +' + ms
-      + 'ms';
+      + ' +' + debug.humanize(ms);
 
     // This hackery is required for IE8
     // where `console.log` doesn't have 'apply'
@@ -69,6 +68,25 @@ debug.enable = function(name) {
 
 debug.disable = function(){
   debug.enable('');
+};
+
+/**
+ * Humanize the given `ms`.
+ *
+ * @param {Number} m
+ * @return {String}
+ * @api private
+ */
+
+debug.humanize = function(ms) {
+  var sec = 1000
+    , min = 60 * 1000
+    , hour = 60 * min;
+
+  if (ms >= hour) return (ms / hour).toFixed(1) + 'h';
+  if (ms >= min) return (ms / min).toFixed(1) + 'm';
+  if (ms >= sec) return (ms / sec | 0) + 's';
+  return ms + 'ms';
 };
 
 /**
