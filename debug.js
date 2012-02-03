@@ -24,7 +24,7 @@ function debug(name) {
     fmt = name
       + ' '
       + fmt
-      + ' ' + debug.pad(ms, 40 - fmt.length)
+      + ' +' + ms
       + 'ms';
 
     // This hackery is required for IE8
@@ -40,20 +40,6 @@ function debug(name) {
  */
 
 debug.names = [];
-
-/**
- * Pad the given `str` to `len`.
- * 
- * @param {String} str
- * @param {String} len
- * @return {String}
- * @api private
- */
-
-debug.pad = function(str, len) {
-  return Array(Math.max(len, 1)).join(' ') + str;
-};
-
 /**
  * Enables a debug mode by name. This can include modes
  * separated by a colon and wildcards.
