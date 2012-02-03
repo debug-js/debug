@@ -40,6 +40,7 @@ function debug(name) {
  */
 
 debug.names = [];
+
 /**
  * Enables a debug mode by name. This can include modes
  * separated by a colon and wildcards.
@@ -49,6 +50,8 @@ debug.names = [];
  */
 
 debug.enable = function(name) {
+  localStorage.debug = name;
+
   var split = (name || '').split(/[\s,]+/)
     , len = split.length;
 
@@ -74,3 +77,7 @@ debug.enabled = function(name) {
   }
   return false;
 };
+
+// persist
+
+if (window.localStorage) debug.enable(localStorage.debug);
