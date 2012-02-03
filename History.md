@@ -1,4 +1,12 @@
 
+0.5.0 / 2012-02-02 
+==================
+
+  * Added: humanize diffs. Closes #8
+  * Added `debug.disable()` to the CS variant
+  * Removed padding. Closes #10
+  * Fixed: persist client-side variant again. Closes #9
+
 0.4.0 / 2012-02-01 
 ==================
 
