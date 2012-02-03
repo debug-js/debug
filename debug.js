@@ -62,6 +62,16 @@ debug.enable = function(name) {
 };
 
 /**
+ * Disable debug output.
+ *
+ * @api public
+ */
+
+debug.disable = function(){
+  debug.enable('');
+};
+
+/**
  * Returns true if the given mode name is enabled, false otherwise.
  *
  * @param {String} name
