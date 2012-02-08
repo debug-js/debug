@@ -39,6 +39,7 @@ function debug(name) {
  */
 
 debug.names = [];
+debug.skips = [];
 
 /**
  * Enables a debug mode by name. This can include modes
@@ -56,7 +57,12 @@ debug.enable = function(name) {
 
   for (var i = 0; i < len; i++) {
     name = split[i].replace('*', '.*?');
-    debug.names.push(new RegExp('^' + name + '$'));
+    if (name[0] === '-') {
+      debug.skips.push(new RegExp('^' + name.substr(1) + '$'));
+    }
+    else {
+      debug.names.push(new RegExp('^' + name + '$'));
+    }
   }
 };
 
@@ -98,6 +104,11 @@ debug.humanize = function(ms) {
  */
 
 debug.enabled = function(name) {
+  for (var i = 0, len = debug.skips.length; i < len; i++) {
+    if (debug.skips[i].test(name)) {
+      return false;
+    }
+  }
   for (var i = 0, len = debug.names.length; i < len; i++) {
     if (debug.names[i].test(name)) {
       return true;
