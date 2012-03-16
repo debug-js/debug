@@ -1,4 +1,10 @@
 
+0.6.0 / 2012-03-16 
+==================
+
+  * Added support for "-" prefix in DEBUG [Vinay Pulim]
+  * Added `.enabled` flag to the node version [TooTallNate] 
+
 0.5.0 / 2012-02-02 
 ==================
 
