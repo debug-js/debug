@@ -1,4 +1,10 @@
 
+0.7.0 / 2012-05-04 
+==================
+
+  * Added .component to package.json
+  * Added debug.component.js build
+
 0.6.0 / 2012-03-16 
 ==================
 
