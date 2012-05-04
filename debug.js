@@ -1,10 +1,4 @@
 
-/*!
- * debug
- * Copyright(c) 2012 TJ Holowaychuk <tj@vision-media.ca>
- * MIT Licensed
- */
-
 /**
  * Create a debugger with the given `name`.
  *
