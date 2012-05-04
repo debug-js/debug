@@ -8,4 +8,9 @@
   , "devDependencies": { "mocha": "*" }
   , "main": "index"
   , "engines": { "node": "*" }
+  , "component": {
+    "scripts": {
+      "debug": "debug.component.js"
+    }
+  }
 }
