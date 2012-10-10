@@ -7,11 +7,6 @@
   , "dependencies": {}
   , "devDependencies": { "mocha": "*" }
   , "main": "index"
-  , "browserify": "debug.component.js"
+  , "browserify": "debug.js"
   , "engines": { "node": "*" }
-  , "component": {
-    "scripts": {
-      "debug": "debug.component.js"
-    }
-  }
 }
