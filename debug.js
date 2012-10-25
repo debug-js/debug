@@ -1,4 +1,3 @@
-
 /**
  * Expose `debug()` as the module.
  */
@@ -116,6 +115,24 @@ debug.enabled = function(name) {
   }
   return false;
 };
+
+/**
+ * Returns CoffeeScript and "de&&bug" friendly combined results
+ * of debug() and enabled()
+ *
+ * @param {String} name
+ * @return {[Boolean,Function]}
+ * @api public
+ *
+ *  Usage:
+ *    [de,bug] = debug.faster( name)
+ *    de&&bug( "with less overhead")
+ */
+
+debug.faster = function(name) {
+  return [debug.enabled(name),debug(name)];
+};
+
 
 // persist
 
