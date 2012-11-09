@@ -3,5 +3,5 @@ var debug = mod('test');
 debug('x');
 mod.enable('test');
 debug('x2');
-mod.disable();
+mod.disable('test');
 debug('x3');
