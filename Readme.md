@@ -1,7 +1,7 @@
 
 # debug
 
-  tiny node.js debugging utility.
+  tiny node.js debugging utility modelled after node core's debugging technique.
 
 ## Installation
 
@@ -9,24 +9,9 @@
 $ npm install debug
 ```
 
-## Example
+## Usage
 
-  This module is modelled after node core's debugging technique, allowing you to enable one or more topic-specific debugging functions, for example core does the following within many modules:
-
-```js
-var debug;
-if (process.env.NODE_DEBUG && /cluster/.test(process.env.NODE_DEBUG)) {
-  debug = function(x) {
-    var prefix = process.pid + ',' +
-        (process.env.NODE_WORKER_ID ? 'Worker' : 'Master');
-    console.error(prefix, x);
-  };
-} else {
-  debug = function() { };
-}
-```
-
- This concept is extremely simple but it works well. With `debug` you simply invoke the exported function to generate your debug function, passing it a name which will determine if a noop function is returned, or a decorated `console.error`, so all of the `console` format string goodies you're used to work fine. A unique color is selected per-function for visibility.
+ With `debug` you simply invoke the exported function to generate your debug function, passing it a name which will determine if a noop function is returned, or a decorated `console.error`, so all of the `console` format string goodies you're used to work fine. A unique color is selected per-function for visibility.
  
 Example _app.js_:
 
