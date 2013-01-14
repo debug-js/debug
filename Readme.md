@@ -62,6 +62,11 @@ setInterval(function(){
   
   ![](http://f.cl.ly/items/112H3i0e0o0P0a2Q2r11/Screenshot.png)
 
+
+## Pretty JSON
+
+In addition to the usual `console.log` string interpoloation you also have a `%pj` token. This works the same way as the usual `%j` token except outputs the data in a much more readable format.
+
 ## Conventions
 
  If you're using this in one or more of your libraries, you _should_ use the name of your library so that developers may toggle debugging as desired without guessing names. If you have more than one debuggers you _should_ prefix them with your library name and use ":" to separate features. For example "bodyParser" from Connect would then be "connect:bodyParser". 
