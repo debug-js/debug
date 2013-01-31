@@ -50,7 +50,9 @@ debug.skips = [];
  */
 
 debug.enable = function(name) {
-  localStorage.debug = name;
+  try {
+    localStorage.debug = name;
+  } catch(e){}
 
   var split = (name || '').split(/[\s,]+/)
     , len = split.length;
