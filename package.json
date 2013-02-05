@@ -1,26 +1,13 @@
 {
-  "name": "debug",
-  "version": "0.7.0",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/visionmedia/debug.git"
-  },
-  "description": "small debugging utility",
-  "keywords": [
-    "debug",
-    "log",
-    "debugger"
-  ],
-  "author": "TJ Holowaychuk <tj@vision-media.ca>",
-  "dependencies": {
-    "prettyjson": "~0.7.1"
-  },
-  "devDependencies": {
-    "mocha": "*"
-  },
-  "main": "lib/debug.js",
-  "browserify": "debug.js",
-  "engines": {
-    "node": "*"
-  }
+    "name": "debug"
+  , "version": "0.7.1"
+  , "repository": { "type": "git", "url": "git://github.com/visionmedia/debug.git" }
+  , "description": "small debugging utility"
+  , "keywords": ["debug", "log", "debugger"]
+  , "author": "TJ Holowaychuk <tj@vision-media.ca>"
+  , "dependencies": {}
+  , "devDependencies": { "mocha": "*" }
+  , "main": "lib/debug.js"
+  , "browserify": "debug.js"
+  , "engines": { "node": "*" }
 }

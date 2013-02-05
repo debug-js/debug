@@ -1,4 +1,12 @@
 
+0.7.1 / 2013-02-05 
+==================
+
+  * add repository URL to package.json
+  * add DEBUG_COLORED to force colored output
+  * add browserify support
+  * fix component. Closes #24
+
 0.7.0 / 2012-05-04 
 ==================
 
