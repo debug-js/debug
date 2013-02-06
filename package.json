@@ -10,4 +10,10 @@
   , "main": "lib/debug.js"
   , "browserify": "debug.js"
   , "engines": { "node": "*" }
+  , "component": {
+    "scripts": {
+      "debug/index.js": "index.js",
+      "debug/debug.js": "debug.js"
+    }
+  }
 }
