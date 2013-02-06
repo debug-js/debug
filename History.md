@@ -1,4 +1,11 @@
 
+0.7.2 / 2013-02-06 
+==================
+
+  * fix package.json
+  * fix: Mobile Safari (private mode) is broken with debug
+  * fix: Use unicode to send escape character to shell instead of octal to work with strict mode javascript
+
 0.7.1 / 2013-02-05 
 ==================
 
