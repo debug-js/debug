@@ -9,6 +9,7 @@
   , "devDependencies": { "mocha": "*" }
   , "main": "lib/debug.js"
   , "browserify": "debug.js"
+  , "browser": "./debug.js"
   , "engines": { "node": "*" }
   , "component": {
     "scripts": {
