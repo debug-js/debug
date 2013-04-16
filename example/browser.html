@@ -1,10 +1,11 @@
 <html>
   <head>
     <title>debug()</title>
-    <script src="../debug.js"></script>
+    <script src="../build/build.js"></script>
     <script>
       // type debug.enable('*') in
       // the console and refresh :)
+      var debug = require('debug');
 
       a = debug('worker:a');
       b = debug('worker:b');
@@ -19,6 +20,6 @@
     </script>
   </head>
   <body>
-    
+
   </body>
 </html>
