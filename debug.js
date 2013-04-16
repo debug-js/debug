@@ -126,7 +126,7 @@ debug.enabled = function(name) {
  */
 
 function coerce(val) {
-  if (val instanceof Error) return val.stack;
+  if (val instanceof Error) return val.stack || val.message;
   return val;
 }
 
