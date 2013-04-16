@@ -20,3 +20,7 @@ function workb() {
 }
 
 workb();
+
+setTimeout(function(){
+  b(new Error('fail'));
+}, 5000);
