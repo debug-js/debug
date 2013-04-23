@@ -3,7 +3,7 @@ var debug = require('../')('json')
 debug('Fetching %s from %s', 'data', 'example.com')
 
 setTimeout(function () {
-	debug('Received: %pj', {
+	debug('Received: %j %j', 'a string', {
 		activity: [
 			'added a todo',
 			'added a todo',
