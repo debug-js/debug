@@ -16,25 +16,50 @@ module.exports = debug;
 function debug(name) {
   if (!debug.enabled(name)) return function(){};
 
+  var c = debug.color();
   return function(fmt){
     fmt = coerce(fmt);
 
     var curr = new Date;
     var ms = curr - (debug[name] || curr);
     debug[name] = curr;
+    var args = [];
 
-    fmt = name
+    fmt = c(args) + name
       + ' '
-      + fmt
-      + ' +' + debug.humanize(ms);
+      + c(args, Array.prototype.slice.call(arguments, 1), 'black') + fmt
+      + ' ' + c(args) + '+' + debug.humanize(ms);
+
+    args.unshift(fmt);
 
     // This hackery is required for IE8
     // where `console.log` doesn't have 'apply'
     window.console
       && console.log
-      && Function.prototype.apply.call(console.log, console, arguments);
+      && Function.prototype.apply.call(console.log, console, args);
   }
 }
+
+/**
+ * add color support to browser
+ */
+debug.prevColor = 0;
+debug.colors = ['#008080', 'green', '#808000', 'blue', 'magenta', 'red', '#7f0000', '#827f00'];
+debug.color = function () {
+  if(window.chrome || window.console && (console.exception && console.table || console.colorized)) {
+    var c = debug.colors[debug.prevColor++ % debug.colors.length];
+    return function (args, append, color) {
+      args.push('color:'+ (color || c));
+      append && append.length && args.push(append);
+      return '%c';
+    };
+  } else {
+    return function (args, append) {
+      append && append.length && args.push(append);
+      return '';
+    };
+  }
+};
 
 /**
  * The currently active debug mode names.
