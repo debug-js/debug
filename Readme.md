@@ -1,4 +1,3 @@
-
 # debug
 
   tiny node.js debugging utility modelled after node core's debugging technique.
@@ -85,7 +84,7 @@ setInterval(function(){
 }, 1000);
 
 setInterval(function(){
-  a('doing some work');
+  b('doing some work');
 }, 1200);
 ```
 
