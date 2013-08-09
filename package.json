@@ -11,6 +11,11 @@
   , "browserify": "debug.js"
   , "browser": "./debug.js"
   , "engines": { "node": "*" }
+  , "files": [
+      "lib/debug.js",
+      "debug.js",
+      "index.js"
+    ]
   , "component": {
     "scripts": {
       "debug/index.js": "index.js",
