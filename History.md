@@ -1,4 +1,11 @@
 
+0.7.3 / 2013-10-30 
+==================
+
+ * fix: catch localStorage security error when cookies are blocked (Chrome)
+ * add debug(err) support. Closes #46
+ * add .browser prop to package.json. Closes #42
+
 0.7.2 / 2013-02-06 
 ==================
 
