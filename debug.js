@@ -19,6 +19,7 @@ function debug(name) {
   return function(fmt){
     fmt = coerce(fmt);
 
+    var args;
     var curr = new Date;
     var ms = curr - (debug[name] || curr);
     debug[name] = curr;
@@ -28,11 +29,17 @@ function debug(name) {
       + fmt
       + ' +' + debug.humanize(ms);
 
+    if (debug.colorSupport)  {
+      fmt = '%c ' + fmt;
+      args = Array.prototype.slice.call(arguments);
+      args.splice(1, 0, debug.color(name));
+    }
+
     // This hackery is required for IE8
     // where `console.log` doesn't have 'apply'
     window.console
       && console.log
-      && Function.prototype.apply.call(console.log, console, arguments);
+      && Function.prototype.apply.call(console.log, console, args || arguments);
   }
 }
 
@@ -42,6 +49,7 @@ function debug(name) {
 
 debug.names = [];
 debug.skips = [];
+debug.colors = {};
 
 /**
  * Enables a debug mode by name. This can include modes
@@ -129,6 +137,33 @@ function coerce(val) {
   if (val instanceof Error) return val.stack || val.message;
   return val;
 }
+
+/**
+ * Check if browser supports color
+ */
+(function colorSupportCheck() {
+  if(window.chrome || window.console && (console.exception && console.table || console.colorized)) {
+    debug.colorSupport = true;
+    return;
+  }
+  debug.colorSupport = false;
+})();
+
+/**
+ * Returns color assigned to given name,
+ * assigns color to name if needed
+ *
+ * @param {String} name
+ * @return {String}
+ * @api public
+ */
+
+debug.color = function(name) {
+  if (typeof debug.colors[name] === 'undefined') {
+    debug.colors[name] = 'color: #' +('00000'+(Math.random()*16777216<<0).toString(16)).substr(-6)
+  }
+  return debug.colors[name];
+};
 
 // persist
 
