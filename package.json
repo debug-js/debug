@@ -1,6 +1,6 @@
 {
     "name": "debug"
-  , "version": "0.7.3"
+  , "version": "0.7.4"
   , "repository": { "type": "git", "url": "git://github.com/visionmedia/debug.git" }
   , "description": "small debugging utility"
   , "keywords": ["debug", "log", "debugger"]
