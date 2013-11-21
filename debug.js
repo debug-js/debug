@@ -14,26 +14,51 @@ module.exports = debug;
  */
 
 function debug(name) {
-  if (!debug.enabled(name)) return function(){};
+  function letNarrow(fn) {
+    // to a given function `fn` adds a method `.narrow`
+    // this method takes a `suffix` argument
+    // and returns a copy of the `fn` with `suffix` appended `name`.
+    // additionaly adds .name property
+    // and .root property, which holds function created without .narrow
 
-  return function(fmt){
-    fmt = coerce(fmt);
+    fn.scope = name
+    if (typeof root == "function") fn.root = root
+    else fn.root = fn
+    // fn.root = root // a function created with call to debug(), not .narrow()
 
-    var curr = new Date;
-    var ms = curr - (debug[name] || curr);
-    debug[name] = curr;
-
-    fmt = name
-      + ' '
-      + fmt
-      + ' +' + debug.humanize(ms);
-
-    // This hackery is required for IE8
-    // where `console.log` doesn't have 'apply'
-    window.console
-      && console.log
-      && Function.prototype.apply.call(console.log, console, arguments);
+    fn.narrow = function (suffix) {
+      var scope = this.scope ? this.scope + ":" : "";
+      scope    += suffix
+      return debug(scope, fn.root)
+    };
   }
+  var fn;
+
+  if (debug.enabled(name)) {
+    fn = function(fmt){
+      fmt = coerce(fmt);
+
+      var curr = new Date;
+      var ms = curr - (debug[name] || curr);
+      debug[name] = curr;
+
+      fmt = name
+        + ' '
+        + fmt
+        + ' +' + debug.humanize(ms);
+
+      // This hackery is required for IE8
+      // where `console.log` doesn't have 'apply'
+      window.console
+        && console.log
+        && Function.prototype.apply.call(console.log, console, arguments);
+    };
+  }
+  else fn = function() {};
+
+  letNarrow(fn);
+
+  return fn;
 }
 
 /**
