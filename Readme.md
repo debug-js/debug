@@ -58,7 +58,7 @@ setInterval(function(){
   ![](http://f.cl.ly/items/2i3h1d3t121M2Z1A3Q0N/Screenshot.png)
 
   When stderr is not a TTY, `Date#toUTCString()` is used, making it more useful for logging the debug information as shown below:
-  _(NOTE: Debug now uses stderr instead of stdout, so the correct shell command for this example is actually `DEBUG=* node example/worker 2> out &`)_
+  _(NOTE: Debug now uses stderr instead of stdout, so the correct shell command for this example is actually `DEBUG=\* node example/worker 2> out &`)_
   
   ![](http://f.cl.ly/items/112H3i0e0o0P0a2Q2r11/Screenshot.png)
   
@@ -68,13 +68,13 @@ setInterval(function(){
 
 ## Wildcards
 
-  The "*" character may be used as a wildcard. Suppose for example your library has debuggers named "connect:bodyParser", "connect:compress", "connect:session", instead of listing all three with `DEBUG=connect:bodyParser,connect.compress,connect:session`, you may simply do `DEBUG=connect:*`, or to run everything using this module simply use `DEBUG=*`.
+  The asterisk character ('\*') may be used as a wildcard. Suppose for example your library has debuggers named "connect:bodyParser", "connect:compress", "connect:session", instead of listing all three with `DEBUG=connect:bodyParser,connect.compress,connect:session`, you may simply do `DEBUG=connect:\*`, or to run everything using this module simply use `DEBUG=\*`.
 
-  You can also exclude specific debuggers by prefixing them with a "-" character.  For example, `DEBUG=* -connect:*` would include all debuggers except those starting with "connect:".
+  You can also exclude specific debuggers by prefixing them with a "-" character.  For example, `DEBUG=\* -connect:\*` would include all debuggers except those starting with "connect:".
 
 ## Browser support
 
- Debug works in the browser as well, currently persisted by `localStorage`. For example if you have `worker:a` and `worker:b` as shown below, and wish to debug both type `debug.enable('worker:*')` in the console and refresh the page, this will remain until you disable with `debug.disable()`. 
+ Debug works in the browser as well, currently persisted by `localStorage`. For example if you have `worker:a` and `worker:b` as shown below, and wish to debug both type `debug.enable('worker:\*')` in the console and refresh the page, this will remain until you disable with `debug.disable()`. 
 
 ```js
 a = debug('worker:a');
