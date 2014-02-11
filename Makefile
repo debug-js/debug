@@ -1,3 +1,3 @@
 
-build: debug.js index.js
+build: debug.js
 	component build

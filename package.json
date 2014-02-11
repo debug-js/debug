@@ -12,13 +12,6 @@
   , "engines": { "node": "*" }
   , "files": [
       "lib/debug.js",
-      "debug.js",
-      "index.js"
+      "debug.js"
     ]
-  , "component": {
-    "scripts": {
-      "debug/index.js": "index.js",
-      "debug/debug.js": "debug.js"
-    }
-  }
 }
