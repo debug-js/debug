@@ -1,4 +1,11 @@
 
+0.8.0 / 2014-03-30
+==================
+
+ * add `enable()` method for nodejs. Closes #27
+ * change from stderr to stdout
+ * remove unnecessary index.js file
+
 HEAD
 ==================
 
