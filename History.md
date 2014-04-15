@@ -1,15 +1,15 @@
 
+0.8.1 / 2014-04-14
+==================
+
+ * package: re-add the "component" section
+
 0.8.0 / 2014-03-30
 ==================
 
  * add `enable()` method for nodejs. Closes #27
  * change from stderr to stdout
  * remove unnecessary index.js file
-
-HEAD
-==================
-
- * remove unnecessary index.js
 
 0.7.4 / 2013-11-13
 ==================
