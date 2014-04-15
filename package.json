@@ -14,4 +14,9 @@
       "lib/debug.js",
       "debug.js"
     ]
+  , "component": {
+      "scripts": {
+        "debug/index.js": "debug.js"
+      }
+    }
 }
