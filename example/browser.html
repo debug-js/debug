@@ -6,17 +6,20 @@
       // type debug.enable('*') in
       // the console and refresh :)
       var debug = require('debug');
+      var names = 'abcdefghi'.split('');
 
-      a = debug('worker:a');
-      b = debug('worker:b');
-
-      setInterval(function(){
-        a('doing some work');
-      }, 1000);
-
-      setInterval(function(){
-        a('doing some work');
-      }, 1200);
+      for (var i = 0; i < names.length; i++) {
+        (function(i, n) {
+          var j = 3, d = debug('worker:' + n);
+          var m = setInterval(function() {
+            if(j--) {
+              d('doing some work: ' + n);
+            } else {
+              clearInterval(m);
+            }
+          }, (1 + i) * 300);
+        }(i, names[i]));
+      };
     </script>
   </head>
   <body>
