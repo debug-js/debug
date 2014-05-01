@@ -20,8 +20,8 @@ function debug(name) {
     fmt = coerce(fmt);
 
     var curr = new Date;
-    var ms = curr - (debug[name] || curr);
-    debug[name] = curr;
+    var ms = curr - (debug.prev || curr);
+    debug.prev = curr;
 
     fmt = name
       + ' '
@@ -42,6 +42,8 @@ function debug(name) {
 
 debug.names = [];
 debug.skips = [];
+
+debug.prev = 0;
 
 /**
  * Enables a debug mode by name. This can include modes
