@@ -14,7 +14,8 @@ module.exports = debug;
  */
 
 function debug(name) {
-  if (!debug.enabled(name)) return function(){};
+  var enabled = debug.enabled(name);
+  if (!enabled) return function(){ return false };
 
   return function(fmt){
     fmt = coerce(fmt);
@@ -33,6 +34,8 @@ function debug(name) {
     window.console
       && console.log
       && Function.prototype.apply.call(console.log, console, arguments);
+
+    return true;
   }
 }
 
