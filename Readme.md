@@ -61,6 +61,16 @@ setInterval(function(){
 
   ![](http://f.cl.ly/items/112H3i0e0o0P0a2Q2r11/Screenshot.png)
 
+## Coloring
+
+By default debug will provide a unique color per-function. Optionally, if you'd like to force a specific color, supply the terminal color code as second argument.
+
+```js
+var debug = require('debug')('worker', 2)
+
+debug('I will be displayed in green');
+```
+
 ## Conventions
 
  If you're using this in one or more of your libraries, you _should_ use the name of your library so that developers may toggle debugging as desired without guessing names. If you have more than one debuggers you _should_ prefix them with your library name and use ":" to separate features. For example "bodyParser" from Connect would then be "connect:bodyParser".
