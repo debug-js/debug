@@ -4,7 +4,10 @@
   "description": "small debugging utility",
   "version": "0.8.1",
   "keywords": ["debug", "log", "debugger"],
-  "main": "debug.js",
-  "scripts": ["debug.js"],
+  "main": "browser.js",
+  "scripts": [
+    "browser.js",
+    "debug.js"
+  ],
   "dependencies": {}
 }
