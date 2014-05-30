@@ -72,7 +72,7 @@ function log(fmt) {
       + ' ' + name + ' ' + fmt;
   }
 
-  console.log.apply(this, arguments);
+  console.log.apply(console, arguments);
 }
 
 /**
