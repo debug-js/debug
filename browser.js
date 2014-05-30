@@ -12,7 +12,7 @@ exports.load = load;
 
 /**
  * Invokes `console.log()` when available.
- * No-op when `consoel.log` is not a "function".
+ * No-op when `console.log` is not a "function".
  *
  * @api public
  */
