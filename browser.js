@@ -22,7 +22,7 @@ function log(fmt) {
   var ms = curr - (this.prev || curr);
   this.prev = curr;
 
-  fmt = name
+  fmt = this.namespace
     + ' '
     + fmt
     + ' +' + exports.humanize(ms);
