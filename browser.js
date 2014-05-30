@@ -35,7 +35,7 @@ function log(fmt) {
 }
 
 /**
- * Save `namespaces`,
+ * Save `namespaces`.
  *
  * @param {String} namespaces
  * @api private
@@ -48,7 +48,7 @@ function save(namespaces) {
 }
 
 /**
- * Load `namespaces`,
+ * Load `namespaces`.
  *
  * @return {String} returns the previously persisted debug modes
  * @api private
