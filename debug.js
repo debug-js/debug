@@ -11,7 +11,7 @@ exports.coerce = coerce;
 exports.disable = disable;
 exports.enable = enable;
 exports.enabled = enabled;
-exports.humanize = humanize;
+exports.humanize = require('ms');
 
 /**
  * The currently active debug mode names, and names to skip.
@@ -81,25 +81,6 @@ function enable(namespaces) {
 
 function disable() {
   exports.enable('');
-}
-
-/**
- * Humanize the given `ms`.
- *
- * @param {Number} m
- * @return {String}
- * @api private
- */
-
-function humanize(ms) {
-  var sec = 1000;
-  var min = 60 * 1000;
-  var hour = 60 * min;
-
-  if (ms >= hour) return (ms / hour).toFixed(1) + 'h';
-  if (ms >= min) return (ms / min).toFixed(1) + 'm';
-  if (ms >= sec) return (ms / sec | 0) + 's';
-  return ms + 'ms';
 }
 
 /**
