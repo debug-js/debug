@@ -58,6 +58,8 @@ function debug(namespace) {
  */
 
 function enable(namespaces) {
+  exports.save(namespaces);
+
   var split = (namespaces || '').split(/[\s,]+/);
   var len = split.length;
 
@@ -65,13 +67,10 @@ function enable(namespaces) {
     namespaces = split[i].replace('*', '.*?');
     if (namespaces[0] === '-') {
       exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
-    }
-    else {
+    } else {
       exports.names.push(new RegExp('^' + namespaces + '$'));
     }
   }
-
-  exports.save(namespaces);
 }
 
 /**
