@@ -9,5 +9,7 @@
     "browser.js",
     "debug.js"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "guille/ms.js": "0.6.1"
+  }
 }
