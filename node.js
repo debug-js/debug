@@ -52,7 +52,8 @@ function selectColor() {
  * @api public
  */
 
-function log(fmt) {
+function log() {
+  var args = arguments;
   var name = this.namespace;
 
   if (useColors) {
@@ -63,16 +64,16 @@ function log(fmt) {
     var ms = curr - (this.prev || curr);
     this.prev = curr;
 
-    fmt = '  \u001b[9' + c + 'm' + name + ' '
+    args[0] = '  \u001b[9' + c + 'm' + name + ' '
       + '\u001b[3' + c + 'm\u001b[90m'
-      + fmt + '\u001b[3' + c + 'm'
+      + args[0] + '\u001b[3' + c + 'm'
       + ' +' + exports.humanize(ms) + '\u001b[0m';
   } else {
-    fmt = new Date().toUTCString()
-      + ' ' + name + ' ' + fmt;
+    args[0] = new Date().toUTCString()
+      + ' ' + name + ' ' + args[0];
   }
 
-  console.log.apply(console, arguments);
+  console.log.apply(console, args);
 }
 
 /**
