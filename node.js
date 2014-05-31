@@ -94,7 +94,7 @@ function save(namespaces) {
  */
 
 function load() {
-  return process.env.DEBUG || '';
+  return process.env.DEBUG;
 }
 
 /**
