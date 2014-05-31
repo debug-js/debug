@@ -1,74 +1,77 @@
 
 /**
+ * This is the common logic for both the Node.js and web browser
+ * implementations of `debug()`.
+ *
  * Expose `debug()` as the module.
  */
 
-module.exports = debug;
+exports = module.exports = debug;
+exports.coerce = coerce;
+exports.disable = disable;
+exports.enable = enable;
+exports.enabled = enabled;
+exports.humanize = humanize;
 
 /**
- * Create a debugger with the given `name`.
+ * The currently active debug mode names, and names to skip.
+ */
+
+exports.names = [];
+exports.skips = [];
+
+/**
+ * Create a debugger with the given `namespace`.
  *
- * @param {String} name
- * @return {Type}
+ * @param {String} namespace
+ * @return {Function}
  * @api public
  */
 
-function debug(name) {
-  if (!debug.enabled(name)) return function(){};
+function debug(namespace) {
 
-  return function(fmt){
-    fmt = coerce(fmt);
-
-    var curr = new Date;
-    var ms = curr - (debug[name] || curr);
-    debug[name] = curr;
-
-    fmt = name
-      + ' '
-      + fmt
-      + ' +' + debug.humanize(ms);
-
-    // This hackery is required for IE8
-    // where `console.log` doesn't have 'apply'
-    window.console
-      && console.log
-      && Function.prototype.apply.call(console.log, console, arguments);
+  // define the `disabled` version
+  function disabled() {
   }
+  disabled.enabled = false;
+
+  // define the `enabled` version
+  function enabled(fmt) {
+    fmt = exports.coerce(fmt);
+    exports.log.apply(enabled, arguments);
+  }
+  enabled.enabled = true;
+
+  var fn = exports.enabled(namespace) ? enabled : disabled;
+
+  fn.namespace = namespace;
+
+  return fn;
 }
 
 /**
- * The currently active debug mode names.
- */
-
-debug.names = [];
-debug.skips = [];
-
-/**
- * Enables a debug mode by name. This can include modes
+ * Enables a debug mode by namespaces. This can include modes
  * separated by a colon and wildcards.
  *
- * @param {String} name
+ * @param {String} namespaces
  * @api public
  */
 
-debug.enable = function(name) {
-  try {
-    localStorage.debug = name;
-  } catch(e){}
+function enable(namespaces) {
+  exports.save(namespaces);
 
-  var split = (name || '').split(/[\s,]+/)
-    , len = split.length;
+  var split = (namespaces || '').split(/[\s,]+/);
+  var len = split.length;
 
   for (var i = 0; i < len; i++) {
-    name = split[i].replace('*', '.*?');
-    if (name[0] === '-') {
-      debug.skips.push(new RegExp('^' + name.substr(1) + '$'));
-    }
-    else {
-      debug.names.push(new RegExp('^' + name + '$'));
+    namespaces = split[i].replace('*', '.*?');
+    if (namespaces[0] === '-') {
+      exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
+    } else {
+      exports.names.push(new RegExp('^' + namespaces + '$'));
     }
   }
-};
+}
 
 /**
  * Disable debug output.
@@ -76,9 +79,9 @@ debug.enable = function(name) {
  * @api public
  */
 
-debug.disable = function(){
-  debug.enable('');
-};
+function disable() {
+  exports.enable('');
+}
 
 /**
  * Humanize the given `ms`.
@@ -88,16 +91,16 @@ debug.disable = function(){
  * @api private
  */
 
-debug.humanize = function(ms) {
-  var sec = 1000
-    , min = 60 * 1000
-    , hour = 60 * min;
+function humanize(ms) {
+  var sec = 1000;
+  var min = 60 * 1000;
+  var hour = 60 * min;
 
   if (ms >= hour) return (ms / hour).toFixed(1) + 'h';
   if (ms >= min) return (ms / min).toFixed(1) + 'm';
   if (ms >= sec) return (ms / sec | 0) + 's';
   return ms + 'ms';
-};
+}
 
 /**
  * Returns true if the given mode name is enabled, false otherwise.
@@ -107,31 +110,30 @@ debug.humanize = function(ms) {
  * @api public
  */
 
-debug.enabled = function(name) {
-  for (var i = 0, len = debug.skips.length; i < len; i++) {
-    if (debug.skips[i].test(name)) {
+function enabled(name) {
+  var i, len;
+  for (i = 0, len = exports.skips.length; i < len; i++) {
+    if (exports.skips[i].test(name)) {
       return false;
     }
   }
-  for (var i = 0, len = debug.names.length; i < len; i++) {
-    if (debug.names[i].test(name)) {
+  for (i = 0, len = exports.names.length; i < len; i++) {
+    if (exports.names[i].test(name)) {
       return true;
     }
   }
   return false;
-};
+}
 
 /**
  * Coerce `val`.
+ *
+ * @param {Mixed} val
+ * @return {Mixed}
+ * @api private
  */
 
 function coerce(val) {
   if (val instanceof Error) return val.stack || val.message;
   return val;
 }
-
-// persist
-
-try {
-  if (window.localStorage) debug.enable(localStorage.debug);
-} catch(e){}
