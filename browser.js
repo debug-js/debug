@@ -79,7 +79,19 @@ function log() {
     if (null == this.c) this.c = selectColor();
     var c = 'color: ' + this.c;
     args = [args[0], c, ''].concat(Array.prototype.slice.call(args, 1));
-    args.push(c);
+
+    // the final "%c" is somewhat tricky, because there could be other
+    // arguments passed either before or after the %c, so we need to
+    // figure out the correct index to insert the CSS into
+    var index = 0;
+    args[0].replace(/%[a-z%]/g, function(match) {
+      index++;
+      if (index < 3) return; // skip the first 2 %c's since that's handled already
+      if ('%c' === match) {
+        args.splice(index, 0, c);
+      }
+      return match;
+    });
   }
 
   // This hackery is required for IE8,
