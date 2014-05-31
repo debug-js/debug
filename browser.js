@@ -85,12 +85,12 @@ function log() {
     // figure out the correct index to insert the CSS into
     var index = 0;
     args[0].replace(/%[a-z%]/g, function(match) {
+      if ('%%' === match) return;
       index++;
       if (index < 3) return; // skip the first 2 %c's since that's handled already
       if ('%c' === match) {
         args.splice(index, 0, c);
       }
-      return match;
     });
   }
 
