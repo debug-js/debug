@@ -62,23 +62,23 @@ function selectColor() {
  * @api public
  */
 
-function log(fmt) {
+function log() {
   var args = arguments;
   var curr = new Date();
   var ms = curr - (this.prev || curr);
   this.prev = curr;
 
-  fmt = (useColors ? '%c' : '')
+  args[0] = (useColors ? '%c' : '')
     + this.namespace
     + (useColors ? '%c ' : ' ')
-    + fmt
+    + args[0]
     + (useColors ? '%c ' : ' ')
     + '+' + exports.humanize(ms);
 
   if (useColors) {
     if (null == this.c) this.c = selectColor();
     var c = 'color: ' + this.c;
-    args = [args[0], c, ''].concat(Array.prototype.slice.call(arguments, 1));
+    args = [args[0], c, ''].concat(Array.prototype.slice.call(args, 1));
     args.push(c);
   }
 
