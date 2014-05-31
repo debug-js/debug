@@ -55,9 +55,9 @@ function save(namespaces) {
  */
 
 function load() {
-  var r = '';
+  var r;
   try {
-    r = localStorage.debug || '';
+    r = localStorage.debug;
   } catch(e) {}
   return r;
 }
