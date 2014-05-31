@@ -30,11 +30,19 @@ var colors = [
 var prevColor = 0;
 
 /**
- * Currently only WebKit-based Web Inspectors are known
- * to support "%c" CSS customizations.
+ * Currently only WebKit-based Web Inspectors and the Firebug
+ * extension (*not* the built-in Firefox web inpector) are
+ * known to support "%c" CSS customizations.
+ *
+ * TODO: add a `localStorage` variable to explicitly enable/disable colors
  */
 
-var useColors = 'WebkitAppearance' in document.documentElement.style;
+var useColors =
+  // is webkit? http://stackoverflow.com/a/16459606/376773
+  ('WebkitAppearance' in document.documentElement.style) ||
+  // is firebug? http://stackoverflow.com/a/398120/376773
+  (window.console && (console.firebug || (console.exception && console.table)));
+
 
 /**
  * Select a color.
