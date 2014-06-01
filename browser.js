@@ -91,14 +91,18 @@ function log() {
     // arguments passed either before or after the %c, so we need to
     // figure out the correct index to insert the CSS into
     var index = 0;
+    var lastC = 0;
     args[0].replace(/%[a-z%]/g, function(match) {
       if ('%%' === match) return;
       index++;
-      if (index < 3) return; // skip the first 2 %c's since that's handled already
       if ('%c' === match) {
-        args.splice(index, 0, c);
+        // we only are interested in the *last* %c
+        // (the user may have provided their own)
+        lastC = index;
       }
     });
+
+    args.splice(lastC, 0, c);
   }
 
   // This hackery is required for IE8,
