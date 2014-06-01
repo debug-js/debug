@@ -6,9 +6,12 @@
   , "keywords": ["debug", "log", "debugger"]
   , "author": "TJ Holowaychuk <tj@vision-media.ca>"
   , "dependencies": {
-      "ms": "0.6.2"
+        "ms": "0.6.2"
     }
-  , "devDependencies": { "mocha": "*" }
+  , "devDependencies": {
+        "browserify": "4.1.6"
+      , "mocha": "*"
+    }
   , "main": "./node.js"
   , "browser": "./browser.js"
   , "component": {
