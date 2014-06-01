@@ -43,6 +43,13 @@ var useColors =
   // is firebug? http://stackoverflow.com/a/398120/376773
   (window.console && (console.firebug || (console.exception && console.table)));
 
+/**
+ * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
+ */
+
+exports.formatters.j = function(v) {
+  return JSON.stringify(v);
+};
 
 /**
  * Select a color.

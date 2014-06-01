@@ -21,6 +21,14 @@ exports.names = [];
 exports.skips = [];
 
 /**
+ * Map of special "%n" handling functions, for the debug "format" argument.
+ *
+ * Valid key names are a single, lowercased letter, i.e. "n".
+ */
+
+exports.formatters = {};
+
+/**
  * Create a debugger with the given `namespace`.
  *
  * @param {String} namespace
@@ -36,9 +44,34 @@ function debug(namespace) {
   disabled.enabled = false;
 
   // define the `enabled` version
-  function enabled(fmt) {
-    fmt = exports.coerce(fmt);
-    exports.log.apply(enabled, arguments);
+  function enabled() {
+    var args = Array.prototype.slice.call(arguments);
+    if ('string' === typeof args[0]) {
+      args[0] = exports.coerce(args[0]);
+    } else {
+      // anything else let's inspect with %o
+      args = ['%o'].concat(args);
+    }
+
+    // apply any `formatters` transformations
+    var index = 0;
+    args[0] = args[0].replace(/%([a-z%])/g, function(match, format) {
+      // if we encounter an escaped % then don't increase the array index
+      if (match === '%%') return match;
+      index++;
+      var formatter = exports.formatters[format];
+      if ('function' === typeof formatter) {
+        var val = args[index];
+        match = formatter.call(enabled, val);
+
+        // now we need to remove `args[index]` since it's inlined in the `format`
+        args.splice(index, 1);
+        index--;
+      }
+      return match;
+    });
+
+    exports.log.apply(enabled, args);
   }
   enabled.enabled = true;
 

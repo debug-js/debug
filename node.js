@@ -4,6 +4,7 @@
  */
 
 var tty = require('tty');
+var util = require('util');
 
 /**
  * This is the Node.js implementation of `debug()`.
@@ -33,6 +34,16 @@ var prevColor = 0;
  */
 
 var useColors = tty.isatty(1) || process.env.DEBUG_COLORS;
+
+/**
+ * Map %o to `util.inspect()`, since Node doesn't do that out of the box.
+ */
+
+exports.formatters.o = function(v) {
+  var str = (useColors ? '\u001b[0m' : '')
+    + util.inspect(v, { colors: useColors }).replace(/\s*\n\s*/g, ' ');
+  return str;
+};
 
 /**
  * Select a color.
