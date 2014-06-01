@@ -73,7 +73,7 @@ setInterval(function(){
 
 ## Browser support
 
- Debug works in the browser as well, currently persisted by `localStorage`. For example if you have `worker:a` and `worker:b` as shown below, and wish to debug both type `debug.enable('worker:*')` in the console and refresh the page, this will remain until you disable with `debug.disable()`.
+  Debug works in the browser as well, currently persisted by `localStorage`. For example if you have `worker:a` and `worker:b` as shown below, and wish to debug both type `debug.enable('worker:*')` in the console and refresh the page, this will remain until you disable with `debug.disable()`.
 
 ```js
 a = debug('worker:a');
@@ -87,6 +87,14 @@ setInterval(function(){
   b('doing some work');
 }, 1200);
 ```
+
+#### Web Inspector Colors
+
+  Colors are also enabled on "Web Inspectors" that understand the `%c` formatting
+  option. These are WebKit web inspectors, and the Firebug plugin for Firefox.
+  Colored output looks something like:
+
+  ![](https://cloud.githubusercontent.com/assets/71256/3139768/b98c5fd8-e8ef-11e3-862a-f7253b6f47c6.png)
 
 ## License
 
