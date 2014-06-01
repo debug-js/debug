@@ -56,9 +56,8 @@ function debug(namespace) {
     // apply any `formatters` transformations
     var index = 0;
     args[0] = args[0].replace(/%([a-z%])/g, function(match, format) {
-      // replace "%%" with a placeholder value for now.
-      // we restore it after doing the formatters parsing.
-      if (match === '%%') return '68ddd49c85cb46fc8c';
+      // if we encounter an escaped % then don't increase the array index
+      if (match === '%%') return match;
       index++;
       var formatter = exports.formatters[format];
       if ('function' === typeof formatter) {
@@ -70,7 +69,7 @@ function debug(namespace) {
         index--;
       }
       return match;
-    }).replace(/68ddd49c85cb46fc8c/g, '%%');
+    });
 
     exports.log.apply(enabled, args);
   }
