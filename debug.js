@@ -46,9 +46,10 @@ function debug(namespace) {
   // define the `enabled` version
   function enabled() {
     var args = Array.prototype.slice.call(arguments);
-    if ('string' === typeof args[0]) {
-      args[0] = exports.coerce(args[0]);
-    } else {
+
+    args[0] = exports.coerce(args[0]);
+
+    if ('string' !== typeof args[0]) {
       // anything else let's inspect with %o
       args = ['%o'].concat(args);
     }
