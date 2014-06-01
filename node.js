@@ -40,8 +40,7 @@ var useColors = tty.isatty(1) || process.env.DEBUG_COLORS;
  */
 
 exports.formatters.o = function(v) {
-  var str = (useColors ? '\u001b[0m' : '')
-    + util.inspect(v, { colors: useColors }).replace(/\s*\n\s*/g, ' ');
+  var str = util.inspect(v, { colors: useColors }).replace(/\s*\n\s*/g, ' ');
   return str;
 };
 
@@ -76,7 +75,7 @@ function log() {
     this.prev = curr;
 
     args[0] = '  \u001b[9' + c + 'm' + name + ' '
-      + '\u001b[3' + c + 'm\u001b[90m'
+      + '\u001b[0m'
       + args[0] + '\u001b[3' + c + 'm'
       + ' +' + exports.humanize(ms) + '\u001b[0m';
   } else {
