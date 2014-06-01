@@ -83,8 +83,8 @@ function log() {
     + '+' + exports.humanize(ms);
 
   if (useColors) {
-    if (null == this.c) this.c = selectColor();
-    var c = 'color: ' + this.c;
+    if (null == this.color) this.color = selectColor();
+    var c = 'color: ' + this.color;
     args = [args[0], c, ''].concat(Array.prototype.slice.call(args, 1));
 
     // the final "%c" is somewhat tricky, because there could be other

@@ -68,9 +68,9 @@ function log() {
   var name = this.namespace;
 
   if (useColors) {
-    if (null == this.c) this.c = selectColor();
+    if (null == this.color) this.color = selectColor();
 
-    var c = this.c;
+    var c = this.color;
     var curr = new Date();
     var ms = curr - (this.prev || curr);
     this.prev = curr;
