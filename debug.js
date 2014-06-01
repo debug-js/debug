@@ -121,6 +121,7 @@ function enable(namespaces) {
   var len = split.length;
 
   for (var i = 0; i < len; i++) {
+    if (!split[i]) continue; // ignore empty strings
     namespaces = split[i].replace('*', '.*?');
     if (namespaces[0] === '-') {
       exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
