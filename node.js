@@ -29,14 +29,13 @@ exports.colors = [6, 2, 3, 4, 5, 1];
  */
 
 function useColors() {
-  var debugColors = process.env.DEBUG_COLORS;
-  if (null == debugColors || 0 === debugColors.trim().length) {
+  var debugColors = (process.env.DEBUG_COLORS || '').trim().toLowerCase();
+  if (0 === debugColors.length) {
     return tty.isatty(1);
   } else {
-    debugColors = debugColors.trim().toLowerCase();
     return '0' !== debugColors
         && 'no' !== debugColors
-        && 'false' !== debugCoors
+        && 'false' !== debugColors
         && 'disabled' !== debugColors;
   }
 }
