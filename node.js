@@ -25,11 +25,20 @@ exports.useColors = useColors;
 exports.colors = [6, 2, 3, 4, 5, 1];
 
 /**
- * Is stdout a TTY? Colored output is disabled when `true`.
+ * Is stdout a TTY? Colored output is enabled when `true`.
  */
 
 function useColors() {
-  return tty.isatty(1) || process.env.DEBUG_COLORS;
+  var debugColors = process.env.DEBUG_COLORS;
+  if (null == debugColors || 0 === debugColors.trim().length) {
+    return tty.isatty(1);
+  } else {
+    debugColors = debugColors.trim().toLowerCase();
+    return '0' !== debugColors
+        && 'no' !== debugColors
+        && 'false' !== debugCoors
+        && 'disabled' !== debugColors;
+  }
 }
 
 /**
