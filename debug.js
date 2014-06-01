@@ -29,6 +29,23 @@ exports.skips = [];
 exports.formatters = {};
 
 /**
+ * Previously assigned color.
+ */
+
+var prevColor = 0;
+
+/**
+ * Select a color.
+ *
+ * @return {Number}
+ * @api private
+ */
+
+function selectColor() {
+  return exports.colors[prevColor++ % exports.colors.length];
+}
+
+/**
  * Create a debugger with the given `namespace`.
  *
  * @param {String} namespace
@@ -45,6 +62,12 @@ function debug(namespace) {
 
   // define the `enabled` version
   function enabled() {
+    var self = enabled;
+
+    // add the `color` if not set
+    if (null == self.useColors) self.useColors = exports.useColors();
+    if (null == self.color && self.useColors) self.color = selectColor();
+
     var args = Array.prototype.slice.call(arguments);
 
     args[0] = exports.coerce(args[0]);
@@ -63,7 +86,7 @@ function debug(namespace) {
       var formatter = exports.formatters[format];
       if ('function' === typeof formatter) {
         var val = args[index];
-        match = formatter.call(enabled, val);
+        match = formatter.call(self, val);
 
         // now we need to remove `args[index]` since it's inlined in the `format`
         args.splice(index, 1);
@@ -72,7 +95,7 @@ function debug(namespace) {
       return match;
     });
 
-    exports.log.apply(enabled, args);
+    exports.log.apply(self, args);
   }
   enabled.enabled = true;
 

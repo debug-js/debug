@@ -9,12 +9,13 @@ exports = module.exports = require('./debug');
 exports.log = log;
 exports.save = save;
 exports.load = load;
+exports.useColors = useColors;
 
 /**
  * Colors.
  */
 
-var colors = [
+exports.colors = [
   'cyan',
   'green',
   'goldenrod', // "yellow" is just too bright on a white background...
@@ -24,12 +25,6 @@ var colors = [
 ];
 
 /**
- * Previously assigned color.
- */
-
-var prevColor = 0;
-
-/**
  * Currently only WebKit-based Web Inspectors and the Firebug
  * extension (*not* the built-in Firefox web inpector) are
  * known to support "%c" CSS customizations.
@@ -37,11 +32,12 @@ var prevColor = 0;
  * TODO: add a `localStorage` variable to explicitly enable/disable colors
  */
 
-var useColors =
+function useColors() {
   // is webkit? http://stackoverflow.com/a/16459606/376773
-  ('WebkitAppearance' in document.documentElement.style) ||
-  // is firebug? http://stackoverflow.com/a/398120/376773
-  (window.console && (console.firebug || (console.exception && console.table)));
+  return ('WebkitAppearance' in document.documentElement.style) ||
+    // is firebug? http://stackoverflow.com/a/398120/376773
+    (window.console && (console.firebug || (console.exception && console.table)));
+}
 
 /**
  * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
@@ -52,17 +48,6 @@ exports.formatters.j = function(v) {
 };
 
 /**
- * Select a color.
- *
- * @return {Number}
- * @api private
- */
-
-function selectColor() {
-  return colors[prevColor++ % colors.length];
-}
-
-/**
  * Invokes `console.log()` when available.
  * No-op when `console.log` is not a "function".
  *
@@ -71,6 +56,7 @@ function selectColor() {
 
 function log() {
   var args = arguments;
+  var useColors = this.useColors;
   var curr = new Date();
   var ms = curr - (this.prev || curr);
   this.prev = curr;
@@ -83,7 +69,6 @@ function log() {
     + '+' + exports.humanize(ms);
 
   if (useColors) {
-    if (null == this.color) this.color = selectColor();
     var c = 'color: ' + this.color;
     args = [args[0], c, ''].concat(Array.prototype.slice.call(args, 1));
 

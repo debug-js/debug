@@ -16,44 +16,30 @@ exports = module.exports = require('./debug');
 exports.log = log;
 exports.save = save;
 exports.load = load;
+exports.useColors = useColors;
 
 /**
  * Colors.
  */
 
-var colors = [6, 2, 3, 4, 5, 1];
-
-/**
- * Previously assigned color.
- */
-
-var prevColor = 0;
+exports.colors = [6, 2, 3, 4, 5, 1];
 
 /**
  * Is stdout a TTY? Colored output is disabled when `true`.
  */
 
-var useColors = tty.isatty(1) || process.env.DEBUG_COLORS;
+function useColors() {
+  return tty.isatty(1) || process.env.DEBUG_COLORS;
+}
 
 /**
  * Map %o to `util.inspect()`, since Node doesn't do that out of the box.
  */
 
 exports.formatters.o = function(v) {
-  var str = util.inspect(v, { colors: useColors }).replace(/\s*\n\s*/g, ' ');
-  return str;
+  return util.inspect(v, { colors: this.useColors })
+    .replace(/\s*\n\s*/g, ' ');
 };
-
-/**
- * Select a color.
- *
- * @return {Number}
- * @api private
- */
-
-function selectColor() {
-  return colors[prevColor++ % colors.length];
-}
 
 /**
  * Invokes `console.log()` with the specified arguments,
@@ -64,11 +50,10 @@ function selectColor() {
 
 function log() {
   var args = arguments;
+  var useColors = this.useColors;
   var name = this.namespace;
 
   if (useColors) {
-    if (null == this.color) this.color = selectColor();
-
     var c = this.color;
     var curr = new Date();
     var ms = curr - (this.prev || curr);
