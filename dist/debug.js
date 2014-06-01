@@ -10,12 +10,13 @@ exports = module.exports = _dereq_('./debug');
 exports.log = log;
 exports.save = save;
 exports.load = load;
+exports.useColors = useColors;
 
 /**
  * Colors.
  */
 
-var colors = [
+exports.colors = [
   'cyan',
   'green',
   'goldenrod', // "yellow" is just too bright on a white background...
@@ -25,12 +26,6 @@ var colors = [
 ];
 
 /**
- * Previously assigned color.
- */
-
-var prevColor = 0;
-
-/**
  * Currently only WebKit-based Web Inspectors and the Firebug
  * extension (*not* the built-in Firefox web inpector) are
  * known to support "%c" CSS customizations.
@@ -38,11 +33,12 @@ var prevColor = 0;
  * TODO: add a `localStorage` variable to explicitly enable/disable colors
  */
 
-var useColors =
+function useColors() {
   // is webkit? http://stackoverflow.com/a/16459606/376773
-  ('WebkitAppearance' in document.documentElement.style) ||
-  // is firebug? http://stackoverflow.com/a/398120/376773
-  (window.console && (console.firebug || (console.exception && console.table)));
+  return ('WebkitAppearance' in document.documentElement.style) ||
+    // is firebug? http://stackoverflow.com/a/398120/376773
+    (window.console && (console.firebug || (console.exception && console.table)));
+}
 
 /**
  * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
@@ -53,17 +49,6 @@ exports.formatters.j = function(v) {
 };
 
 /**
- * Select a color.
- *
- * @return {Number}
- * @api private
- */
-
-function selectColor() {
-  return colors[prevColor++ % colors.length];
-}
-
-/**
  * Invokes `console.log()` when available.
  * No-op when `console.log` is not a "function".
  *
@@ -72,6 +57,7 @@ function selectColor() {
 
 function log() {
   var args = arguments;
+  var useColors = this.useColors;
   var curr = new Date();
   var ms = curr - (this.prev || curr);
   this.prev = curr;
@@ -84,7 +70,6 @@ function log() {
     + '+' + exports.humanize(ms);
 
   if (useColors) {
-    if (null == this.color) this.color = selectColor();
     var c = 'color: ' + this.color;
     args = [args[0], c, ''].concat(Array.prototype.slice.call(args, 1));
 
@@ -92,14 +77,18 @@ function log() {
     // arguments passed either before or after the %c, so we need to
     // figure out the correct index to insert the CSS into
     var index = 0;
+    var lastC = 0;
     args[0].replace(/%[a-z%]/g, function(match) {
       if ('%%' === match) return;
       index++;
-      if (index < 3) return; // skip the first 2 %c's since that's handled already
       if ('%c' === match) {
-        args.splice(index, 0, c);
+        // we only are interested in the *last* %c
+        // (the user may have provided their own)
+        lastC = index;
       }
     });
+
+    args.splice(lastC, 0, c);
   }
 
   // This hackery is required for IE8,
@@ -175,6 +164,23 @@ exports.skips = [];
 exports.formatters = {};
 
 /**
+ * Previously assigned color.
+ */
+
+var prevColor = 0;
+
+/**
+ * Select a color.
+ *
+ * @return {Number}
+ * @api private
+ */
+
+function selectColor() {
+  return exports.colors[prevColor++ % exports.colors.length];
+}
+
+/**
  * Create a debugger with the given `namespace`.
  *
  * @param {String} namespace
@@ -191,10 +197,17 @@ function debug(namespace) {
 
   // define the `enabled` version
   function enabled() {
+    var self = enabled;
+
+    // add the `color` if not set
+    if (null == self.useColors) self.useColors = exports.useColors();
+    if (null == self.color && self.useColors) self.color = selectColor();
+
     var args = Array.prototype.slice.call(arguments);
-    if ('string' === typeof args[0]) {
-      args[0] = exports.coerce(args[0]);
-    } else {
+
+    args[0] = exports.coerce(args[0]);
+
+    if ('string' !== typeof args[0]) {
       // anything else let's inspect with %o
       args = ['%o'].concat(args);
     }
@@ -208,7 +221,7 @@ function debug(namespace) {
       var formatter = exports.formatters[format];
       if ('function' === typeof formatter) {
         var val = args[index];
-        match = formatter.call(enabled, val);
+        match = formatter.call(self, val);
 
         // now we need to remove `args[index]` since it's inlined in the `format`
         args.splice(index, 1);
@@ -217,7 +230,7 @@ function debug(namespace) {
       return match;
     });
 
-    exports.log.apply(enabled, args);
+    exports.log.apply(self, args);
   }
   enabled.enabled = true;
 
