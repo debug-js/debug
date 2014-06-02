@@ -35,6 +35,12 @@ exports.formatters = {};
 var prevColor = 0;
 
 /**
+ * Previous log timestamp.
+ */
+
+var prevTime;
+
+/**
  * Select a color.
  *
  * @return {Number}
@@ -62,7 +68,16 @@ function debug(namespace) {
 
   // define the `enabled` version
   function enabled() {
+
     var self = enabled;
+
+    // set `diff` timestamp
+    var curr = +new Date();
+    var ms = curr - (prevTime || curr);
+    self.diff = ms;
+    self.prev = prevTime;
+    self.curr = curr;
+    prevTime = curr;
 
     // add the `color` if not set
     if (null == self.useColors) self.useColors = exports.useColors();

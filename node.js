@@ -63,14 +63,11 @@ function log() {
 
   if (useColors) {
     var c = this.color;
-    var curr = new Date();
-    var ms = curr - (this.prev || curr);
-    this.prev = curr;
 
     args[0] = '  \u001b[9' + c + 'm' + name + ' '
       + '\u001b[0m'
       + args[0] + '\u001b[3' + c + 'm'
-      + ' +' + exports.humanize(ms) + '\u001b[0m';
+      + ' +' + exports.humanize(this.diff) + '\u001b[0m';
   } else {
     args[0] = new Date().toUTCString()
       + ' ' + name + ' ' + args[0];

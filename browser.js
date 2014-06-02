@@ -57,16 +57,13 @@ exports.formatters.j = function(v) {
 function log() {
   var args = arguments;
   var useColors = this.useColors;
-  var curr = new Date();
-  var ms = curr - (this.prev || curr);
-  this.prev = curr;
 
   args[0] = (useColors ? '%c' : '')
     + this.namespace
     + (useColors ? '%c ' : ' ')
     + args[0]
     + (useColors ? '%c ' : ' ')
-    + '+' + exports.humanize(ms);
+    + '+' + exports.humanize(this.diff);
 
   if (useColors) {
     var c = 'color: ' + this.color;
