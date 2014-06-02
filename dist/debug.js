@@ -58,16 +58,13 @@ exports.formatters.j = function(v) {
 function log() {
   var args = arguments;
   var useColors = this.useColors;
-  var curr = new Date();
-  var ms = curr - (this.prev || curr);
-  this.prev = curr;
 
   args[0] = (useColors ? '%c' : '')
     + this.namespace
     + (useColors ? '%c ' : ' ')
     + args[0]
     + (useColors ? '%c ' : ' ')
-    + '+' + exports.humanize(ms);
+    + '+' + exports.humanize(this.diff);
 
   if (useColors) {
     var c = 'color: ' + this.color;
@@ -170,6 +167,12 @@ exports.formatters = {};
 var prevColor = 0;
 
 /**
+ * Previous log timestamp.
+ */
+
+var prevTime;
+
+/**
  * Select a color.
  *
  * @return {Number}
@@ -197,7 +200,16 @@ function debug(namespace) {
 
   // define the `enabled` version
   function enabled() {
+
     var self = enabled;
+
+    // set `diff` timestamp
+    var curr = +new Date();
+    var ms = curr - (prevTime || curr);
+    self.diff = ms;
+    self.prev = prevTime;
+    self.curr = curr;
+    prevTime = curr;
 
     // add the `color` if not set
     if (null == self.useColors) self.useColors = exports.useColors();
@@ -256,6 +268,7 @@ function enable(namespaces) {
   var len = split.length;
 
   for (var i = 0; i < len; i++) {
+    if (!split[i]) continue; // ignore empty strings
     namespaces = split[i].replace('*', '.*?');
     if (namespaces[0] === '-') {
       exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
