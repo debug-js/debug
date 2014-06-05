@@ -1,4 +1,27 @@
 
+1.0.0 / 2014-06-04
+==================
+
+  * make ms diff be global, not be scope
+  * debug: ignore empty strings in enable()
+  * node: make DEBUG_COLORS able to disable coloring
+  * *: export the `colors` array
+  * npmignore: don't publish the `dist` dir
+  * Makefile: refactor to use browserify
+  * package: add "browserify" as a dev dependency
+  * Readme: add Web Inspector Colors section
+  * node: reset terminal color for the debug content
+  * node: map "%o" to `util.inspect()`
+  * browser: map "%j" to `JSON.stringify()`
+  * debug: add custom "formatters"
+  * debug: use "ms" module for humanizing the diff
+  * Readme: add "bash" syntax highlighting
+  * browser: add Firebug color support
+  * browser: add colors for WebKit browsers
+  * node: apply log to `console`
+  * rewrite: abstract common logic for Node & browsers
+  * add .jshintrc file
+
 0.8.1 / 2014-04-14
 ==================
 

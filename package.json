@@ -1,23 +1,30 @@
 {
-    "name": "debug"
-  , "version": "0.8.1"
-  , "repository": { "type": "git", "url": "git://github.com/visionmedia/debug.git" }
-  , "description": "small debugging utility"
-  , "keywords": ["debug", "log", "debugger"]
-  , "author": "TJ Holowaychuk <tj@vision-media.ca>"
-  , "dependencies": {
-        "ms": "0.6.2"
+  "name": "debug",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/visionmedia/debug.git"
+  },
+  "description": "small debugging utility",
+  "keywords": [
+    "debug",
+    "log",
+    "debugger"
+  ],
+  "author": "TJ Holowaychuk <tj@vision-media.ca>",
+  "dependencies": {
+    "ms": "0.6.2"
+  },
+  "devDependencies": {
+    "browserify": "4.1.6",
+    "mocha": "*"
+  },
+  "main": "./node.js",
+  "browser": "./browser.js",
+  "component": {
+    "scripts": {
+      "debug/index.js": "browser.js",
+      "debug/debug.js": "debug.js"
     }
-  , "devDependencies": {
-        "browserify": "4.1.6"
-      , "mocha": "*"
-    }
-  , "main": "./node.js"
-  , "browser": "./browser.js"
-  , "component": {
-      "scripts": {
-          "debug/index.js": "browser.js"
-        , "debug/debug.js": "debug.js"
-      }
-    }
+  }
 }
