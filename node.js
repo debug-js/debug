@@ -77,7 +77,7 @@ function log() {
 }
 
 /**
- * Save `namespaces
+ * Save `namespaces`.
  *
  * @param {String} namespaces
  * @api private
