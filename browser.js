@@ -103,7 +103,11 @@ function log() {
 
 function save(namespaces) {
   try {
-    localStorage.debug = namespaces;
+    if (null == namespaces) {
+      delete localStorage.debug;
+    } else {
+      localStorage.debug = namespaces;
+    }
   } catch(e) {}
 }
 
