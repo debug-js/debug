@@ -1,4 +1,13 @@
 
+1.0.1 / 2014-06-06
+==================
+
+  * browser: use `removeItem()` to clear localStorage
+  * browser, node: don't set DEBUG if namespaces is undefined (#107, @leedm777)
+  * package: add "contributors" section
+  * node: fix comment typo
+  * README: list authors
+
 1.0.0 / 2014-06-04
 ==================
 
