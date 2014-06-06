@@ -104,7 +104,7 @@ function log() {
 function save(namespaces) {
   try {
     if (null == namespaces) {
-      delete localStorage.debug;
+      localStorage.removeItem('debug');
     } else {
       localStorage.debug = namespaces;
     }
