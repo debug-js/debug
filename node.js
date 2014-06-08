@@ -14,6 +14,7 @@ var util = require('util');
 
 exports = module.exports = require('./debug');
 exports.log = log;
+exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
@@ -50,13 +51,12 @@ exports.formatters.o = function(v) {
 };
 
 /**
- * Invokes `console.log()` with the specified arguments,
- * after adding ANSI color escape codes if enabled.
+ * Adds ANSI color escape codes if enabled.
  *
  * @api public
  */
 
-function log() {
+function formatArgs() {
   var args = arguments;
   var useColors = this.useColors;
   var name = this.namespace;
@@ -72,8 +72,15 @@ function log() {
     args[0] = new Date().toUTCString()
       + ' ' + name + ' ' + args[0];
   }
+  return args;
+}
 
-  console.log.apply(console, args);
+/**
+ * Invokes `console.log()` with the specified arguments.
+ */
+
+function log() {
+  return console.log.apply(console, arguments);
 }
 
 /**

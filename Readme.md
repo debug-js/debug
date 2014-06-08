@@ -96,6 +96,32 @@ setInterval(function(){
 
   ![](https://cloud.githubusercontent.com/assets/71256/3139768/b98c5fd8-e8ef-11e3-862a-f7253b6f47c6.png)
 
+### stderr vs stdout
+
+You can set an alternative logging method per-namespace by overriding the `log` method on a per-namespace or globally:
+
+Example _stderr.js_:
+
+```js
+var debug = require('../');
+var log = debug('app:log');
+
+// by default console.log is used
+log('goes to stdout!');
+
+var error = debug('app:error');
+// set this namespace to log via console.error
+error.log = console.error.bind(console); // don't forget to bind to console!
+error('goes to stderr');
+log('still goes to stdout!');
+
+// set all output to go via console.warn
+// overrides all per-namespace log settings
+debug.log = console.warn.bind(console);
+log('now goes to stderr via console.warn');
+error('still goes to stderr, but via console.warn now');
+```
+
 ## Authors
 
  - TJ Holowaychuk
