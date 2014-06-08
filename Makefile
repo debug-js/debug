@@ -7,7 +7,7 @@ THIS_DIR:=$(shell cd $(dir $(THIS_MAKEFILE_PATH));pwd)
 BIN := $(THIS_DIR)/node_modules/.bin
 
 # applications
-NODE ?= node
+NODE ?= $(shell which node)
 NPM ?= $(NODE) $(shell which npm)
 BROWSERIFY ?= $(NODE) $(BIN)/browserify
 
