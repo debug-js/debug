@@ -75,10 +75,10 @@ function log() {
   if (useColors) {
     var c = this.color;
 
-    args[0] = '  \u001b[9' + c + 'm' + name + ' '
-      + '\u001b[0m'
-      + args[0] + '\u001b[3' + c + 'm'
-      + ' +' + exports.humanize(this.diff) + '\u001b[0m';
+    args[0] = '  \u001b[9' + c + 'm' + name
+      + '\u001b[0m' + '\u001b[3' + c + 'm'
+      + ' +' + exports.humanize(this.diff) + '\u001b[0m'
+      + ' ' + args[0];
   } else {
     args[0] = new Date().toUTCString()
       + ' ' + name + ' ' + args[0];
