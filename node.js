@@ -44,8 +44,19 @@ function useColors() {
  * Map %o to `util.inspect()`, since Node doesn't do that out of the box.
  */
 
+var inspect = (4 === util.inspect.length ?
+  // node <= 0.8.x
+  function (v, colors) {
+    return util.inspect(v, void 0, void 0, colors);
+  } :
+  // node > 0.8.x
+  function (v, colors) {
+    return util.inspect(v, { colors: colors });
+  }
+);
+
 exports.formatters.o = function(v) {
-  return util.inspect(v, { colors: this.useColors })
+  return inspect(v, this.useColors)
     .replace(/\s*\n\s*/g, ' ');
 };
 
