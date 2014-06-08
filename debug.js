@@ -110,7 +110,11 @@ function debug(namespace) {
       return match;
     });
 
-    exports.log.apply(self, args);
+    if ('function' === typeof exports.formatArgs) {
+      args = exports.formatArgs.apply(self, args);
+    }
+    var logFn = exports.log || enabled.log || console.log.bind(console);
+    logFn.apply(self, args);
   }
   enabled.enabled = true;
 
