@@ -17,12 +17,12 @@ exports.useColors = useColors;
  */
 
 exports.colors = [
-  'dodgerblue',
+  'lightseagreen',
   'forestgreen',
   'goldenrod',
-  'crimson',
+  'dodgerblue',
   'darkorchid',
-  'lightseagreen'
+  'crimson'
 ];
 
 /**
