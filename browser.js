@@ -17,12 +17,12 @@ exports.useColors = useColors;
  */
 
 exports.colors = [
-  'cyan',
-  'green',
-  'goldenrod', // "yellow" is just too bright on a white background...
-  'blue',
-  'purple',
-  'red'
+  'dodgerblue',
+  'forestgreen',
+  'goldenrod',
+  'crimson',
+  'darkorchid',
+  'lightseagreen'
 ];
 
 /**
