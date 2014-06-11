@@ -1,4 +1,12 @@
 
+1.0.2 / 2014-06-10
+==================
+
+  * browser: update color palette (#113, @gscottolson)
+  * common: make console logging function configurable (#108, @timoxley)
+  * node: fix %o colors on old node <= 0.8.x
+  * Makefile: find node path using shell/which (#109, @timoxley)
+
 1.0.1 / 2014-06-06
 ==================
 
