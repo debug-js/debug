@@ -119,7 +119,7 @@ log('still goes to stdout!');
 // overrides all per-namespace log settings
 debug.log = console.warn.bind(console);
 log('now goes to stderr via console.warn');
-error('still goes to stderr, but via console.warn now');
+error('still goes to stderr, but via console.error now');
 ```
 
 ## Authors
