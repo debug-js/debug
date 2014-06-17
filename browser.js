@@ -66,7 +66,7 @@ function formatArgs() {
     + (useColors ? '%c ' : ' ')
     + '+' + exports.humanize(this.diff);
 
-  if (!useColors) return args
+  if (!useColors) return args;
 
   var c = 'color: ' + this.color;
   args = [args[0], c, ''].concat(Array.prototype.slice.call(args, 1));
