@@ -11,7 +11,7 @@ exports.coerce = coerce;
 exports.disable = disable;
 exports.enable = enable;
 exports.enabled = enabled;
-exports.humanize = require('ms');
+exports.humanize = require('ms.js');
 
 /**
  * The currently active debug mode names, and names to skip.
