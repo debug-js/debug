@@ -141,7 +141,7 @@ function enable(namespaces) {
 
   for (var i = 0; i < len; i++) {
     if (!split[i]) continue; // ignore empty strings
-    namespaces = split[i].replace('*', '.*?');
+    namespaces = split[i].replace(/\*/g, '.*?');
     if (namespaces[0] === '-') {
       exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
     } else {
