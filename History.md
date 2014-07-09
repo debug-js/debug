@@ -1,4 +1,10 @@
 
+1.0.3 / 2014-07-09
+==================
+
+ * Add support for multiple wildcards in namespaces (#122, @seegno)
+ * browser: fix lint
+
 1.0.2 / 2014-06-10
 ==================
 
