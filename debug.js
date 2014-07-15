@@ -113,7 +113,7 @@ function debug(namespace) {
     if ('function' === typeof exports.formatArgs) {
       args = exports.formatArgs.apply(self, args);
     }
-    var logFn = exports.log || enabled.log || console.log.bind(console);
+    var logFn = enabled.log || exports.log || console.log.bind(console);
     logFn.apply(self, args);
   }
   enabled.enabled = true;
