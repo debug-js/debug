@@ -91,7 +91,10 @@ setInterval(function(){
 #### Web Inspector Colors
 
   Colors are also enabled on "Web Inspectors" that understand the `%c` formatting
-  option. These are WebKit web inspectors, Firefox since version 31 and the Firebug plugin for Firefox.
+  option. These are WebKit web inspectors, Firefox ([since version
+  31](https://hacks.mozilla.org/2014/05/editable-box-model-multiple-selection-sublime-text-keys-much-more-firefox-developer-tools-episode-31/))
+  and the Firebug plugin for Firefox (any version).
+
   Colored output looks something like:
 
   ![](https://cloud.githubusercontent.com/assets/71256/3139768/b98c5fd8-e8ef-11e3-862a-f7253b6f47c6.png)
