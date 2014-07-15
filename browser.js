@@ -26,9 +26,9 @@ exports.colors = [
 ];
 
 /**
- * Currently only WebKit-based Web Inspectors and the Firebug
- * extension (*not* the built-in Firefox web inpector) are
- * known to support "%c" CSS customizations.
+ * Currently only WebKit-based Web Inspectors, Firefox >= v31,
+ * and the Firebug extension (any Firefox version) are known
+ * to support "%c" CSS customizations.
  *
  * TODO: add a `localStorage` variable to explicitly enable/disable colors
  */
@@ -37,7 +37,10 @@ function useColors() {
   // is webkit? http://stackoverflow.com/a/16459606/376773
   return ('WebkitAppearance' in document.documentElement.style) ||
     // is firebug? http://stackoverflow.com/a/398120/376773
-    (window.console && (console.firebug || (console.exception && console.table)));
+    (window.console && (console.firebug || (console.exception && console.table))) ||
+    // is firefox >= v31?
+    // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
+    (navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31);
 }
 
 /**
