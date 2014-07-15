@@ -67,7 +67,7 @@ function formatArgs() {
     + (useColors ? '%c ' : ' ')
     + '+' + exports.humanize(this.diff);
 
-  if (!useColors) return args
+  if (!useColors) return args;
 
   var c = 'color: ' + this.color;
   args = [args[0], c, ''].concat(Array.prototype.slice.call(args, 1));
@@ -288,7 +288,7 @@ function enable(namespaces) {
 
   for (var i = 0; i < len; i++) {
     if (!split[i]) continue; // ignore empty strings
-    namespaces = split[i].replace('*', '.*?');
+    namespaces = split[i].replace(/\*/g, '.*?');
     if (namespaces[0] === '-') {
       exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
     } else {
