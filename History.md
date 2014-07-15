@@ -1,4 +1,16 @@
 
+1.0.4 / 2014-07-15
+==================
+
+ * dist: recompile
+ * example: remove `console.info()` log usage
+ * example: add "Content-Type" UTF-8 header to browser example
+ * browser: place %c marker after the space character
+ * browser: reset the "content" color via `color: inherit`
+ * browser: add colors support for Firefox >= v31
+ * debug: prefer an instance `log()` function over the global one (#119)
+ * Readme: update documentation about styled console logs for FF v31 (#116, @wryk)
+
 1.0.3 / 2014-07-09
 ==================
 
