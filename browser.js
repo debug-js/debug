@@ -72,7 +72,7 @@ function formatArgs() {
   if (!useColors) return args;
 
   var c = 'color: ' + this.color;
-  args = [args[0], c, ''].concat(Array.prototype.slice.call(args, 1));
+  args = [args[0], c, 'color: inherit'].concat(Array.prototype.slice.call(args, 1));
 
   // the final "%c" is somewhat tricky, because there could be other
   // arguments passed either before or after the %c, so we need to
