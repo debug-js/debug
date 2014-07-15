@@ -11,10 +11,6 @@
       var a = debug('worker:a');
       var b = debug('worker:b');
 
-      // set all output to go via console.info
-      // instead of console.log
-      debug.log = console.info.bind(console);
-
       setInterval(function(){
         a('doing some work');
       }, 1000);
