@@ -57,7 +57,7 @@ setInterval(function(){
 
   ![](http://f.cl.ly/items/2i3h1d3t121M2Z1A3Q0N/Screenshot.png)
 
-  When stdout is not a TTY, `Date#toUTCString()` is used, making it more useful for logging the debug information as shown below:
+  When stdout is not a TTY, `Date#toString()` is used, making it more useful for logging the debug information as shown below:
 
   ![](http://f.cl.ly/items/112H3i0e0o0P0a2Q2r11/Screenshot.png)
 
