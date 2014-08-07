@@ -75,7 +75,8 @@ function formatArgs() {
   if (useColors) {
     var c = this.color;
 
-    args[0] = '  ' + new Date().toJSON()                    //time
+    args[0] = 
+        ' \x1B[35m' + new Date().toJSON()                   //time
       + ' \u001b[9' + c + 'm' + name                        //name
       + ' \u001b[3' + c + 'm+' + exports.humanize(this.diff)//diff
       + ' \u001b[0m' + args[0];                             //args
