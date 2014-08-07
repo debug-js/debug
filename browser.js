@@ -62,7 +62,8 @@ function formatArgs() {
   var args = arguments;
   var useColors = this.useColors;
 
-  args[0] = (useColors ? '%c' : '')
+  args[0] = new Date().toJSON() + ' '
+    + (useColors ? '%c' : '')
     + this.namespace
     + (useColors ? ' %c' : ' ')
     + args[0]
