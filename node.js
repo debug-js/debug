@@ -87,11 +87,11 @@ function formatArgs() {
 }
 
 /**
- * Invokes `console.log()` with the specified arguments.
+ * Invokes `console.error()` with the specified arguments.
  */
 
 function log() {
-  return console.log.apply(console, arguments);
+  return console.error.apply(console, arguments);
 }
 
 /**
