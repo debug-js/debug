@@ -1,4 +1,10 @@
 
+2.0.0 / 2014-09-01
+==================
+
+ * package: update "browserify" to v5.11.0
+ * node: use stderr rather than stdout for logging (#29, @stephenmathieson)
+
 1.0.4 / 2014-07-15
 ==================
 
