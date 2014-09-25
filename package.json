@@ -15,6 +15,7 @@
   "contributors": [
     "Nathan Rajlich <nathan@tootallnate.net> (http://n8.io)"
   ],
+  "license": "MIT",
   "dependencies": {
     "ms": "0.6.2"
   },
