@@ -18,7 +18,7 @@ exports.useColors = useColors;
 
 var storage;
 
-if (chrome.storage.local !== undefined)
+if (chrome && chrome.storage)
   storage = chrome.storage.local;
 else
   storage = window.localStorage;
