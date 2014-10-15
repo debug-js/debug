@@ -1,4 +1,11 @@
 
+2.1.0 / 2014-10-15
+==================
+
+ * node: implement `DEBUG_FD` env variable support
+ * package: update "browserify" to v6.1.0
+ * package: add "license" field to package.json (#135, @panuhorsmalahti)
+
 2.0.0 / 2014-09-01
 ==================
 
