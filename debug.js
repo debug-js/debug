@@ -87,10 +87,12 @@ function debug(namespace) {
 
     args[0] = exports.coerce(args[0]);
 
-    if ('string' !== typeof args[0]) {
-      // anything else let's inspect with %o
-      args = ['%o'].concat(args);
+    var fmtString = [];
+    for (var i in args) {
+      if ('string' !== typeof args[i]) fmtString.push('%o');
+      else fmtString.push('%s');
     }
+    args = [fmtString.join(' ')].concat(args);
 
     // apply any `formatters` transformations
     var index = 0;
