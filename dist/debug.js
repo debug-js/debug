@@ -1,4 +1,150 @@
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.debug=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+/**
+ * in-memory cache
+ */
+
+var enabled = [];
+var disabled = [];
+
+/**
+ * Checks if the specified `ns` is enabled.
+ *
+ * @param {String} ns  Wildcards are not supported here
+ * @returns {Boolean}
+ */
+
+exports.enabled = function (ns) {
+  if (find(disabled, ns, true) > -1) return false;
+  if (find(enabled, ns, true) > -1) return true;
+  return false;
+};
+
+/**
+ * Destroys the lists of enabled/disabled. (primarilly for testing purposes)
+ */
+
+exports.clear = function () {
+  disabled.length = enabled.length = 0; // truncates w/o destroying
+};
+
+/**
+ * Outputs the list of enable/disabled in a single string.
+ *
+ * @returns {String}
+ */
+
+exports.stringify = function () {
+  var e = enabled.map(function (item) {
+    return item.string;
+  });
+
+  var d = disabled.map(function (item) {
+    return '-' + item.string;
+  });
+
+  return e.concat(d).join(',');
+};
+
+/**
+ * Parses a list and enables/disables accordingly.
+ *
+ * This list can either be passed from the user directly, or from .stringify()
+ *
+ * @param {String} str
+ */
+
+exports.parse = function (str) {
+  if (!str) return;
+  str.split(/[\s,]+/).forEach(function (ns) {
+    if (!ns) return;
+    else if ('-' == ns[0]) exports.disable(ns.slice(1));
+    else                   exports.enable(ns);
+  });
+};
+
+/**
+ * Enables the specified `ns`.
+ *
+ * @param {String} ns
+ */
+
+exports.enable = function (ns) {
+  prune(disabled, ns);
+  if (find(enabled, ns) > -1) return;
+
+  enabled.push({
+    string: ns,
+    regex: regex(ns)
+  });
+};
+
+/**
+ * Disables the specified `ns`.
+ *
+ * @param {String} ns
+ */
+
+exports.disable = function (ns) {
+  prune(enabled, ns);
+  if (find(disabled, ns) > -1) return;
+
+  disabled.push({
+    string: ns,
+    regex: regex(ns)
+  });
+};
+
+/**
+ * Searches for the given `ns` in the `arr`.
+ *
+ * By default, it only matches on the raw string, but if `regex` is set, it will
+ * match via the `RegExp` instead.
+ *
+ * Returns the index of the match, or -1 if not found.
+ *
+ * @param {Array} arr
+ * @param {String} ns
+ * @param {Boolean} [regex]
+ * @returns {Number}
+ */
+
+function find(arr, ns, regex) {
+  var ret = -1;
+  arr.some(function (item, x) {
+    if (regex ? item.regex.test(ns) : ns === item.string) {
+      ret = x;
+      return true;
+    }
+  });
+  return ret;
+}
+
+/**
+ * Wraps around `find(...)`, but also removes the found item.
+ *
+ * @param {Array} arr
+ * @param {String} ns
+ * @param {Boolean} [regex]
+ */
+
+function prune(arr, ns, regex) {
+  var x = find(arr, ns, regex);
+  if (x > -1) arr.splice(x, 1);
+}
+
+/**
+ * Converts a raw `ns` into a `RegExp`.
+ *
+ * @param {String} ns
+ * @returns {RegExp}
+ */
+
+function regex(ns) {
+  var pattern = ns.replace(/\*/g, '.*?');
+  return new RegExp('^' + pattern + '$');
+}
+
+},{}],2:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -9,17 +155,13 @@
 
 exports = module.exports = debug;
 exports.coerce = coerce;
-exports.disable = disable;
-exports.enable = enable;
-exports.enabled = enabled;
 exports.humanize = require('ms');
+exports.dynamic = dynamic;
 
-/**
- * The currently active debug mode names, and names to skip.
- */
-
-exports.names = [];
-exports.skips = [];
+var able = require('./able');
+exports.enabled = able.enabled;
+exports.enable = able.enable;
+exports.disable = able.disable;
 
 /**
  * Map of special "%n" handling functions, for the debug "format" argument.
@@ -28,6 +170,12 @@ exports.skips = [];
  */
 
 exports.formatters = {};
+
+/**
+ * Flag for dynamic status.
+ */
+
+var isDynamic = false;
 
 /**
  * Previously assigned color.
@@ -118,70 +266,20 @@ function debug(namespace) {
     logFn.apply(self, args);
   }
   enabled.enabled = true;
+  enabled.namespace = namespace;
 
-  var fn = exports.enabled(namespace) ? enabled : disabled;
-
-  fn.namespace = namespace;
-
-  return fn;
-}
-
-/**
- * Enables a debug mode by namespaces. This can include modes
- * separated by a colon and wildcards.
- *
- * @param {String} namespaces
- * @api public
- */
-
-function enable(namespaces) {
-  exports.save(namespaces);
-
-  var split = (namespaces || '').split(/[\s,]+/);
-  var len = split.length;
-
-  for (var i = 0; i < len; i++) {
-    if (!split[i]) continue; // ignore empty strings
-    namespaces = split[i].replace(/\*/g, '.*?');
-    if (namespaces[0] === '-') {
-      exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
-    } else {
-      exports.names.push(new RegExp('^' + namespaces + '$'));
-    }
+  function dynamic() {
+    if (!exports.enabled(namespace)) return disabled();
+    return enabled.apply(enabled, arguments);
   }
-}
+  dynamic.namespace = namespace;
 
-/**
- * Disable debug output.
- *
- * @api public
- */
-
-function disable() {
-  exports.enable('');
-}
-
-/**
- * Returns true if the given mode name is enabled, false otherwise.
- *
- * @param {String} name
- * @return {Boolean}
- * @api public
- */
-
-function enabled(name) {
-  var i, len;
-  for (i = 0, len = exports.skips.length; i < len; i++) {
-    if (exports.skips[i].test(name)) {
-      return false;
-    }
+  function fn() {
+    if (isDynamic) return dynamic;
+    return exports.enabled(namespace) ? enabled : disabled;
   }
-  for (i = 0, len = exports.names.length; i < len; i++) {
-    if (exports.names[i].test(name)) {
-      return true;
-    }
-  }
-  return false;
+
+  return fn();
 }
 
 /**
@@ -197,7 +295,18 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":2}],2:[function(require,module,exports){
+/**
+ * Get/set the dynamic flag
+ *
+ * @param {Boolean} [flag]
+ * @returns {Boolean}
+ */
+
+function dynamic(flag) {
+  isDynamic = !!flag;
+}
+
+},{"./able":1,"ms":3}],3:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -310,7 +419,7 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 
 /**
  * This is the web browser implementation of `debug()`.
@@ -324,6 +433,34 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
+
+/**
+ * Enabled/disabled lists management.
+ */
+
+var able = require('./able');
+
+/**
+ * Wrapped enable that saves after list modified.
+ *
+ * @param {String} ns
+ */
+
+exports.enable = function (ns) {
+  able.enable(ns);
+  save();
+};
+
+/**
+ * Wrapped disable that saves after list modified.
+ *
+ * @param {String} ns
+ */
+
+exports.disable = function (ns) {
+  able.disable(ns);
+  save();
+};
 
 /**
  * Colors.
@@ -428,8 +565,10 @@ function log() {
  * @api private
  */
 
-function save(namespaces) {
+function save() {
   try {
+    var namespaces = able.stringify();
+
     if (null == namespaces) {
       localStorage.removeItem('debug');
     } else {
@@ -457,7 +596,7 @@ function load() {
  * Enable namespaces listed in `localStorage.debug` initially.
  */
 
-exports.enable(load());
+able.parse(load());
 
-},{"./debug":1}]},{},[3])(3)
+},{"./able":1,"./debug":2}]},{},[4])(4)
 });

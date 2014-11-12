@@ -20,6 +20,12 @@ exports.load = load;
 exports.useColors = useColors;
 
 /**
+ * Enabled/disabled lists management.
+ */
+
+var able = require('./able');
+
+/**
  * Colors.
  */
 
@@ -113,7 +119,7 @@ function log() {
  */
 
 function save() {
-  var namespaces = exports.stringify();
+  var namespaces = able.stringify();
 
   if (null == namespaces) {
     // If you set a process.env field to null or undefined, it gets cast to the
@@ -215,4 +221,4 @@ if (process.env.DEBUG_DYN) {
  * Enable namespaces listed in `process.env.DEBUG` initially.
  */
 
-exports.parse(load());
+able.parse(load());

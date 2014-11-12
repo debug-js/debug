@@ -13,6 +13,34 @@ exports.load = load;
 exports.useColors = useColors;
 
 /**
+ * Enabled/disabled lists management.
+ */
+
+var able = require('./able');
+
+/**
+ * Wrapped enable that saves after list modified.
+ *
+ * @param {String} ns
+ */
+
+exports.enable = function (ns) {
+  able.enable(ns);
+  save();
+};
+
+/**
+ * Wrapped disable that saves after list modified.
+ *
+ * @param {String} ns
+ */
+
+exports.disable = function (ns) {
+  able.disable(ns);
+  save();
+};
+
+/**
  * Colors.
  */
 
@@ -117,7 +145,7 @@ function log() {
 
 function save() {
   try {
-    var namespaces = exports.stringify();
+    var namespaces = able.stringify();
 
     if (null == namespaces) {
       localStorage.removeItem('debug');
@@ -146,4 +174,4 @@ function load() {
  * Enable namespaces listed in `localStorage.debug` initially.
  */
 
-exports.parse(load());
+able.parse(load());

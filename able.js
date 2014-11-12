@@ -53,6 +53,7 @@ exports.stringify = function () {
  */
 
 exports.parse = function (str) {
+  if (!str) return;
   str.split(/[\s,]+/).forEach(function (ns) {
     if (!ns) return;
     else if ('-' == ns[0]) exports.disable(ns.slice(1));

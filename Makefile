@@ -22,7 +22,7 @@ clean:
 dist:
 	@mkdir -p $@
 
-dist/debug.js: node_modules browser.js debug.js dist
+dist/debug.js: node_modules browser.js debug.js able.js | dist
 	@$(BROWSERIFY) \
 		--standalone debug \
 		. > $@
