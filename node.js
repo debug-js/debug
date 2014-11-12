@@ -221,4 +221,4 @@ if (process.env.DEBUG_DYN) {
  * Enable namespaces listed in `process.env.DEBUG` initially.
  */
 
-able.parse(load());
+exports.enable(load());

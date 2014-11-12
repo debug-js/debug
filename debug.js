@@ -1,5 +1,11 @@
 
 /**
+ * Enabled/disabled status management
+ */
+
+var able = require('./able');
+
+/**
  * This is the common logic for both the Node.js and web browser
  * implementations of `debug()`.
  *
@@ -10,11 +16,10 @@ exports = module.exports = debug;
 exports.coerce = coerce;
 exports.humanize = require('ms');
 exports.dynamic = dynamic;
-
-var able = require('./able');
+exports.enable = enable;
+exports.disable = disable;
 exports.enabled = able.enabled;
-exports.enable = able.enable;
-exports.disable = able.disable;
+
 
 /**
  * Map of special "%n" handling functions, for the debug "format" argument.
@@ -157,4 +162,34 @@ function coerce(val) {
 
 function dynamic(flag) {
   isDynamic = !!flag;
+}
+
+/**
+ * Enables a string of namespaces (disables those with hyphen prefixes)
+ *
+ * @param {String} namespaces
+ */
+
+function enable(namespaces) {
+  able.parse(namespaces).forEach(function (ns) {
+    if ('-' == ns[0]) able.disable(ns.slice(1));
+    else              able.enable(ns);
+  });
+
+  exports.save();
+}
+
+/**
+ * Disables a string of namespaces (ignores hyphen prefixs if found)
+ *
+ * @param {String} namespaces
+ */
+
+function disable(namespaces) {
+  able.parse(namespaces).forEach(function (ns) {
+    if ('-' == ns[0]) ns = ns.slice(1);
+    able.disable(ns);
+  });
+
+  exports.save();
 }

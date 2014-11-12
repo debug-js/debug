@@ -53,11 +53,9 @@ exports.stringify = function () {
  */
 
 exports.parse = function (str) {
-  if (!str) return;
-  str.split(/[\s,]+/).forEach(function (ns) {
-    if (!ns) return;
-    else if ('-' == ns[0]) exports.disable(ns.slice(1));
-    else                   exports.enable(ns);
+  if (!str) return [];
+  return (str || '').trim().split(/[\s,]+/).filter(function (item) {
+    return !!item;
   });
 };
 
