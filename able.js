@@ -68,6 +68,9 @@ exports.parse = function (str) {
  */
 
 exports.enable = function (ns) {
+  // special case, empty the current list and allow it to append
+  if ('*' == ns) exports.clear();
+
   prune(disabled, ns);
   if (find(enabled, ns) > -1) return;
 
@@ -84,6 +87,9 @@ exports.enable = function (ns) {
  */
 
 exports.disable = function (ns) {
+  // special case, empty the current list (since default is to allow nothing)
+  if ('*' == ns) return exports.clear();
+
   prune(enabled, ns);
   if (find(disabled, ns) > -1) return;
 
