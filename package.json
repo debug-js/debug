@@ -28,7 +28,8 @@
   "component": {
     "scripts": {
       "debug/index.js": "browser.js",
-      "debug/debug.js": "debug.js"
+      "debug/debug.js": "debug.js",
+      "debug/able.js": "able.js"
     }
   }
 }

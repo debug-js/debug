@@ -115,8 +115,10 @@ function log() {
  * @api private
  */
 
-function save(namespaces) {
+function save() {
   try {
+    var namespaces = exports.stringify();
+
     if (null == namespaces) {
       localStorage.removeItem('debug');
     } else {
@@ -144,4 +146,4 @@ function load() {
  * Enable namespaces listed in `localStorage.debug` initially.
  */
 
-exports.enable(load());
+exports.parse(load());

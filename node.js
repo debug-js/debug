@@ -109,11 +109,12 @@ function log() {
 /**
  * Save `namespaces`.
  *
- * @param {String} namespaces
  * @api private
  */
 
-function save(namespaces) {
+function save() {
+  var namespaces = exports.stringify();
+
   if (null == namespaces) {
     // If you set a process.env field to null or undefined, it gets cast to the
     // string 'null' or 'undefined'. Just delete instead.
@@ -203,7 +204,15 @@ function createWritableStdioStream (fd) {
 }
 
 /**
+ * Enable dynamic mode when `process.env.DEBUG_DYN` is set to `1`
+ */
+
+if (process.env.DEBUG_DYN) {
+  exports.dynamic(process.env.DEBUG_DYN == 1);
+}
+
+/**
  * Enable namespaces listed in `process.env.DEBUG` initially.
  */
 
-exports.enable(load());
+exports.parse(load());
