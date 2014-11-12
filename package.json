@@ -20,8 +20,10 @@
     "ms": "0.6.2"
   },
   "devDependencies": {
+    "body-parser": "^1.9.2",
     "browserify": "6.1.0",
-    "mocha": "*"
+    "express": "^4.10.2",
+    "mocha": "^2.0.1"
   },
   "main": "./node.js",
   "browser": "./browser.js",
