@@ -10,6 +10,7 @@ BIN := $(THIS_DIR)/node_modules/.bin
 NODE ?= $(shell which node)
 NPM ?= $(NODE) $(shell which npm)
 BROWSERIFY ?= $(NODE) $(BIN)/browserify
+MOCHA ?= $(NODE) $(BIN)/_mocha
 
 all: dist/debug.js
 
@@ -30,4 +31,7 @@ node_modules: package.json
 	@NODE_ENV= $(NPM) install
 	@touch node_modules
 
-.PHONY: all install clean
+test:
+	@$(MOCHA) -R dot
+
+.PHONY: all install clean test
