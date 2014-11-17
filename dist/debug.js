@@ -54,11 +54,9 @@ exports.stringify = function () {
  */
 
 exports.parse = function (str) {
-  if (!str) return;
-  str.split(/[\s,]+/).forEach(function (ns) {
-    if (!ns) return;
-    else if ('-' == ns[0]) exports.disable(ns.slice(1));
-    else                   exports.enable(ns);
+  if (!str) return [];
+  return (str || '').trim().split(/[\s,]+/).filter(function (item) {
+    return !!item;
   });
 };
 
@@ -69,6 +67,9 @@ exports.parse = function (str) {
  */
 
 exports.enable = function (ns) {
+  // special case, empty the current list and allow it to append
+  if ('*' == ns) exports.clear();
+
   prune(disabled, ns);
   if (find(enabled, ns) > -1) return;
 
@@ -85,6 +86,9 @@ exports.enable = function (ns) {
  */
 
 exports.disable = function (ns) {
+  // special case, empty the current list (since default is to allow nothing)
+  if ('*' == ns) return exports.clear();
+
   prune(enabled, ns);
   if (find(disabled, ns) > -1) return;
 
@@ -147,6 +151,12 @@ function regex(ns) {
 },{}],2:[function(require,module,exports){
 
 /**
+ * Enabled/disabled status management
+ */
+
+var able = require('./able');
+
+/**
  * This is the common logic for both the Node.js and web browser
  * implementations of `debug()`.
  *
@@ -157,11 +167,10 @@ exports = module.exports = debug;
 exports.coerce = coerce;
 exports.humanize = require('ms');
 exports.dynamic = dynamic;
-
-var able = require('./able');
+exports.enable = enable;
+exports.disable = disable;
 exports.enabled = able.enabled;
-exports.enable = able.enable;
-exports.disable = able.disable;
+
 
 /**
  * Map of special "%n" handling functions, for the debug "format" argument.
@@ -303,7 +312,38 @@ function coerce(val) {
  */
 
 function dynamic(flag) {
+  if (1 == arguments.length) return isDynamic;
   isDynamic = !!flag;
+}
+
+/**
+ * Enables a string of namespaces (disables those with hyphen prefixes)
+ *
+ * @param {String} namespaces
+ */
+
+function enable(namespaces) {
+  able.parse(namespaces).forEach(function (ns) {
+    if ('-' == ns[0]) able.disable(ns.slice(1));
+    else              able.enable(ns);
+  });
+
+  exports.save();
+}
+
+/**
+ * Disables a string of namespaces (ignores hyphen prefixs if found)
+ *
+ * @param {String} namespaces
+ */
+
+function disable(namespaces) {
+  able.parse(namespaces).forEach(function (ns) {
+    if ('-' == ns[0]) ns = ns.slice(1);
+    able.disable(ns);
+  });
+
+  exports.save();
 }
 
 },{"./able":1,"ms":3}],3:[function(require,module,exports){
@@ -433,34 +473,6 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
-
-/**
- * Enabled/disabled lists management.
- */
-
-var able = require('./able');
-
-/**
- * Wrapped enable that saves after list modified.
- *
- * @param {String} ns
- */
-
-exports.enable = function (ns) {
-  able.enable(ns);
-  save();
-};
-
-/**
- * Wrapped disable that saves after list modified.
- *
- * @param {String} ns
- */
-
-exports.disable = function (ns) {
-  able.disable(ns);
-  save();
-};
 
 /**
  * Colors.
@@ -596,7 +608,7 @@ function load() {
  * Enable namespaces listed in `localStorage.debug` initially.
  */
 
-able.parse(load());
+exports.enable(load());
 
-},{"./able":1,"./debug":2}]},{},[4])(4)
+},{"./debug":2}]},{},[4])(4)
 });

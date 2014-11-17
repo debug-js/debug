@@ -161,6 +161,7 @@ function coerce(val) {
  */
 
 function dynamic(flag) {
+  if (0 == arguments.length) return isDynamic;
   isDynamic = !!flag;
 }
 
