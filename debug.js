@@ -121,6 +121,8 @@ function debug(namespace) {
   var fn = exports.enabled(namespace) ? enabled : disabled;
 
   fn.namespace = namespace;
+  fn.enable = enable;
+  fn.disable = disable;
 
   return fn;
 }
