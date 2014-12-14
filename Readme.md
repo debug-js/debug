@@ -51,6 +51,25 @@ setInterval(function(){
 
   ![debug worker](http://f.cl.ly/items/1X413v1a3M0d3C2c1E0i/Screenshot.png)
 
+Now, you can use a .debugrc file with json structure like:
+```json
+{
+  "namespaces": "http,worker"
+}
+```
+```json
+{
+	"namespaces" : [ "http" , "worker"]
+}
+```
+
+or INI format
+
+```ini
+; INI format
+namespaces = worker,cluster
+```
+
 ## Millisecond diff
 
   When actively developing an application it can be useful to see when the time spent between one `debug()` call and the next. Suppose for example you invoke `debug()` before requesting a resource, and after as well, the "+NNNms" will show you how much time was spent between calls.

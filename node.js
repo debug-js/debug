@@ -5,6 +5,7 @@
 
 var tty = require('tty');
 var util = require('util');
+var rc = require('rc');
 
 /**
  * This is the Node.js implementation of `debug()`.
@@ -131,7 +132,18 @@ function save(namespaces) {
  */
 
 function load() {
-  return process.env.DEBUG;
+  var conf = {namespaces:null};
+  rc('debug',conf);
+  if( typeof conf.config === 'undefined' ){
+    return process.env.DEBUG;
+  }
+  if(typeof conf.namespaces === 'string' ||  conf.namespaces === null ){
+    return conf.namespaces;
+  }
+  if(typeof conf.namespaces.join === 'function' ){
+    return conf.namespaces.join();
+  }
+  return null;
 }
 
 /**

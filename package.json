@@ -17,7 +17,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "ms": "0.6.2"
+    "ms": "0.6.2",
+    "rc": "^0.5.4"
   },
   "devDependencies": {
     "browserify": "6.1.0",
