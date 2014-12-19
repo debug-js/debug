@@ -1,9 +1,9 @@
 {
-  "name": "debug",
-  "version": "2.1.0",
+  "name": "qwilr-debug-fork",
+  "version": "2.2.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/visionmedia/debug.git"
+    "url": "https://github.com/dylan-baskind/debug.git"
   },
   "description": "small debugging utility",
   "keywords": [
