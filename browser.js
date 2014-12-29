@@ -103,8 +103,8 @@ function formatArgs() {
 function log() {
   // This hackery is required for IE8,
   // where the `console.log` function doesn't have 'apply'
-  return 'object' == typeof console
-    && 'function' == typeof console.log
+  return console
+    && console.log
     && Function.prototype.apply.call(console.log, console, arguments);
 }
 
