@@ -47,13 +47,11 @@ setInterval(function(){
 
  The __DEBUG__ environment variable is then used to enable these based on space or comma-delimited names. Here are some examples:
 
-### OSX and Linux usage
-
   ![debug http and worker](http://f.cl.ly/items/18471z1H402O24072r1J/Screenshot.png)
 
   ![debug worker](http://f.cl.ly/items/1X413v1a3M0d3C2c1E0i/Screenshot.png)
 
-### Windows usage
+#### Windows note
 
  On Windows the environment variable is set using the `set` command. 
  
@@ -61,7 +59,7 @@ setInterval(function(){
  set DEBUG=*,-not_this
  ```
 
-The run the program to be debugged as ususal.
+Then, run the program to be debugged as ususal.
 
 ## Millisecond diff
 
