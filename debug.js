@@ -133,10 +133,15 @@ function debug(namespace) {
  * @api public
  */
 
-function enable(namespaces) {
+function enable(namespaces, spaceDelimiting) {
   exports.save(namespaces);
 
-  var split = (namespaces || '').split(/[\s,]+/);
+  // Option for space delimiting.
+  if (spaceDelimiting === true)
+    var split = (namespaces || '').split(/[\s,]+/);
+  else
+    var split = (namespaces || '').split(/[,]+/);
+    
   var len = split.length;
 
   for (var i = 0; i < len; i++) {
