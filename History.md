@@ -1,4 +1,13 @@
 
+2.1.1 / 2014-12-29
+==================
+
+  * browser: use `typeof` to check for `console` existence
+  * browser: check for `console.log` truthiness (fix IE 8/9)
+  * browser: add support for Chrome apps
+  * Readme: added Windows usage remarks
+  * Add `bower.json` to properly support bower install
+
 2.1.0 / 2014-10-15
 ==================
 
