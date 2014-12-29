@@ -105,6 +105,7 @@ function log() {
   // where the `console.log` function doesn't have 'apply'
   return 'object' == typeof console
     && 'function' == typeof console.log
+    || 'object' == typeof console.log // IE 8-9 reports console methods as objects when using the typeof operator.
     && Function.prototype.apply.call(console.log, console, arguments);
 }
 
