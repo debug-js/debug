@@ -21,7 +21,7 @@ var storage;
 if (typeof chrome !== 'undefined' && typeof chrome.storage !== 'undefined')
   storage = chrome.storage.local;
 else
-  storage = window.localStorage;
+  storage = localstorage();
 
 /**
  * Colors.
@@ -156,3 +156,20 @@ function load() {
  */
 
 exports.enable(load());
+
+/**
+ * Localstorage attempts to return the localstorage.
+ *
+ * This is necessary because safari throws
+ * when a user disables cookies/localstorage
+ * and you attempt to access it.
+ *
+ * @return {LocalStorage}
+ * @api private
+ */
+
+function localstorage(){
+  try {
+    return window.localStorage;
+  } catch (e) {}
+}
