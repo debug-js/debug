@@ -44,9 +44,14 @@ exports.colors = [
  * TODO: add a `localStorage` variable to explicitly enable/disable colors
  */
 
+var isBrowser = typeof window != "undefined";
+var isWebWorker = !isBrowser && typeof DedicatedWorkerGlobalScope != "undefined";
+var isSharedWorker = !isBrowser && typeof SharedWorkerGlobalScope != "undefined";
+var isServiceWorker = !isBrowser && typeof ServiceWorkerGlobalScope != "undefined";
+
 function useColors() {
   // is webkit? http://stackoverflow.com/a/16459606/376773
-  return typeof ServiceWorkerGlobalScope == "undefined" && (
+  return isBrowser && (
     ('WebkitAppearance' in document.documentElement.style) ||
     // is firebug? http://stackoverflow.com/a/398120/376773
     (window.console && (console.firebug || (console.exception && console.table))) ||
