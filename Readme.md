@@ -83,7 +83,19 @@ Then, run the program to be debugged as ususal.
 
 ## Browser support
 
-  Debug works in the browser as well, currently persisted by `localStorage`. For example if you have `worker:a` and `worker:b` as shown below, and wish to debug both type `debug.enable('worker:*')` in the console and refresh the page, this will remain until you disable with `debug.disable()`.
+  Debug works in the browser as well, currently persisted by `localStorage`. Consider the situation shown below where you have `worker:a` and `worker:b`, and wish to debug both. Somewhere in the code on your page, include:
+
+```js
+window.myDebug = require("debug");
+```
+
+  ("debug" is a global object in the browser so we give this object a different name.) When your page is open in the browser, type the following in the console:
+
+```js
+myDebug.enable("worker:*")
+```
+
+  Refresh the page. Debug output will continue to be sent to the console until it is disabled by typing `myDebug.disable()` in the console.
 
 ```js
 a = debug('worker:a');
