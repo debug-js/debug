@@ -1,5 +1,11 @@
 
 /**
+ * Enabled/disabled status management
+ */
+
+var able = require('./able');
+
+/**
  * This is the common logic for both the Node.js and web browser
  * implementations of `debug()`.
  *
@@ -8,17 +14,12 @@
 
 exports = module.exports = debug;
 exports.coerce = coerce;
-exports.disable = disable;
-exports.enable = enable;
-exports.enabled = enabled;
 exports.humanize = require('ms');
+exports.dynamic = dynamic;
+exports.enable = enable;
+exports.disable = disable;
+exports.enabled = able.enabled;
 
-/**
- * The currently active debug mode names, and names to skip.
- */
-
-exports.names = [];
-exports.skips = [];
 
 /**
  * Map of special "%n" handling functions, for the debug "format" argument.
@@ -27,6 +28,12 @@ exports.skips = [];
  */
 
 exports.formatters = {};
+
+/**
+ * Flag for dynamic status.
+ */
+
+var isDynamic = false;
 
 /**
  * Previously assigned color.
@@ -117,70 +124,20 @@ function debug(namespace) {
     logFn.apply(self, args);
   }
   enabled.enabled = true;
+  enabled.namespace = namespace;
 
-  var fn = exports.enabled(namespace) ? enabled : disabled;
-
-  fn.namespace = namespace;
-
-  return fn;
-}
-
-/**
- * Enables a debug mode by namespaces. This can include modes
- * separated by a colon and wildcards.
- *
- * @param {String} namespaces
- * @api public
- */
-
-function enable(namespaces) {
-  exports.save(namespaces);
-
-  var split = (namespaces || '').split(/[\s,]+/);
-  var len = split.length;
-
-  for (var i = 0; i < len; i++) {
-    if (!split[i]) continue; // ignore empty strings
-    namespaces = split[i].replace(/\*/g, '.*?');
-    if (namespaces[0] === '-') {
-      exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
-    } else {
-      exports.names.push(new RegExp('^' + namespaces + '$'));
-    }
+  function dynamic() {
+    if (!exports.enabled(namespace)) return disabled();
+    return enabled.apply(enabled, arguments);
   }
-}
+  dynamic.namespace = namespace;
 
-/**
- * Disable debug output.
- *
- * @api public
- */
-
-function disable() {
-  exports.enable('');
-}
-
-/**
- * Returns true if the given mode name is enabled, false otherwise.
- *
- * @param {String} name
- * @return {Boolean}
- * @api public
- */
-
-function enabled(name) {
-  var i, len;
-  for (i = 0, len = exports.skips.length; i < len; i++) {
-    if (exports.skips[i].test(name)) {
-      return false;
-    }
+  function fn() {
+    if (isDynamic) return dynamic;
+    return exports.enabled(namespace) ? enabled : disabled;
   }
-  for (i = 0, len = exports.names.length; i < len; i++) {
-    if (exports.names[i].test(name)) {
-      return true;
-    }
-  }
-  return false;
+
+  return fn();
 }
 
 /**
@@ -194,4 +151,46 @@ function enabled(name) {
 function coerce(val) {
   if (val instanceof Error) return val.stack || val.message;
   return val;
+}
+
+/**
+ * Get/set the dynamic flag
+ *
+ * @param {Boolean} [flag]
+ * @returns {Boolean}
+ */
+
+function dynamic(flag) {
+  if (0 == arguments.length) return isDynamic;
+  isDynamic = !!flag;
+}
+
+/**
+ * Enables a string of namespaces (disables those with hyphen prefixes)
+ *
+ * @param {String} namespaces
+ */
+
+function enable(namespaces) {
+  able.parse(namespaces).forEach(function (ns) {
+    if ('-' == ns[0]) able.disable(ns.slice(1));
+    else              able.enable(ns);
+  });
+
+  exports.save();
+}
+
+/**
+ * Disables a string of namespaces (ignores hyphen prefixs if found)
+ *
+ * @param {String} namespaces
+ */
+
+function disable(namespaces) {
+  able.parse(namespaces).forEach(function (ns) {
+    if ('-' == ns[0]) ns = ns.slice(1);
+    able.disable(ns);
+  });
+
+  exports.save();
 }

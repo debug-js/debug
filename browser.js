@@ -126,8 +126,10 @@ function log() {
  * @api private
  */
 
-function save(namespaces) {
+function save() {
   try {
+    var namespaces = able.stringify();
+
     if (null == namespaces) {
       storage.removeItem('debug');
     } else {
