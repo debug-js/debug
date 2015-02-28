@@ -20,7 +20,7 @@
     "ms": "0.7.0"
   },
   "devDependencies": {
-    "browserify": "6.1.0",
+    "browserify": "9.0.3",
     "mocha": "*"
   },
   "main": "./node.js",
