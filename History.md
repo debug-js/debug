@@ -1,4 +1,15 @@
 
+2.1.2 / 2015-03-01
+==================
+
+  * dist: recompile
+  * update "ms" to v0.7.0
+  * package: update "browserify" to v9.0.3
+  * component: fix "ms.js" repo location
+  * changed bower package name
+  * updated documentation about using debug in a browser
+  * fix: security error on safari (#167, #168, @yields)
+
 2.1.1 / 2014-12-29
 ==================
 
