@@ -11,33 +11,33 @@
 2.1.0 / 2014-10-15
 ==================
 
- * node: implement `DEBUG_FD` env variable support
- * package: update "browserify" to v6.1.0
- * package: add "license" field to package.json (#135, @panuhorsmalahti)
+  * node: implement `DEBUG_FD` env variable support
+  * package: update "browserify" to v6.1.0
+  * package: add "license" field to package.json (#135, @panuhorsmalahti)
 
 2.0.0 / 2014-09-01
 ==================
 
- * package: update "browserify" to v5.11.0
- * node: use stderr rather than stdout for logging (#29, @stephenmathieson)
+  * package: update "browserify" to v5.11.0
+  * node: use stderr rather than stdout for logging (#29, @stephenmathieson)
 
 1.0.4 / 2014-07-15
 ==================
 
- * dist: recompile
- * example: remove `console.info()` log usage
- * example: add "Content-Type" UTF-8 header to browser example
- * browser: place %c marker after the space character
- * browser: reset the "content" color via `color: inherit`
- * browser: add colors support for Firefox >= v31
- * debug: prefer an instance `log()` function over the global one (#119)
- * Readme: update documentation about styled console logs for FF v31 (#116, @wryk)
+  * dist: recompile
+  * example: remove `console.info()` log usage
+  * example: add "Content-Type" UTF-8 header to browser example
+  * browser: place %c marker after the space character
+  * browser: reset the "content" color via `color: inherit`
+  * browser: add colors support for Firefox >= v31
+  * debug: prefer an instance `log()` function over the global one (#119)
+  * Readme: update documentation about styled console logs for FF v31 (#116, @wryk)
 
 1.0.3 / 2014-07-09
 ==================
 
- * Add support for multiple wildcards in namespaces (#122, @seegno)
- * browser: fix lint
+  * Add support for multiple wildcards in namespaces (#122, @seegno)
+  * browser: fix lint
 
 1.0.2 / 2014-06-10
 ==================
