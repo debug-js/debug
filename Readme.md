@@ -59,7 +59,7 @@ setInterval(function(){
  set DEBUG=*,-not_this
  ```
 
-Then, run the program to be debugged as ususal.
+Then, run the program to be debugged as usual.
 
 ## Millisecond diff
 
