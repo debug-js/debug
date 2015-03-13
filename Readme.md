@@ -125,26 +125,26 @@ setInterval(function(){
 
 You can set an alternative logging method per-namespace by overriding the `log` method on a per-namespace or globally:
 
-Example _stderr.js_:
+Example _stdout.js_:
 
 ```js
-var debug = require('../');
-var log = debug('app:log');
-
-// by default console.log is used
-log('goes to stdout!');
-
+var debug = require('debug');
 var error = debug('app:error');
-// set this namespace to log via console.error
-error.log = console.error.bind(console); // don't forget to bind to console!
-error('goes to stderr');
-log('still goes to stdout!');
 
-// set all output to go via console.warn
+// by default stderr is used
+error('goes to stderr!');
+
+var log = debug('app:log');
+// set this namespace to log via console.log
+log.log = console.log.bind(console); // don't forget to bind to console!
+log('goes to stdout');
+error('still goes to stderr!');
+
+// set all output to go via console.info
 // overrides all per-namespace log settings
-debug.log = console.warn.bind(console);
-log('now goes to stderr via console.warn');
-error('still goes to stderr, but via console.warn now');
+debug.log = console.info.bind(console);
+error('now goes to stdout via console.info');
+log('still goes to stdout, but via console.info now');
 ```
 
 ## Authors
