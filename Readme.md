@@ -53,8 +53,8 @@ setInterval(function(){
 
 #### Windows note
 
- On Windows the environment variable is set using the `set` command. 
- 
+ On Windows the environment variable is set using the `set` command.
+
  ```cmd
  set DEBUG=*,-not_this
  ```
@@ -145,6 +145,16 @@ error('still goes to stderr!');
 debug.log = console.info.bind(console);
 error('now goes to stdout via console.info');
 log('still goes to stdout, but via console.info now');
+```
+
+### Save debug output to a file
+
+You can save all debug statements to a file by piping them.
+
+Example:
+
+```bash
+$ DEBUG_FD=3 node your-app.js 3> whatever.log
 ```
 
 ## Authors
