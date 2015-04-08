@@ -384,7 +384,11 @@ function useColors() {
  */
 
 exports.formatters.j = function(v) {
-  return JSON.stringify(v);
+  try {
+    return JSON.stringify(v);
+  }catch( err){
+    return '[UnexpectedJSONParseError]: ' + err.message;
+  }
 };
 
 
