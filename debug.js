@@ -62,7 +62,8 @@ function selectColor() {
 function debug(namespace) {
 
   // define the `disabled` version
-  function disabled() {
+  function disabled(data) {
+    return data;  // Return first parameter.  debug('sam i am') === 'sam i am')
   }
   disabled.enabled = false;
 
@@ -117,7 +118,7 @@ function debug(namespace) {
     var logFn = enabled.log || exports.log || console.log.bind(console);
     logFn.apply(self, args);
     
-    return ret; // debug('sam i am') === 'sam i am')
+    return ret; // Return first parameter.  debug('sam i am') === 'sam i am')
   }
   enabled.enabled = true;
 
