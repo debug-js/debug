@@ -14,6 +14,6 @@
     "debug.js"
   ],
   "dependencies": {
-    "rauchg/ms.js": "0.7.0"
+    "rauchg/ms.js": "0.7.1"
   }
 }
