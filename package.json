@@ -17,7 +17,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "ms": "0.7.0"
+    "ms": "0.7.1"
   },
   "devDependencies": {
     "browserify": "9.0.3",
