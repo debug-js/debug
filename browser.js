@@ -123,6 +123,8 @@ function save(namespaces) {
   try {
     if (null == namespaces) {
       exports.storage.removeItem('debug');
+      exports.skips = [];
+      exports.names = [];
     } else {
       exports.storage.debug = namespaces;
     }
