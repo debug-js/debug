@@ -17,6 +17,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "browser-supports-log-styles": "^1.1.1",
     "ms": "0.7.1"
   },
   "devDependencies": {
