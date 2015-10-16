@@ -114,10 +114,14 @@ setInterval(function(){
   Colored output looks something like:
 
   ![](https://cloud.githubusercontent.com/assets/71256/3139768/b98c5fd8-e8ef-11e3-862a-f7253b6f47c6.png)
+  
+## Output streams
 
+  
 ### stderr vs stdout
-
-You can set an alternative logging method per-namespace by overriding the `log` method on a per-namespace or globally:
+  By default `debug` will log to stderr, however this can be changed by setting the environment variable `DEBUG_FD` to `1` for stdout and `2` for stderr (the default value).
+  
+You can also set an alternative logging method per-namespace by overriding the `log` method on a per-namespace or globally:
 
 Example _stdout.js_:
 
@@ -151,6 +155,12 @@ Example:
 $ DEBUG_FD=3 node your-app.js 3> whatever.log
 ```
 
+### Terminal colors
+
+  By default colors will only be used in a TTY. However this can be overridden by setting the environment variable `USE_COLORS` to `1`. 
+  
+  Note: Certain IDEs (such as WebStorm) don't support colors on stderr. In these cases you must set `USE_COLORS` to `1` and additionally change `DEBUG_FD` to `1`.
+  
 ## Authors
 
  - TJ Holowaychuk
