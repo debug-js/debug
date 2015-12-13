@@ -38,6 +38,11 @@ exports.colors = [
  */
 
 function useColors() {
+  // check we aren't in a web worker
+  if (typeof window === 'undefined') {
+    return false;
+  }
+  
   // is webkit? http://stackoverflow.com/a/16459606/376773
   return ('WebkitAppearance' in document.documentElement.style) ||
     // is firebug? http://stackoverflow.com/a/398120/376773
