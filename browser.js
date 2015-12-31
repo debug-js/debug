@@ -37,8 +37,15 @@ exports.colors = [
  * TODO: add a `localStorage` variable to explicitly enable/disable colors
  */
 
-function useColors() {
-  // is webkit? http://stackoverflow.com/a/16459606/376773
+function useColors(force) {
+  if (typeof force != 'undefined') {
+    this.forceColors = !!force;
+  }
+  
+  if ('forceColors' in this)
+    return this.forceColors;
+    
+    // is webkit? http://stackoverflow.com/a/16459606/376773
   return ('WebkitAppearance' in document.documentElement.style) ||
     // is firebug? http://stackoverflow.com/a/398120/376773
     (window.console && (console.firebug || (console.exception && console.table))) ||
