@@ -110,6 +110,10 @@ function debug(namespace) {
         });
 
         for (var i = 1; i < args.length; i++) {
+            if (typeof args[i] !== 'object') {
+                args[0] += ' ' + args[i];
+                continue;
+            }
             args[0] += ' ' + exports.formatters.o.call(self, args[i]);
         }
         args = args.slice(0, 1);
