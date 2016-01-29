@@ -141,7 +141,7 @@ function objectFormatter(obj, spaceString, nSpaces) {
 };
 
 exports.formatters.o = function(v) {
-    return objectFormatter.apply(this, [v, '', 2]);
+    return objectFormatter.apply(this, [v, '   ', 2]);
 };
 
 /**

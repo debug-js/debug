@@ -109,14 +109,24 @@ function debug(namespace) {
             return match;
         });
 
+        var stillNeedToParse = args[0].match(/%([a-z%])/g),
+            paramsToKeep = stillNeedToParse != void 0 ? stillNeedToParse.length : 0;
+        if (stillNeedToParse != void 0) {
+            stillNeedToParse.forEach(function(d) {
+                if (d[1] === '%') {
+                    paramsToKeep--;
+                }
+            });
+        }
+
         for (var i = 1; i < args.length; i++) {
             if (typeof args[i] !== 'object') {
                 args[0] += ' ' + args[i];
                 continue;
             }
-            args[0] += ' ' + exports.formatters.o.call(self, args[i]);
+            args[0] += '\n  ' + exports.formatters.o.call(self, args[i]);
         }
-        args = args.slice(0, 1);
+        args = args.slice(0, args.length - paramsToKeep);
 
         if ('function' === typeof exports.formatArgs) {
             args = exports.formatArgs.apply(self, args);
