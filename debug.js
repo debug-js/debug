@@ -110,23 +110,25 @@ function debug(namespace) {
         });
 
         var stillNeedToParse = args[0].match(/%([a-z%])/g),
-            paramsToKeep = stillNeedToParse != void 0 ? stillNeedToParse.length : 0;
+            argsToKeep = 0;
         if (stillNeedToParse != void 0) {
             stillNeedToParse.forEach(function(d) {
-                if (d[1] === '%') {
-                    paramsToKeep--;
+                if (d[1] !== '%') {
+                    argsToKeep++;
                 }
             });
         }
 
-        for (var i = 1; i < args.length; i++) {
+        // console.log(argsToKeep, args.slice(1));
+        for (var i = 1 + argsToKeep; i < args.length; i++) {
             if (typeof args[i] !== 'object') {
                 args[0] += ' ' + args[i];
                 continue;
             }
             args[0] += '\n  ' + exports.formatters.o.call(self, args[i]);
         }
-        args = args.slice(0, args.length - paramsToKeep);
+        // console.log(argsToKeep, args.slice(1));
+        args = args.slice(0, 1 + argsToKeep);
 
         if ('function' === typeof exports.formatArgs) {
             args = exports.formatArgs.apply(self, args);

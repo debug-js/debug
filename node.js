@@ -109,7 +109,25 @@ function objectFormatter(obj, spaceString, nSpaces) {
     var type = " [" + customTypeOf(obj) + "]";
     var out = "";
     if (obj != void 0 && obj.toISOString != void 0) {
-        out += obj.toISOString() + type;
+        out += this.stylize(obj.toISOString() + type, 'cyan');
+        return out;
+    } else if (typeof obj === 'function') {
+        out += this.stylize('[Function: ' + (obj.name === '' ? 'anonymous' : obj.name) + ']', 'cyan');
+        return out;
+    } else if (typeof obj === 'string') { //string, number...
+        out += this.stylize(obj + type, "yellow");
+        return out;
+    } else if (typeof obj === 'number') { //string, number...
+        out += this.stylize(obj + type, "blue");
+        return out;
+    } else if (obj === null) { //string, number...
+        out += this.stylize(obj + type, "red");
+        return out;
+    } else if (typeof obj === 'boolean') { //string, number...
+        out += this.stylize(obj + type, "magenta");
+        return out;
+    } else if (obj === void 0) { //string, number...
+        out += this.stylize(obj + type, "red");
         return out;
     } else if (!(typeof obj === 'object')) { //string, number...
         out += obj + type;
@@ -126,15 +144,17 @@ function objectFormatter(obj, spaceString, nSpaces) {
         if (type == "number")
             kString = this.stylize(k, "blue");
         else if (type == "array")
-            kString = this.stylize(k, "underline");
+            kString = this.stylize(k, "magenta.underline");
         else if (type == "object")
-            kString = this.stylize(k, "bold");
+            kString = this.stylize(k, "black.bold");
         else if (type == "string")
             kString = this.stylize(k, "yellow");
         else if (type == "ISOStringDate" || type == "momentJSDate" || type == "JSDate")
             kString = this.stylize(k, "cyan");
         else if (type == "void0" || type == "null")
             kString = this.stylize(k, "red");
+        // else if (type == 'function')
+        //     kString = this.stylize(k, 'cyan')
         out += currentSpaces + kString + " : " + objectFormatter.apply(this, [obj[k], spaceString, nSpaces]);
     }
     return out;
