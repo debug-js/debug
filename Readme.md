@@ -58,9 +58,9 @@ setInterval(function(){
  ```cmd
  set DEBUG=*,-not_this
  ```
- 
+
  Note that PowerShell using different syntax to set environment variables.
- 
+
  ```cmd
  $env:DEBUG = "DEBUG=*,-not_this"
   ```
@@ -80,6 +80,17 @@ Then, run the program to be debugged as usual.
 ## Conventions
 
  If you're using this in one or more of your libraries, you _should_ use the name of your library so that developers may toggle debugging as desired without guessing names. If you have more than one debuggers you _should_ prefix them with your library name and use ":" to separate features. For example "bodyParser" from Connect would then be "connect:bodyParser".
+
+### Child Debugger
+In order to make this simpler, you may create child debuggers of any debugger.
+
+For example:
+```javascript
+var debugConnect = require('debug')('connect');
+var debugBodyParser = debugConnect.child('bodyParser')
+
+// debugBodyParser will use 'connect:bodyParser' as its namespace
+```
 
 ## Wildcards
 

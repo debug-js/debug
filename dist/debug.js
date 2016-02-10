@@ -123,6 +123,12 @@ function debug(namespace) {
 
   fn.namespace = namespace;
 
+  function createChild(childNamespace) {
+    return debug.debug(this.namespace + ':' + childNamespace);
+  }
+
+  fn.child = createChild;
+
   return fn;
 }
 
