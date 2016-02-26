@@ -13,6 +13,7 @@ var util = require('util');
  */
 
 exports = module.exports = require('./debug');
+exports.inspect = inspect;
 exports.log = log;
 exports.formatArgs = formatArgs;
 exports.save = save;
@@ -53,25 +54,54 @@ function useColors() {
   }
 }
 
-/**
- * Map %o to `util.inspect()`, since Node doesn't do that out of the box.
- */
-
-var inspect = (4 === util.inspect.length ?
+// Compatibility wrapper for util.inspect
+var utilInspect = (4 === util.inspect.length ?
   // node <= 0.8.x
-  function (v, colors) {
-    return util.inspect(v, void 0, void 0, colors);
+  function (v, options) {
+    return util.inspect(v, options.showHidden, options.depth, options.colors);
   } :
   // node > 0.8.x
-  function (v, colors) {
-    return util.inspect(v, { colors: colors });
-  }
+  util.inspect
 );
 
-exports.formatters.o = function(v) {
-  return inspect(v, this.useColors)
-    .replace(/\s*\n\s*/g, ' ');
-};
+/**
+ * Inspects an object when debugging is enabled, producing single-line output
+ * and default colorization matching debug.
+ *
+ * @param {Object} object Object to inspect.
+ * @param {Object} options Options passed to util.inspect.
+ * @return {String} Inspection of argument object if enabled, otherwise an
+ * empty string.
+ * @api public
+ */
+
+function inspect(object, options) {
+  if (this && this.enabled === false) {
+    return '';
+  }
+
+  var optionsWithColors = options;
+  if (!optionsWithColors || typeof optionsWithColors.colors === 'undefined') {
+    // Note:  Careful of inspect being called before debug
+    var useColors =
+      this && typeof this.useColors !== 'undefined' ? this.useColors :
+      exports.useColors;
+    optionsWithColors = {
+      colors: typeof useColors === 'function' ? useColors() : useColors
+    };
+    for (var prop in options) {
+      optionsWithColors[prop] = options[prop];
+    }
+  }
+
+  return utilInspect(object, optionsWithColors).replace(/\s*\n\s*/g, ' ');
+}
+
+/**
+ * Map %o to `this.inspect()`, since Node doesn't provide %o out of the box.
+ */
+
+exports.formatters.o = function(v) { return this.inspect(v); };
 
 /**
  * Adds ANSI color escape codes if enabled.

@@ -147,6 +147,34 @@ error('now goes to stdout via console.info');
 log('still goes to stdout, but via console.info now');
 ```
 
+### Inspecting objects
+
+Objects can be included in the debug output using the `%o` formatting directive, which displays the object in the inspector on browsers and uses `util.inspect` on Node.  Objects which require special formatting can be output using `.inspect` on the debug instance.  It accepts the same options as `util.inspect` and can be overridden for each namespace:
+
+Example _inspect.js_:
+
+```js
+var debug = require('debug');
+
+var error = debug('app:error');
+// inspect hidden properties of a single object
+error('stdin', error.inspect(new Error('Oh snap'), {showHidden: true}));
+
+var shallow = debug('app:shallow');
+// default depth 0 for all formatted objects in this namespace
+var debugInspect = shallow.inspect;
+shallow.inspect = function(object, options) {
+  return debugInspect.call(this, object, Object.assign({depth: 0}, options));
+};
+shallow('console properties: %o', console);
+```
+
+Some advantages of using `debug.inspect` over `util.inspect` are:
+
+* It avoids unnecessary formatting work when debugging is disabled for the namespace.
+* It shares the same colorization default as the `debug`-formatted output.
+* It becomes a no-op on browsers to avoid interfering with the inspector.
+
 ### Save debug output to a file
 
 You can save all debug statements to a file by piping them.
