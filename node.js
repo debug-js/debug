@@ -145,7 +145,13 @@ function objectFormatter(obj, spaceString, nSpaces) {
     if (nSpaces > 1)
         out += type;
     var kString;
+    if (obj && typeof obj.toJSON === 'function') {
+        obj = obj.toJSON();
+    }
     for (var k in obj) {
+        if (!obj.hasOwnProperty(k)) {
+            continue;
+        }
         out += "\n";
         type = customTypeOf(obj[k]);
         kString = k;
