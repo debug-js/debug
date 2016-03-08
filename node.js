@@ -97,6 +97,7 @@ var customTypeOf = function(inp) {
         return typeof inp;
     }
 };
+var seenObjects = [];
 
 function objectFormatter(obj, spaceString, nSpaces) {
     if (!nSpaces)
@@ -133,6 +134,13 @@ function objectFormatter(obj, spaceString, nSpaces) {
         out += obj + type;
         return out;
     }
+    if (typeof obj === 'object') {
+
+        if (seenObjects.indexOf(obj) !== -1) {
+            return out;
+        }
+        seenObjects.push(obj);
+    }
     nSpaces++;
     if (nSpaces > 1)
         out += type;
@@ -161,6 +169,7 @@ function objectFormatter(obj, spaceString, nSpaces) {
 };
 
 exports.formatters.o = function(v) {
+    seenObjects = [];
     return objectFormatter.apply(this, [v, '   ', 2]);
 };
 
