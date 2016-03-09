@@ -10,7 +10,7 @@ $ npm install debug
 
 ## Usage
 
- With `debug` you simply invoke the exported function to generate your debug function, passing it a name which will determine if a noop function is returned, or a decorated `console.error`, so all of the `console` format string goodies you're used to work fine. A unique color is selected per-function for visibility.
+ With `debug` you simply invoke the exported function to generate your debug function, passing it a name which will determine if a noop function is returned, or a decorated `console.error`, so all of the `console` [format string goodies](https://developer.chrome.com/devtools/docs/console-api#consolelogobject-object) you're used to work fine. A unique color is selected per-function for visibility.
 
 Example _app.js_:
 
