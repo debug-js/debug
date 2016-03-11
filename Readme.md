@@ -62,7 +62,7 @@ setInterval(function(){
  Note that PowerShell using different syntax to set environment variables.
  
  ```cmd
- $env:DEBUG = "DEBUG=*,-not_this"
+ $env:DEBUG = "*,-not_this"
   ```
 
 Then, run the program to be debugged as usual.
