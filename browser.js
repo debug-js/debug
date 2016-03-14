@@ -6,6 +6,7 @@
  */
 
 exports = module.exports = require('./debug');
+exports.inspect = inspect;
 exports.log = log;
 exports.formatArgs = formatArgs;
 exports.save = save;
@@ -45,6 +46,14 @@ function useColors() {
     // is firefox >= v31?
     // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
     (navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31);
+}
+
+/**
+ * Compatibility inspect function which returns its argument to allow
+ * unconditional debug.inspect(foo) usage without interfering with inspector.
+ */
+function inspect(o) {
+  return o;
 }
 
 /**

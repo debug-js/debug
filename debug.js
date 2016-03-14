@@ -120,6 +120,7 @@ function debug(namespace) {
 
   var fn = exports.enabled(namespace) ? enabled : disabled;
 
+  fn.inspect = exports.inspect;
   fn.namespace = namespace;
 
   return fn;
