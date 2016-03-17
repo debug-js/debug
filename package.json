@@ -17,9 +17,12 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "is-electron-renderer": "^2.0.0",
     "ms": "0.7.1"
   },
   "devDependencies": {
     "mocha": "*"
   },
+  "main": "./index.js",
+  "browser": "./browser.js"
 }
