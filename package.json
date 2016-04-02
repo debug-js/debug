@@ -17,6 +17,8 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "colors": "^1.1.2",
+    "moment": "^2.8.3",
     "ms": "0.7.1"
   },
   "devDependencies": {

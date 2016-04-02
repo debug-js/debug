@@ -1,4 +1,3 @@
-
 /**
  * This is the common logic for both the Node.js and web browser
  * implementations of `debug()`.
@@ -48,7 +47,7 @@ var prevTime;
  */
 
 function selectColor() {
-  return exports.colors[prevColor++ % exports.colors.length];
+    return exports.colors[prevColor++ % exports.colors.length];
 }
 
 /**
@@ -61,68 +60,89 @@ function selectColor() {
 
 function debug(namespace) {
 
-  // define the `disabled` version
-  function disabled() {
-  }
-  disabled.enabled = false;
+    // define the `disabled` version
+    function disabled() {}
+    disabled.enabled = false;
 
-  // define the `enabled` version
-  function enabled() {
+    // define the `enabled` version
+    function enabled() {
 
-    var self = enabled;
+        var self = enabled;
 
-    // set `diff` timestamp
-    var curr = +new Date();
-    var ms = curr - (prevTime || curr);
-    self.diff = ms;
-    self.prev = prevTime;
-    self.curr = curr;
-    prevTime = curr;
+        // set `diff` timestamp
+        var curr = +new Date();
+        var ms = curr - (prevTime || curr);
+        self.diff = ms;
+        self.prev = prevTime;
+        self.curr = curr;
+        prevTime = curr;
 
-    // add the `color` if not set
-    if (null == self.useColors) self.useColors = exports.useColors();
-    if (null == self.color && self.useColors) self.color = selectColor();
+        // add the `color` if not set
+        if (null == self.useColors) self.useColors = exports.useColors();
+        if (null == self.color && self.useColors) self.color = selectColor();
+        if (null == self.stylize) self.stylize = exports.stylize;
 
-    var args = Array.prototype.slice.call(arguments);
+        var args = Array.prototype.slice.call(arguments);
 
-    args[0] = exports.coerce(args[0]);
+        args[0] = exports.coerce(args[0]);
 
-    if ('string' !== typeof args[0]) {
-      // anything else let's inspect with %o
-      args = ['%o'].concat(args);
+        if ('string' !== typeof args[0]) {
+            // anything else let's inspect with %o
+            args = ['%o'].concat(args);
+        }
+
+        // apply any `formatters` transformations
+        var index = 0;
+        args[0] = args[0].replace(/%([a-z%])/g, function(match, format) {
+            // if we encounter an escaped % then don't increase the array index
+            if (match === '%') return match;
+            index++;
+            var formatter = exports.formatters[format];
+            if ('function' === typeof formatter) {
+                var val = args[index];
+                match = formatter.call(self, val);
+
+                // now we need to remove `args[index]` since it's inlined in the `format`
+                args.splice(index, 1);
+                index--;
+            }
+            return match;
+        });
+
+        var stillNeedToParse = args[0].match(/%([a-z%])/g),
+            argsToKeep = 0;
+        if (stillNeedToParse != void 0) {
+            stillNeedToParse.forEach(function(d) {
+                if (d[1] !== '%') {
+                    argsToKeep++;
+                }
+            });
+        }
+
+        // console.log(argsToKeep, args.slice(1));
+        for (var i = 1 + argsToKeep; i < args.length; i++) {
+            if (typeof args[i] !== 'object') {
+                args[0] += ' ' + args[i];
+                continue;
+            }
+            args[0] += '\n  ' + exports.formatters.o.call(self, args[i]);
+        }
+        // console.log(argsToKeep, args.slice(1));
+        args = args.slice(0, 1 + argsToKeep);
+
+        if ('function' === typeof exports.formatArgs) {
+            args = exports.formatArgs.apply(self, args);
+        }
+        var logFn = enabled.log || exports.log || console.log.bind(console);
+        logFn.apply(self, args);
     }
+    enabled.enabled = true;
 
-    // apply any `formatters` transformations
-    var index = 0;
-    args[0] = args[0].replace(/%([a-z%])/g, function(match, format) {
-      // if we encounter an escaped % then don't increase the array index
-      if (match === '%%') return match;
-      index++;
-      var formatter = exports.formatters[format];
-      if ('function' === typeof formatter) {
-        var val = args[index];
-        match = formatter.call(self, val);
+    var fn = exports.enabled(namespace) ? enabled : disabled;
 
-        // now we need to remove `args[index]` since it's inlined in the `format`
-        args.splice(index, 1);
-        index--;
-      }
-      return match;
-    });
+    fn.namespace = namespace;
 
-    if ('function' === typeof exports.formatArgs) {
-      args = exports.formatArgs.apply(self, args);
-    }
-    var logFn = enabled.log || exports.log || console.log.bind(console);
-    logFn.apply(self, args);
-  }
-  enabled.enabled = true;
-
-  var fn = exports.enabled(namespace) ? enabled : disabled;
-
-  fn.namespace = namespace;
-
-  return fn;
+    return fn;
 }
 
 /**
@@ -134,20 +154,20 @@ function debug(namespace) {
  */
 
 function enable(namespaces) {
-  exports.save(namespaces);
+    exports.save(namespaces);
 
-  var split = (namespaces || '').split(/[\s,]+/);
-  var len = split.length;
+    var split = (namespaces || '').split(/[\s,]+/);
+    var len = split.length;
 
-  for (var i = 0; i < len; i++) {
-    if (!split[i]) continue; // ignore empty strings
-    namespaces = split[i].replace(/\*/g, '.*?');
-    if (namespaces[0] === '-') {
-      exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
-    } else {
-      exports.names.push(new RegExp('^' + namespaces + '$'));
+    for (var i = 0; i < len; i++) {
+        if (!split[i]) continue; // ignore empty strings
+        namespaces = split[i].replace(/\*/g, '.*?');
+        if (namespaces[0] === '-') {
+            exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
+        } else {
+            exports.names.push(new RegExp('^' + namespaces + '$'));
+        }
     }
-  }
 }
 
 /**
@@ -157,7 +177,7 @@ function enable(namespaces) {
  */
 
 function disable() {
-  exports.enable('');
+    exports.enable('');
 }
 
 /**
@@ -169,18 +189,18 @@ function disable() {
  */
 
 function enabled(name) {
-  var i, len;
-  for (i = 0, len = exports.skips.length; i < len; i++) {
-    if (exports.skips[i].test(name)) {
-      return false;
+    var i, len;
+    for (i = 0, len = exports.skips.length; i < len; i++) {
+        if (exports.skips[i].test(name)) {
+            return false;
+        }
     }
-  }
-  for (i = 0, len = exports.names.length; i < len; i++) {
-    if (exports.names[i].test(name)) {
-      return true;
+    for (i = 0, len = exports.names.length; i < len; i++) {
+        if (exports.names[i].test(name)) {
+            return true;
+        }
     }
-  }
-  return false;
+    return false;
 }
 
 /**
@@ -192,6 +212,6 @@ function enabled(name) {
  */
 
 function coerce(val) {
-  if (val instanceof Error) return val.stack || val.message;
-  return val;
+    if (val instanceof Error) return val.stack || val.message;
+    return val;
 }
