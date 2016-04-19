@@ -18,6 +18,8 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
+exports.isRenderer = require('is-electron-renderer');
+var browser = require('./browser');
 
 /**
  * Colors.
@@ -80,6 +82,9 @@ exports.formatters.o = function(v) {
  */
 
 function formatArgs() {
+  if (exports.isRenderer) {
+    return browser.formatArgs.apply(this, arguments);
+  }
   var args = arguments;
   var useColors = this.useColors;
   var name = this.namespace;
@@ -103,6 +108,9 @@ function formatArgs() {
  */
 
 function log() {
+  if (exports.isRenderer) {
+    return console.log.apply(console, arguments);
+  }
   return stream.write(util.format.apply(this, arguments) + '\n');
 }
 
