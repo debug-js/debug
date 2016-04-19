@@ -82,9 +82,6 @@ exports.formatters.o = function(v) {
  */
 
 function formatArgs() {
-  if (exports.isRenderer) {
-    return browser.formatArgs.apply(this, arguments);
-  }
   var args = arguments;
   var useColors = this.useColors;
   var name = this.namespace;
