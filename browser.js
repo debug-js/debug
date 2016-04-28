@@ -6,6 +6,7 @@
  */
 
 exports = module.exports = require('./debug');
+exports.is_browser = true;
 exports.log = log;
 exports.formatArgs = formatArgs;
 exports.save = save;
