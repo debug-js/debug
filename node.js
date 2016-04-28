@@ -1,3 +1,12 @@
+// babel explicitly requires ('debug/node')
+// via hadron-compile-cache even in the renderer.
+// So just check here as well so formatting
+// is nice and consistent between console and devtools.
+var isRenderer = require('is-electron-renderer');
+if (isRenderer) {
+  module.exports = require('./browser.js');
+  return;
+}
 
 /**
  * Module dependencies.

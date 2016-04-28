@@ -22,7 +22,5 @@
   },
   "devDependencies": {
     "mocha": "*"
-  },
-  "main": "./index.js",
-  "browser": "./browser.js"
+  }
 }
