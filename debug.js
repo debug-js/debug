@@ -81,6 +81,7 @@ function debug(namespace) {
 
     // add the `color` if not set
     if (null == self.useColors) self.useColors = exports.useColors();
+    if (null == self.disableColorDecorations) self.disableColorDecorations = exports.disableColorDecorations();
     if (null == self.color && self.useColors) self.color = selectColor();
 
     var args = Array.prototype.slice.call(arguments);

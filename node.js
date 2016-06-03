@@ -18,6 +18,7 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
+exports.disableColorDecorations = disableColorDecorations;
 
 /**
  * Colors.
@@ -53,6 +54,18 @@ function useColors() {
   }
 }
 
+function disableColorDecorations() {
+  var debugColorDecor = (process.env.DEBUG_DISABLE_COLORDECOR || '').trim().toLowerCase();
+  if (0 === debugColorDecor.length) {
+    return false
+  } else {
+    return '0' !== debugColorDecor
+        && 'no' !== debugColorDecor
+        && 'false' !== debugColorDecor
+        && 'disabled' !== debugColorDecor;
+  }
+}
+
 /**
  * Map %o to `util.inspect()`, since Node doesn't do that out of the box.
  */
@@ -82,12 +95,13 @@ exports.formatters.o = function(v) {
 function formatArgs() {
   var args = arguments;
   var useColors = this.useColors;
+  var disableColorDecorations = this.disableColorDecorations;
   var name = this.namespace;
 
   if (useColors) {
     var c = this.color;
-
-    args[0] = '  \u001b[3' + c + ';1m' + name + ' '
+    var coldec = disableColorDecorations ? 'm' : ';1m';
+    args[0] = '  \u001b[3' + c + coldec + name + ' '
       + '\u001b[0m'
       + args[0] + '\u001b[3' + c + 'm'
       + ' +' + exports.humanize(this.diff) + '\u001b[0m';
