@@ -17,18 +17,15 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "is-electron-renderer": "^2.0.0",
     "ms": "0.7.1"
   },
   "devDependencies": {
-    "browserify": "9.0.3",
-    "mocha": "*"
+    "eslint-config-mongodb-js": "^2.0.0",
+    "mocha": "*",
+    "mongodb-js-fmt": "0.0.3"
   },
-  "main": "./node.js",
-  "browser": "./browser.js",
-  "component": {
-    "scripts": {
-      "debug/index.js": "browser.js",
-      "debug/debug.js": "debug.js"
-    }
+  "scripts": {
+    "fmt": "mongodb-js-fmt"
   }
 }
