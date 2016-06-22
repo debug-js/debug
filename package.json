@@ -21,6 +21,11 @@
     "ms": "0.7.1"
   },
   "devDependencies": {
-    "mocha": "*"
+    "eslint-config-mongodb-js": "^2.0.0",
+    "mocha": "*",
+    "mongodb-js-fmt": "0.0.3"
+  },
+  "scripts": {
+    "fmt": "mongodb-js-fmt"
   }
 }
