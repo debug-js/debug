@@ -17,6 +17,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "domain": "0.0.1",
     "ms": "0.7.1"
   },
   "devDependencies": {
@@ -30,5 +31,8 @@
       "debug/index.js": "browser.js",
       "debug/debug.js": "debug.js"
     }
+  },
+  "optionalDependencies": {
+    "winston": "^2.2.0"
   }
 }

@@ -7,6 +7,11 @@ var tty = require('tty');
 var util = require('util');
 
 /**
+ * Including domain capabilities to allow injection of custom loggers
+ */
+var domain = require('domain');
+
+/**
  * This is the Node.js implementation of `debug()`.
  *
  * Expose `debug()` as the module.
@@ -103,6 +108,13 @@ function formatArgs() {
  */
 
 function log() {
+  // Applying the logger loaded in domain
+  if (domain && domain.active && domain.active.logger) {
+    var logger = domain.active.logger;
+    return logger.log.apply(logger, ['debug'].concat(arguments));
+  }
+
+  // Applying the default behavior
   return stream.write(util.format.apply(this, arguments) + '\n');
 }
 
