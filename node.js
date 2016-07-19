@@ -7,6 +7,11 @@ var tty = require('tty');
 var util = require('util');
 
 /**
+ * Including domain capabilities to allow injection of custom loggers
+ */
+var domain = require('domain');
+
+/**
  * This is the Node.js implementation of `debug()`.
  *
  * Expose `debug()` as the module.
@@ -34,8 +39,8 @@ exports.colors = [6, 2, 3, 4, 5, 1];
 
 var fd = parseInt(process.env.DEBUG_FD, 10) || 2;
 var stream = 1 === fd ? process.stdout :
-             2 === fd ? process.stderr :
-             createWritableStdioStream(fd);
+  2 === fd ? process.stderr :
+    createWritableStdioStream(fd);
 
 /**
  * Is stdout a TTY? Colored output is enabled when `true`.
@@ -47,9 +52,9 @@ function useColors() {
     return tty.isatty(fd);
   } else {
     return '0' !== debugColors
-        && 'no' !== debugColors
-        && 'false' !== debugColors
-        && 'disabled' !== debugColors;
+      && 'no' !== debugColors
+      && 'false' !== debugColors
+      && 'disabled' !== debugColors;
   }
 }
 
@@ -68,7 +73,7 @@ var inspect = (4 === util.inspect.length ?
   }
 );
 
-exports.formatters.o = function(v) {
+exports.formatters.o = function (v) {
   return inspect(v, this.useColors)
     .replace(/\s*\n\s*/g, ' ');
 };
@@ -103,6 +108,18 @@ function formatArgs() {
  */
 
 function log() {
+  // Applying the logger loaded in domain
+  if (domain && domain.active && domain.active.logger) {
+    var logger = domain.active.logger;
+    return logger.log.apply(
+      logger,
+      ['debug'].concat(
+        util.format.apply(this, arguments)
+      )
+    );
+  }
+
+  // Applying the default behavior
   return stream.write(util.format.apply(this, arguments) + '\n');
 }
 
@@ -141,7 +158,7 @@ function load() {
  * relies on the undocumented `tty_wrap.guessHandleType()` which is also lame.
  */
 
-function createWritableStdioStream (fd) {
+function createWritableStdioStream(fd) {
   var stream;
   var tty_wrap = process.binding('tty_wrap');
 
