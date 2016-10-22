@@ -68,7 +68,7 @@ var inspect = (4 === util.inspect.length ?
   }
 );
 
-exports.formatters.o = function(v) {
+exports.formatters.o = exports.formatters.O = function(v) {
   return inspect(v, this.useColors)
     .replace(/\s*\n\s*/g, ' ');
 };
