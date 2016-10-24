@@ -18,6 +18,7 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
+exports.useDiff = useDiff;
 
 /**
  * Colors.
@@ -54,6 +55,18 @@ function useColors() {
 }
 
 /**
+ * Allow disabling ms diff, enabled by default.
+ */
+
+function useDiff() {
+  var diff = (process.env.DEBUG_DIFF || '').trim().toLowerCase();
+  return '0' !== diff
+      && 'no' !== diff
+      && 'false' !== diff
+      && 'disabled' !== diff;
+}
+
+/**
  * Map %o to `util.inspect()`, since Node doesn't do that out of the box.
  */
 
@@ -86,14 +99,14 @@ function formatArgs() {
 
   if (useColors) {
     var c = this.color;
-
+    var timeStamp = useDiff() ? ' +' + exports.humanize(this.diff) : ''
     args[0] = '  \u001b[3' + c + ';1m' + name + ' '
       + '\u001b[0m'
       + args[0] + '\u001b[3' + c + 'm'
-      + ' +' + exports.humanize(this.diff) + '\u001b[0m';
+      + timeStamp + '\u001b[0m';
   } else {
-    args[0] = new Date().toUTCString()
-      + ' ' + name + ' ' + args[0];
+    var timeStamp = useDiff() ? new Date().toUTCString() + ' ' : ''
+    args[0] = timeStamp + name + ' ' + args[0];
   }
   return args;
 }
