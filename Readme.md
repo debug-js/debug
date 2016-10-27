@@ -166,7 +166,7 @@ $ DEBUG_FD=3 node your-app.js 3> whatever.log
 
 (The MIT License)
 
-Copyright (c) 2016 TJ Holowaychuk &lt;tj@vision-media.ca&gt;
+Copyright (c) 2014-2016 TJ Holowaychuk &lt;tj@vision-media.ca&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
