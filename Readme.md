@@ -171,6 +171,7 @@ $ DEBUG_FD=3 node your-app.js 3> whatever.log
 
  - TJ Holowaychuk
  - Nathan Rajlich
+ - Andrew Rhyne
 
 ## License
 
