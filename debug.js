@@ -29,6 +29,18 @@ exports.skips = [];
 exports.formatters = {};
 
 /**
+ * Container for dynamic debug instances.
+ */
+
+exports.dynamics = {};
+
+/**
+ * Dynamic debug instances counter.
+ */
+
+var dynamicCounter = 0;
+
+/**
  * Previously assigned color.
  */
 
@@ -55,74 +67,145 @@ function selectColor() {
  * Create a debugger with the given `namespace`.
  *
  * @param {String} namespace
+ * @param {[Boolean]} isDynamic
  * @return {Function}
  * @api public
  */
 
-function debug(namespace) {
-
-  // define the `disabled` version
-  function disabled() {
-  }
-  disabled.enabled = false;
-
-  // define the `enabled` version
-  function enabled() {
-
-    var self = enabled;
-
-    // set `diff` timestamp
-    var curr = +new Date();
-    var ms = curr - (prevTime || curr);
-    self.diff = ms;
-    self.prev = prevTime;
-    self.curr = curr;
-    prevTime = curr;
-
-    // add the `color` if not set
-    if (null == self.useColors) self.useColors = exports.useColors();
-    if (null == self.color && self.useColors) self.color = selectColor();
-
-    var args = Array.prototype.slice.call(arguments);
-
-    args[0] = exports.coerce(args[0]);
-
-    if ('string' !== typeof args[0]) {
-      // anything else let's inspect with %o
-      args = ['%o'].concat(args);
+function debug(namespace, isDynamic) {
+  // Return a non dynamic debug instance.
+  if (!isDynamic) {
+    // define the `disabled` version
+    function disabled() {
     }
+    disabled.enabled = false;
 
-    // apply any `formatters` transformations
-    var index = 0;
-    args[0] = args[0].replace(/%([a-z%])/g, function(match, format) {
-      // if we encounter an escaped % then don't increase the array index
-      if (match === '%%') return match;
-      index++;
-      var formatter = exports.formatters[format];
-      if ('function' === typeof formatter) {
-        var val = args[index];
-        match = formatter.call(self, val);
+    // define the `enabled` version
+    function enabled() {
+      // set `diff` timestamp
+      var curr = +new Date();
+      var ms = curr - (prevTime || curr);
+      enabled.diff = ms;
+      enabled.prev = prevTime;
+      enabled.curr = curr;
+      prevTime = curr;
 
-        // now we need to remove `args[index]` since it's inlined in the `format`
-        args.splice(index, 1);
-        index--;
+      // add the `color` if not set
+      if (null == enabled.useColors) enabled.useColors = exports.useColors();
+      if (null == enabled.color && enabled.useColors) enabled.color = selectColor();
+
+      var args = Array.prototype.slice.call(arguments);
+
+      args[0] = exports.coerce(args[0]);
+
+      if ('string' !== typeof args[0]) {
+        // anything else let's inspect with %o
+        args = ['%o'].concat(args);
       }
-      return match;
-    });
 
-    if ('function' === typeof exports.formatArgs) {
-      args = exports.formatArgs.apply(self, args);
+      // apply any `formatters` transformations
+      var index = 0;
+      args[0] = args[0].replace(/%([a-z%])/g, function(match, format) {
+        // if we encounter an escaped % then don't increase the array index
+        if (match === '%%') return match;
+        index++;
+        var formatter = exports.formatters[format];
+        if ('function' === typeof formatter) {
+          var val = args[index];
+          match = formatter.call(enabled, val);
+
+          // now we need to remove `args[index]` since it's inlined in the `format`
+          args.splice(index, 1);
+          index--;
+        }
+        return match;
+      });
+
+      if ('function' === typeof exports.formatArgs) {
+        args = exports.formatArgs.apply(enabled, args);
+      }
+      var logFn = enabled.log || exports.log || console.log.bind(console);
+      logFn.apply(enabled, args);
     }
-    var logFn = enabled.log || exports.log || console.log.bind(console);
-    logFn.apply(self, args);
+    enabled.enabled = true;
+
+    var fn = exports.enabled(namespace) ? enabled : disabled;
+
+    fn.namespace = namespace;
+
+    // Fake release() method.
+    fn.release = function() {};
+
+    return fn;
   }
-  enabled.enabled = true;
 
-  var fn = exports.enabled(namespace) ? enabled : disabled;
+  // Return a dynamic debug instance.
+  else {
+    function dynamic() {
+      if (!dynamic.enabled) {
+        return;
+      }
 
-  fn.namespace = namespace;
+      // set `diff` timestamp
+      var curr = +new Date();
+      var ms = curr - (prevTime || curr);
+      dynamic.diff = ms;
+      dynamic.prev = prevTime;
+      dynamic.curr = curr;
+      prevTime = curr;
 
-  return fn;
+      // add the `color` if not set
+      if (null == dynamic.useColors) dynamic.useColors = exports.useColors();
+      if (null == dynamic.color && dynamic.useColors) dynamic.color = selectColor();
+
+      var args = Array.prototype.slice.call(arguments);
+
+      args[0] = exports.coerce(args[0]);
+
+      if ('string' !== typeof args[0]) {
+        // anything else let's inspect with %o
+        args = ['%o'].concat(args);
+      }
+
+      // apply any `formatters` transformations
+      var index = 0;
+      args[0] = args[0].replace(/%([a-z%])/g, function(match, format) {
+        // if we encounter an escaped % then don't increase the array index
+        if (match === '%%') return match;
+        index++;
+        var formatter = exports.formatters[format];
+        if ('function' === typeof formatter) {
+          var val = args[index];
+          match = formatter.call(dynamic, val);
+
+          // now we need to remove `args[index]` since it's inlined in the `format`
+          args.splice(index, 1);
+          index--;
+        }
+        return match;
+      });
+
+      if ('function' === typeof exports.formatArgs) {
+        args = exports.formatArgs.apply(dynamic, args);
+      }
+      var logFn = dynamic.log || exports.log || console.log.bind(console);
+      logFn.apply(dynamic, args);
+    }
+
+    dynamic.enabled = exports.enabled(namespace);
+    dynamic.namespace = namespace;
+
+    // Append to the container-
+    var idx = dynamicCounter++;
+    exports.dynamics[idx] = dynamic;
+
+    // Set release() method.
+    dynamic.release = function() {
+      delete exports.dynamics[idx];
+    };
+
+    return dynamic;
+  }
 }
 
 /**
@@ -136,6 +219,10 @@ function debug(namespace) {
 function enable(namespaces) {
   exports.save(namespaces);
 
+  // Reset names and skips.
+  exports.names = [];
+  exports.skips = [];
+
   var split = (namespaces || '').split(/[\s,]+/);
   var len = split.length;
 
@@ -148,6 +235,9 @@ function enable(namespaces) {
       exports.names.push(new RegExp('^' + namespaces + '$'));
     }
   }
+
+  // Update dynamic debug instances.
+  updateDynamics();
 }
 
 /**
@@ -157,7 +247,15 @@ function enable(namespaces) {
  */
 
 function disable() {
-  exports.enable('');
+  // Clear stored namespaces.
+  exports.save(null);
+
+  // Reset names and skips.
+  exports.names = [];
+  exports.skips = [];
+
+  // Update dynamic debug instances.
+  updateDynamics(true);
 }
 
 /**
@@ -194,4 +292,27 @@ function enabled(name) {
 function coerce(val) {
   if (val instanceof Error) return val.stack || val.message;
   return val;
+}
+
+/**
+ * Update dynamic debug instances.
+ *
+ * @param {[Boolean]} disableAll
+ * @api private
+ */
+
+function updateDynamics(disableAll) {
+  var idx, dynamic;
+
+  for (idx in exports.dynamics) {
+    if (exports.dynamics.hasOwnProperty(idx)) {
+      dynamic = exports.dynamics[idx];
+
+      if (!disableAll) {
+        dynamic.enabled = exports.enabled(dynamic.namespace);
+      } else {
+        dynamic.enabled = false;
+      }
+    }
+  }
 }

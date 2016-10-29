@@ -87,6 +87,22 @@ Then, run the program to be debugged as usual.
 
   You can also exclude specific debuggers by prefixing them with a "-" character.  For example, `DEBUG=*,-connect:*` would include all debuggers except those starting with "connect:".
 
+## enable() and disable() functions
+
+  The module exports a `enable(namespaces)` function that updates the enabled namespaces, and `disable()` function that disables the logging. Note however that those functions just work on future created debug instances (unless they were dynamic instances).
+
+## Dynamic debug instances
+
+  Dynamic debug instances are those whose behavior (whether they are printed or not) is updated in **runtime** for every call to the module exported `enable()` or `disabled()` methods (see above).
+
+  Dynamic debug instances are created by passing `true` as second argument to the module exported function:
+
+```js
+var dyndebug = require('debug')('myApp', true);
+```
+
+  *IMPORTANT:* Dynamic debug instances are stored within the module so they may cause a memory leak technically (if instances are created in runtime rather than statically at the script start). To avoid that, call the `release()` method on them. Once `release()` is called the instance is no longer dynamic.
+
 ## Browser support
 
   Debug works in the browser as well, currently persisted by `localStorage`. Consider the situation shown below where you have `worker:a` and `worker:b`, and wish to debug both. You can enable this using `localStorage.debug`:
