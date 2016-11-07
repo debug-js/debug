@@ -80,12 +80,12 @@ exports.formatters.o = exports.formatters.O = function(v) {
  */
 
 function formatArgs() {
-  var args = [];
   var len = arguments.length;
+  var args = new Array(len);
   var useColors = this.useColors;
   var name = this.namespace;
   for (var i = 0; i < len; i++) {
-    args.push(arguments[i]);
+    args[i] = arguments[i];
   }
 
   if (useColors) {
