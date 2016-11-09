@@ -4,7 +4,7 @@
  */
 
 if ((process || {}).type === 'renderer') {
-  module.exports = require('./browser');
+  module.exports = require('./browser.js');
 } else {
-  module.exports = require('./node');
+  module.exports = require('./node.js');
 }
