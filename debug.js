@@ -120,8 +120,8 @@ function debug(namespace) {
       return match;
     });
 
-    // apply env-specific formatting
-    args = exports.formatArgs.apply(self, args);
+    // apply env-specific formatting (colors, etc.)
+    exports.formatArgs.call(self, args);
 
     var logFn = enabled.log || exports.log || console.log.bind(console);
     logFn.apply(self, args);

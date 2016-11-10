@@ -83,14 +83,9 @@ exports.formatters.O = function(v) {
  * @api public
  */
 
-function formatArgs() {
-  var len = arguments.length;
-  var args = new Array(len);
-  var useColors = this.useColors;
+function formatArgs(args) {
   var name = this.namespace;
-  for (var i = 0; i < len; i++) {
-    args[i] = arguments[i];
-  }
+  var useColors = this.useColors;
 
   if (useColors) {
     var c = this.color;
@@ -102,7 +97,6 @@ function formatArgs() {
     args[0] = new Date().toUTCString()
       + ' ' + name + ' ' + args[0];
   }
-  return args;
 }
 
 /**
