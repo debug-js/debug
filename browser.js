@@ -144,7 +144,7 @@ function load() {
   } catch(e) {}
 
   // If debug isn't set in LS, and we're in Electron, try to load $DEBUG
-  if ('env' in (typeof process === 'undefined' ? {} : process)) {
+  if (typeof process !== 'undefined' && 'env' in process) {
     r = process.env.DEBUG;
   }
   
