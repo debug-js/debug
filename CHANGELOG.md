@@ -1,3 +1,10 @@
+2.3.1 / 2016-11-09
+==================
+
+  * Fix: Added electron compatibility (#324, @paulcbetts)
+  * Improvement: Added performance optimizations (@tootallnate)
+  * Readme: Corrected PowerShell environment variable example (#252, @gimre)
+  * Misc: Removed yarn lock file from source control (#321, @fengmk2)
 
 2.3.0 / 2016-11-07
 ==================
