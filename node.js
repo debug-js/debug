@@ -18,7 +18,7 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
-exports.disableColorDecorations = disableColorDecorations;
+exports.useColorDecorations = useColorDecorations;
 
 /**
  * Colors.
@@ -54,15 +54,12 @@ function useColors() {
   }
 }
 
-function disableColorDecorations() {
-  var debugColorDecor = (process.env.DEBUG_DISABLE_COLORDECOR || '').trim().toLowerCase();
+function useColorDecorations() {
+  var debugColorDecor = (process.env.DEBUG_COLORDECOR || '').trim().toLowerCase();
   if (0 === debugColorDecor.length) {
     return false
   } else {
-    return '0' !== debugColorDecor
-        && 'no' !== debugColorDecor
-        && 'false' !== debugColorDecor
-        && 'disabled' !== debugColorDecor;
+    return ! /0|no|false|disabled/.test(debugColorDecor)
   }
 }
 
@@ -95,12 +92,12 @@ exports.formatters.o = function(v) {
 function formatArgs() {
   var args = arguments;
   var useColors = this.useColors;
-  var disableColorDecorations = this.disableColorDecorations;
+  var useColorDecorations = this.useColorDecorations;
   var name = this.namespace;
 
   if (useColors) {
     var c = this.color;
-    var coldec = disableColorDecorations ? 'm' : ';1m';
+    var coldec = useColorDecorations ? ';1m' : 'm';
     args[0] = '  \u001b[3' + c + coldec + name + ' '
       + '\u001b[0m'
       + args[0] + '\u001b[3' + c + 'm'
