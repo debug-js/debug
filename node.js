@@ -18,7 +18,6 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
-exports.useColorDecorations = useColorDecorations;
 
 /**
  * Colors.
@@ -54,15 +53,6 @@ function useColors() {
   }
 }
 
-function useColorDecorations() {
-  var debugColorDecor = (process.env.DEBUG_COLORDECOR || '').trim().toLowerCase();
-  if (0 === debugColorDecor.length) {
-    return false
-  } else {
-    return ! /0|no|false|disabled/.test(debugColorDecor)
-  }
-}
-
 /**
  * Map %o to `util.inspect()`, since Node doesn't do that out of the box.
  */
@@ -92,13 +82,11 @@ exports.formatters.o = function(v) {
 function formatArgs() {
   var args = arguments;
   var useColors = this.useColors;
-  var useColorDecorations = this.useColorDecorations;
   var name = this.namespace;
 
   if (useColors) {
     var c = this.color;
-    var coldec = useColorDecorations ? ';1m' : 'm';
-    args[0] = '  \u001b[3' + c + coldec + name + ' '
+    args[0] = '  \u001b[3' + c + 'm' + name + ' '
       + '\u001b[0m'
       + args[0] + '\u001b[3' + c + 'm'
       + ' +' + exports.humanize(this.diff) + '\u001b[0m';
