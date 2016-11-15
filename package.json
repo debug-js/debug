@@ -1,6 +1,6 @@
 {
   "name": "debug",
-  "version": "2.2.0",
+  "version": "2.3.2",
   "repository": {
     "type": "git",
     "url": "git://github.com/visionmedia/debug.git"
@@ -13,17 +13,18 @@
   ],
   "author": "TJ Holowaychuk <tj@vision-media.ca>",
   "contributors": [
-    "Nathan Rajlich <nathan@tootallnate.net> (http://n8.io)"
+    "Nathan Rajlich <nathan@tootallnate.net> (http://n8.io)",
+    "Andrew Rhyne <rhyneandrew@gmail.com>"
   ],
   "license": "MIT",
   "dependencies": {
-    "ms": "0.7.1"
+    "ms": "0.7.2"
   },
   "devDependencies": {
     "browserify": "9.0.3",
     "mocha": "*"
   },
-  "main": "./node.js",
+  "main": "./index.js",
   "browser": "./browser.js",
   "component": {
     "scripts": {

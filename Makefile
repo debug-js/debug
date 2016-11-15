@@ -8,7 +8,8 @@ BIN := $(THIS_DIR)/node_modules/.bin
 
 # applications
 NODE ?= $(shell which node)
-NPM ?= $(NODE) $(shell which npm)
+YARN ?= $(shell which yarn)
+PKG ?= $(if $(YARN),$(YARN),$(NODE) $(shell which npm))
 BROWSERIFY ?= $(NODE) $(BIN)/browserify
 
 all: dist/debug.js
@@ -30,7 +31,7 @@ distclean: clean
 	@rm -rf node_modules
 
 node_modules: package.json
-	@NODE_ENV= $(NPM) install
+	@NODE_ENV= $(PKG) install
 	@touch node_modules
 
 .PHONY: all install clean distclean

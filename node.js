@@ -68,7 +68,7 @@ var inspect = (4 === util.inspect.length ?
   }
 );
 
-exports.formatters.o = function(v) {
+exports.formatters.o = exports.formatters.O = function(v) {
   return inspect(v, this.useColors)
     .replace(/\s*\n\s*/g, ' ');
 };
@@ -80,16 +80,20 @@ exports.formatters.o = function(v) {
  */
 
 function formatArgs() {
-  var args = arguments;
+  var len = arguments.length;
+  var args = new Array(len);
   var useColors = this.useColors;
   var name = this.namespace;
+  for (var i = 0; i < len; i++) {
+    args[i] = arguments[i];
+  }
 
   if (useColors) {
     var c = this.color;
     args[0] = '  \u001b[3' + c + 'm' + name + ' '
       + '\u001b[0m'
-      + args[0] + '\u001b[3' + c + 'm'
-      + ' +' + exports.humanize(this.diff) + '\u001b[0m';
+      + args[0];
+    args.push('\u001b[3' + c + 'm+' + exports.humanize(this.diff) + '\u001b[0m');
   } else {
     args[0] = new Date().toUTCString()
       + ' ' + name + ' ' + args[0];
