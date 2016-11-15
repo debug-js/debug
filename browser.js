@@ -55,7 +55,7 @@ function useColors() {
 exports.formatters.j = function(v) {
   try {
     return JSON.stringify(v);
-  }catch( err){
+  } catch (err) {
     return '[UnexpectedJSONParseError]: ' + err.message;
   }
 };
