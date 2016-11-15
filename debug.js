@@ -38,7 +38,7 @@ var prevColor = 0;
  * Previous log timestamp.
  */
 
-var prevTime;
+var prevTime = {};
 
 /**
  * Select a color.
@@ -73,11 +73,11 @@ function debug(namespace) {
 
     // set `diff` timestamp
     var curr = +new Date();
-    var ms = curr - (prevTime || curr);
+    var ms = curr - (prevTime[namespace] || curr);
     self.diff = ms;
-    self.prev = prevTime;
+    self.prev = prevTime[namespace];
     self.curr = curr;
-    prevTime = curr;
+    prevTime[namespace] = curr;
 
     // add the `color` if not set
     if (null == self.useColors) self.useColors = exports.useColors();
@@ -172,6 +172,9 @@ function disable() {
  */
 
 function enabled(name) {
+  if (name[name.length - 1] === '*') {
+    return true;
+  }
   var i, len;
   for (i = 0, len = exports.skips.length; i < len; i++) {
     if (exports.skips[i].test(name)) {
