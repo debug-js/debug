@@ -1,3 +1,10 @@
+2.3.3 / 2016-11-09
+==================
+
+  * Fix: Catch `JSON.stringify()` errors (#195, Jovan Alleyne)
+  * Fix: Returning `localStorage` saved values (#331, Levi Thomason)
+  * Improvement: Don't create an empty object when no `process` (Nathan Rajlich)
+
 2.3.2 / 2016-11-09
 ==================
 
