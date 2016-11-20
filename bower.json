@@ -1,10 +1,11 @@
 {
   "name": "visionmedia-debug",
   "main": "dist/debug.js",
-  "version": "2.2.0",
   "homepage": "https://github.com/visionmedia/debug",
   "authors": [
-    "TJ Holowaychuk <tj@vision-media.ca>"
+    "TJ Holowaychuk <tj@vision-media.ca>",
+    "Nathan Rajlich <nathan@tootallnate.net> (http://n8.io)",
+    "Andrew Rhyne <rhyneandrew@gmail.com>"
   ],
   "description": "visionmedia-debug",
   "moduleType": [

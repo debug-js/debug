@@ -10,7 +10,7 @@ $ npm install debug
 
 ## Usage
 
- With `debug` you simply invoke the exported function to generate your debug function, passing it a name which will determine if a noop function is returned, or a decorated `console.error`, so all of the `console` format string goodies you're used to work fine. A unique color is selected per-function for visibility.
+ With `debug` you simply invoke the exported function to generate your debug function, passing it a name which will determine if a noop function is returned, or a decorated `console.error`, so all of the `console` [format string goodies](https://developer.chrome.com/devtools/docs/console-api#consolelogobject-object) you're used to work fine. A unique color is selected per-function for visibility.
 
 Example _app.js_:
 
@@ -59,6 +59,12 @@ setInterval(function(){
  set DEBUG=*,-not_this
  ```
 
+ Note that PowerShell using different syntax to set environment variables.
+
+ ```cmd
+ $env:DEBUG = "*,-not_this"
+  ```
+
 Then, run the program to be debugged as usual.
 
 ## Millisecond diff
@@ -83,19 +89,13 @@ Then, run the program to be debugged as usual.
 
 ## Browser support
 
-  Debug works in the browser as well, currently persisted by `localStorage`. Consider the situation shown below where you have `worker:a` and `worker:b`, and wish to debug both. Somewhere in the code on your page, include:
+  Debug works in the browser as well, currently persisted by `localStorage`. Consider the situation shown below where you have `worker:a` and `worker:b`, and wish to debug both. You can enable this using `localStorage.debug`:
 
 ```js
-window.myDebug = require("debug");
+localStorage.debug = 'worker:*'
 ```
 
-  ("debug" is a global object in the browser so we give this object a different name.) When your page is open in the browser, type the following in the console:
-
-```js
-myDebug.enable("worker:*")
-```
-
-  Refresh the page. Debug output will continue to be sent to the console until it is disabled by typing `myDebug.disable()` in the console.
+And then refresh the page.
 
 ```js
 a = debug('worker:a');
@@ -121,9 +121,13 @@ setInterval(function(){
 
   ![](https://cloud.githubusercontent.com/assets/71256/3139768/b98c5fd8-e8ef-11e3-862a-f7253b6f47c6.png)
 
-### stderr vs stdout
+## Output streams
 
-You can set an alternative logging method per-namespace by overriding the `log` method on a per-namespace or globally:
+
+### stderr vs stdout
+  By default `debug` will log to stderr, however this can be changed by setting the environment variable `DEBUG_FD` to `1` for stdout and `2` for stderr (the default value).
+
+You can also set an alternative logging method per-namespace by overriding the `log` method on a per-namespace or globally:
 
 Example _stdout.js_:
 
@@ -157,16 +161,23 @@ Example:
 $ DEBUG_FD=3 node your-app.js 3> whatever.log
 ```
 
+### Terminal colors
+
+  By default colors will only be used in a TTY. However this can be overridden by setting the environment variable `DEBUG_COLORS` to `1`.
+
+  Note: Certain IDEs (such as WebStorm) don't support colors on stderr. In these cases you must set `DEBUG_COLORS` to `1` and additionally change `DEBUG_FD` to `1`.
+
 ## Authors
 
  - TJ Holowaychuk
  - Nathan Rajlich
+ - Andrew Rhyne
 
 ## License
 
 (The MIT License)
 
-Copyright (c) 2014 TJ Holowaychuk &lt;tj@vision-media.ca&gt;
+Copyright (c) 2014-2016 TJ Holowaychuk &lt;tj@vision-media.ca&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
