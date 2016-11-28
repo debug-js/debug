@@ -42,13 +42,20 @@ var prevTime;
 
 /**
  * Select a color.
- *
+ * @param {String} namespace
  * @return {Number}
  * @api private
  */
 
-function selectColor() {
-  return exports.colors[prevColor++ % exports.colors.length];
+function selectColor(namespace) {
+  var hash = 0, i, chr, len;
+  
+  for (i in namespace) {
+    hash  = ((hash << 5) - hash) + namespace.charCodeAt(i);
+    hash |= 0; // Convert to 32bit integer
+  }
+  
+  return exports.colors[Math.abs(hash) % exports.colors.length];
 }
 
 /**
@@ -81,7 +88,7 @@ function debug(namespace) {
 
     // add the `color` if not set
     if (null == self.useColors) self.useColors = exports.useColors();
-    if (null == self.color && self.useColors) self.color = selectColor();
+    if (null == self.color && self.useColors) self.color = selectColor(namespace);
 
     var args = new Array(arguments.length);
     for (var i = 0; i < args.length; i++) {
