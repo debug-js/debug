@@ -48,7 +48,7 @@ var prevTime;
  */
 
 function selectColor(namespace) {
-  var hash = 0, i, chr, len;
+  var hash = 0, i;
   
   for (i in namespace) {
     hash  = ((hash << 5) - hash) + namespace.charCodeAt(i);
