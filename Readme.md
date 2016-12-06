@@ -81,6 +81,17 @@ Then, run the program to be debugged as usual.
 
  If you're using this in one or more of your libraries, you _should_ use the name of your library so that developers may toggle debugging as desired without guessing names. If you have more than one debuggers you _should_ prefix them with your library name and use ":" to separate features. For example "bodyParser" from Connect would then be "connect:bodyParser".
 
+### Child Debugger
+In order to make this simpler, you may create child debuggers of any debugger.
+
+For example:
+```javascript
+var debugConnect = require('debug')('connect');
+var debugBodyParser = debugConnect.child('bodyParser')
+
+// debugBodyParser will use 'connect:bodyParser' as its namespace
+```
+
 ## Wildcards
 
   The `*` character may be used as a wildcard. Suppose for example your library has debuggers named "connect:bodyParser", "connect:compress", "connect:session", instead of listing all three with `DEBUG=connect:bodyParser,connect:compress,connect:session`, you may simply do `DEBUG=connect:*`, or to run everything using this module simply use `DEBUG=*`.
