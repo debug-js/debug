@@ -68,9 +68,13 @@ var inspect = (4 === util.inspect.length ?
   }
 );
 
-exports.formatters.o = exports.formatters.O = function(v) {
+exports.formatters.o = function(v) {
   return inspect(v, this.useColors)
     .replace(/\s*\n\s*/g, ' ');
+};
+
+exports.formatters.O = function(v) {
+  return inspect(v, this.useColors);
 };
 
 /**
@@ -90,10 +94,9 @@ function formatArgs() {
 
   if (useColors) {
     var c = this.color;
+    var prefix = '  \u001b[3' + c + ';1m' + name + ' ' + '\u001b[0m';
 
-    args[0] = '  \u001b[3' + c + ';1m' + name + ' '
-      + '\u001b[0m'
-      + args[0];
+    args[0] = prefix + args[0].split('\n').join('\n' + prefix);
     args.push('\u001b[3' + c + 'm+' + exports.humanize(this.diff) + '\u001b[0m');
   } else {
     args[0] = new Date().toUTCString()
