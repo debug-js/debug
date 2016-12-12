@@ -79,13 +79,35 @@ Then, run the program to be debugged as usual.
 
 ## Conventions
 
- If you're using this in one or more of your libraries, you _should_ use the name of your library so that developers may toggle debugging as desired without guessing names. If you have more than one debuggers you _should_ prefix them with your library name and use ":" to separate features. For example "bodyParser" from Connect would then be "connect:bodyParser".
+  If you're using this in one or more of your libraries, you _should_ use the name of your library so that developers may toggle debugging as desired without guessing names. If you have more than one debuggers you _should_ prefix them with your library name and use ":" to separate features. For example "bodyParser" from Connect would then be "connect:bodyParser".
 
 ## Wildcards
 
   The `*` character may be used as a wildcard. Suppose for example your library has debuggers named "connect:bodyParser", "connect:compress", "connect:session", instead of listing all three with `DEBUG=connect:bodyParser,connect:compress,connect:session`, you may simply do `DEBUG=connect:*`, or to run everything using this module simply use `DEBUG=*`.
 
   You can also exclude specific debuggers by prefixing them with a "-" character.  For example, `DEBUG=*,-connect:*` would include all debuggers except those starting with "connect:".
+
+## Environment Variables
+
+  When running through Node.js, you can set a few environment variables that will
+  change the behavior of the debug logging:
+
+| Name      | Purpose                                         |
+|-----------|-------------------------------------------------|
+| `DEBUG`   | Enables/disabled specific debugging namespaces. |
+| `DEBUG_COLORS`| Whether or not to use colors in the debug output. |
+| `DEBUG_FD`| File descriptor to output debug logs to. Defaults to stderr. |
+| `DEBUG_DEPTH` | Object inspection depth. |
+| `DEBUG_SHOW_HIDDEN` | Shows hidden properties on inspected objects. |
+
+
+  __Note:__ The environment variables beginning with `DEBUG_` end up being
+  converted into an Options object that gets used with `%o`/`%O` formatters.
+  See the Node.js documentation for
+  [`util.inspect()`](https://nodejs.org/api/util.html#util_util_inspect_object_options)
+  for the complete list.
+
+  __Note:__ Certain IDEs (such as WebStorm) don't support colors on stderr. In these cases you must set `DEBUG_COLORS` to `1` and additionally change `DEBUG_FD` to `1`.
 
 ## Formatters
 
@@ -190,12 +212,6 @@ Example:
 ```bash
 $ DEBUG_FD=3 node your-app.js 3> whatever.log
 ```
-
-### Terminal colors
-
-  By default colors will only be used in a TTY. However this can be overridden by setting the environment variable `DEBUG_COLORS` to `1`.
-
-  Note: Certain IDEs (such as WebStorm) don't support colors on stderr. In these cases you must set `DEBUG_COLORS` to `1` and additionally change `DEBUG_FD` to `1`.
 
 ## Authors
 

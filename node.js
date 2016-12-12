@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -13,6 +12,7 @@ var util = require('util');
  */
 
 exports = module.exports = require('./debug');
+exports.init = init;
 exports.log = log;
 exports.formatArgs = formatArgs;
 exports.save = save;
@@ -24,6 +24,32 @@ exports.useColors = useColors;
  */
 
 exports.colors = [6, 2, 3, 4, 5, 1];
+
+/**
+ * Build up the default `inspectOpts` object from the environment variables.
+ *
+ *   $ DEBUG_COLORS=no DEBUG_DEPTH=10 DEBUG_SHOW_HIDDEN=enabled node script.js
+ */
+
+exports.inspectOpts = Object.keys(process.env).filter(function (key) {
+  return /^debug_/i.test(key);
+}).reduce(function (obj, key) {
+  // camel-case
+  var prop = key
+    .substring(6)
+    .toLowerCase()
+    .replace(/_([a-z])/, function (_, k) { return k.toUpperCase() });
+
+  // coerce string value into JS value
+  var val = process.env[key];
+  if (/^(yes|on|true|enabled)$/i.test(val)) val = true;
+  else if (/^(no|off|false|disabled)$/i.test(val)) val = false;
+  else if (val === 'null') val = null;
+  else val = Number(val);
+
+  obj[prop] = val;
+  return obj;
+}, {});
 
 /**
  * The file descriptor to write the `debug()` calls to.
@@ -42,39 +68,28 @@ var stream = 1 === fd ? process.stdout :
  */
 
 function useColors() {
-  var debugColors = (process.env.DEBUG_COLORS || '').trim().toLowerCase();
-  if (0 === debugColors.length) {
-    return tty.isatty(fd);
-  } else {
-    return '0' !== debugColors
-        && 'no' !== debugColors
-        && 'false' !== debugColors
-        && 'disabled' !== debugColors;
-  }
+  return 'colors' in exports.inspectOpts
+    ? Boolean(exports.inspectOpts.colors)
+    : tty.isatty(fd);
 }
 
 /**
- * Map %o to `util.inspect()`, since Node doesn't do that out of the box.
+ * Map %o to `util.inspect()`, all on a single line.
  */
 
-var inspect = (4 === util.inspect.length ?
-  // node <= 0.8.x
-  function (v, colors) {
-    return util.inspect(v, void 0, void 0, colors);
-  } :
-  // node > 0.8.x
-  function (v, colors) {
-    return util.inspect(v, { colors: colors });
-  }
-);
-
 exports.formatters.o = function(v) {
-  return inspect(v, this.useColors)
+  this.inspectOpts.colors = this.useColors;
+  return util.inspect(v, this.inspectOpts)
     .replace(/\s*\n\s*/g, ' ');
 };
 
+/**
+ * Map %o to `util.inspect()`, allowing multiple lines if needed.
+ */
+
 exports.formatters.O = function(v) {
-  return inspect(v, this.useColors);
+  this.inspectOpts.colors = this.useColors;
+  return util.inspect(v, this.inspectOpts);
 };
 
 /**
@@ -83,14 +98,9 @@ exports.formatters.O = function(v) {
  * @api public
  */
 
-function formatArgs() {
-  var len = arguments.length;
-  var args = new Array(len);
-  var useColors = this.useColors;
+function formatArgs(args) {
   var name = this.namespace;
-  for (var i = 0; i < len; i++) {
-    args[i] = arguments[i];
-  }
+  var useColors = this.useColors;
 
   if (useColors) {
     var c = this.color;
@@ -102,15 +112,14 @@ function formatArgs() {
     args[0] = new Date().toUTCString()
       + ' ' + name + ' ' + args[0];
   }
-  return args;
 }
 
 /**
- * Invokes `console.error()` with the specified arguments.
+ * Invokes `util.format()` with the specified arguments and writes to `stream`.
  */
 
 function log() {
-  return stream.write(util.format.apply(this, arguments) + '\n');
+  return stream.write(util.format.apply(util, arguments) + '\n');
 }
 
 /**
@@ -207,6 +216,17 @@ function createWritableStdioStream (fd) {
   stream._isStdio = true;
 
   return stream;
+}
+
+/**
+ * Init logic for `debug` instances.
+ *
+ * Create a new `inspectOpts` object in case `useColors` is set
+ * differently for a particular `debug` instance.
+ */
+
+function init (debug) {
+  debug.inspectOpts = util._extend({}, exports.inspectOpts);
 }
 
 /**
