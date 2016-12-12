@@ -73,6 +73,26 @@ function debug(namespace) {
   }
   disabled.enabled = false;
 
+  // override with our specific browser debug() which keeps line numbers in the console 
+  if (exports.is_browser) {
+    var interval = new Date()
+    interval.__proto__ = {
+      now: (new Date()).getTime(),
+      toString: function() {
+        return -this.now + (this.now = new Date().getTime())
+      }
+    }
+
+    // add the `color` if not set
+    var enabled = (function() {
+      var self = enabled
+      if (null == self.useColors) self.useColors = exports.useColors();
+      if (null == self.color && self.useColors) self.color = selectColor();
+
+      return console.log.bind(console, '%c%s +%sms', 'color: ' + self.color, namespace, interval)
+    })()
+  }
+
   // define the `enabled` version
   function enabled() {
 
