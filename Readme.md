@@ -87,6 +87,30 @@ Then, run the program to be debugged as usual.
 
   You can also exclude specific debuggers by prefixing them with a "-" character.  For example, `DEBUG=*,-connect:*` would include all debuggers except those starting with "connect:".
 
+## Formatters
+
+
+  Debug uses [printf-style](https://wikipedia.org/wiki/Printf_format_string) formatting. Below are the officially supported formatters:
+
+| Formatter | Representation |
+|-----------|----------------|
+| `%O`      | Pretty-print an Object on multiple lines. |
+| `%o`      | Pretty-print an Object all on a single line. |
+| `%s`      | String. |
+| `%d`      | Number (both integer and float). |
+| `%j`      | JSON. Replaced with the string '[Circular]' if the argument contains circular references. |
+| `%%`      | Single percent sign ('%'). This does not consume an argument. |
+
+### Custom formatters
+
+  You can add custom formatters by extending the `debug.formatters` object. For example, if you wanted to add support for rendering a Buffer as hex with `%h`, you could do something like:
+
+```js
+debug.formatters.h = (v) => {
+  return v.toString('hex')
+}
+```
+
 ## Browser support
 
   Debug works in the browser as well, currently persisted by `localStorage`. Consider the situation shown below where you have `worker:a` and `worker:b`, and wish to debug both. You can enable this using `localStorage.debug`:
