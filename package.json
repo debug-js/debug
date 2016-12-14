@@ -22,7 +22,8 @@
   },
   "devDependencies": {
     "browserify": "9.0.3",
-    "mocha": "*"
+    "developer-tools": "0.0.9",
+    "eslint-plugin-mocha": "^4.7.0"
   },
   "main": "./index.js",
   "browser": "./browser.js",
@@ -31,5 +32,21 @@
       "debug/index.js": "browser.js",
       "debug/debug.js": "debug.js"
     }
-  }
+  },
+  "scripts": {
+    "test": "NODE_ENV=test DEBUG=debug-test ./node_modules/.bin/mocha -s 0",
+    "inspect": "NODE_ENV=test node --inspect --debug-brk ./node_modules/.bin/_mocha -s 0 --timeout 60000",
+    "coverage-report": " DEBUG=debug-test ./node_modules/.bin/istanbul-coverage-report",
+    "coverage": "npm run coverage-report && open ./coverage/lcov-report/index.html",
+    "coverage-badge": "./node_modules/.bin/istanbul-cobertura-badger -e 95 -g 85 -b \"${PWD##*/}\"",
+    "lint": "./node_modules/.bin/eslint .",
+    "validate": "./node_modules/.bin/module-validator",
+    "depcheck": "./node_modules/.bin/dependency-checker"
+  },
+  "pre-commit": [
+    "lint",
+    "validate",
+    "depcheck"
+  ],
+  "pre-push": []
 }

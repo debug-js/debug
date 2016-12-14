@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+
+module.exports = function getOptions (depcheck){
+  return {
+    ignoreBinPackage: true,
+    ignoreDirs: [
+      'coverage',
+      'dist',
+      'tmp',
+    ],
+    ignoreMatches: [],
+    parsers: { // the target parsers
+      '*.js': depcheck.parser.es6
+    },
+    detectors: [ // the target detectors 
+      depcheck.detector.requireCallExpression,
+      depcheck.detector.importDeclaration
+    ],
+    specials: [ // the target special parsers 
+      depcheck.special.eslint,
+      depcheck.special.mocha
+    ],
+  };
+};
