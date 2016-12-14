@@ -29,12 +29,6 @@ exports.skips = [];
 exports.formatters = {};
 
 /**
- * Previously assigned color.
- */
-
-var prevColor = 0;
-
-/**
  * Previous log timestamp.
  */
 
