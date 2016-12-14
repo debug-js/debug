@@ -83,6 +83,14 @@ exports.formatters.o = function(v) {
     .replace(/\s*\n\s*/g, ' ');
 };
 
+exports.formatters.j = function(v) {
+  return JSON.stringify(v, undefined, 2);
+};
+
+exports.formatters.J = function(v) {
+  return JSON.stringify(v);
+};
+
 /**
  * Map %o to `util.inspect()`, allowing multiple lines if needed.
  */
