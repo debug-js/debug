@@ -1,4 +1,9 @@
 
+2.4.3 / 2016-12-14
+==================
+
+  * Fix: navigation.userAgent error for react native (#364, @escwald)
+
 2.4.2 / 2016-12-14
 ==================
 
