@@ -123,7 +123,7 @@ function createDebug(namespace) {
   debug.namespace = namespace;
   debug.enabled = exports.enabled(namespace);
   debug.useColors = exports.useColors();
-  debug.color = selectColor(namespae);
+  debug.color = selectColor(namespace);
 
   // env-specific initialization logic for debug instances
   if ('function' === typeof exports.init) {
