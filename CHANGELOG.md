@@ -1,3 +1,14 @@
+
+2.4.0 / 2016-12-13
+==================
+
+  * Fix: bower.json references unbuilt src entry point (#342, @justmatt)
+  * Fix: revert "handle regex special characters" (@tootallnate)
+  * Feature: configurable util.inspect()`options for NodeJS (#327, @tootallnate)
+  * Feature: %O`(big O) pretty-prints objects (#322, @tootallnate)
+  * Improvement: allow colors in workers (#335, @botverse)
+  * Improvement: use same color for same namespace. (#338, @lchenay)
+
 2.3.3 / 2016-11-09
 ==================
 
