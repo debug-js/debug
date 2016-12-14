@@ -78,10 +78,10 @@ function formatArgs(args) {
     + (useColors ? '%c ' : ' ')
     + '+' + exports.humanize(this.diff);
 
-  if (!useColors) return args;
+  if (!useColors) return;
 
   var c = 'color: ' + this.color;
-  args = [args[0], c, 'color: inherit'].concat(Array.prototype.slice.call(args, 1));
+  args.splice(1, 0, c, 'color: inherit')
 
   // the final "%c" is somewhat tricky, because there could be other
   // arguments passed either before or after the %c, so we need to
