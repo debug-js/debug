@@ -49,12 +49,12 @@ var prevTime;
 
 function selectColor(namespace) {
   var hash = 0, i;
-  
+
   for (i in namespace) {
     hash  = ((hash << 5) - hash) + namespace.charCodeAt(i);
     hash |= 0; // Convert to 32bit integer
   }
-  
+
   return exports.colors[Math.abs(hash) % exports.colors.length];
 }
 
@@ -123,7 +123,7 @@ function createDebug(namespace) {
   debug.namespace = namespace;
   debug.enabled = exports.enabled(namespace);
   debug.useColors = exports.useColors();
-  debug.color = selectColor(namespae);
+  debug.color = selectColor(namespace);
 
   // env-specific initialization logic for debug instances
   if ('function' === typeof exports.init) {
