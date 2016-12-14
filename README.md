@@ -1,6 +1,8 @@
 # debug
+[![Build Status](https://travis-ci.org/visionmedia/debug.svg?branch=master)](https://travis-ci.org/visionmedia/debug)
 
-  tiny node.js debugging utility modelled after node core's debugging technique.
+tiny node.js debugging utility modelled after node core's debugging technique.
+
 
 ## Installation
 
