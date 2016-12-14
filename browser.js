@@ -37,6 +37,11 @@ exports.colors = [
  */
 
 function useColors() {
+  // check we aren't in a web worker
+  if (typeof window === 'undefined') {
+    return false;
+  }
+  
   // is webkit? http://stackoverflow.com/a/16459606/376773
   // document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
   return (typeof document !== 'undefined' && 'WebkitAppearance' in document.documentElement.style) ||
