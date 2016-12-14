@@ -1,8 +1,15 @@
 
+2.4.2 / 2016-12-14
+==================
+
+  * Fix: browser colors (#367, @tootallnate)
+  * Misc: travis ci integration (@thebigredgeek)
+  * Misc: added linting and testing boilerplate with sanity check (@thebigredgeek)
+
 2.4.1 / 2016-12-13
 ==================
 
-  * Fixed a typo that broke the package (#356)
+  * Fix: typo that broke the package (#356)
 
 2.4.0 / 2016-12-13
 ==================
