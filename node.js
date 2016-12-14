@@ -62,6 +62,13 @@ var fd = parseInt(process.env.DEBUG_FD, 10) || 2;
 var stream = 1 === fd ? process.stdout :
              2 === fd ? process.stderr :
              createWritableStdioStream(fd);
+/**
+ * Get debug line
+ */
+
+function getDebugLine() {
+  return (new Error()).stack.split('\n')[4].split(':')[1];
+}
 
 /**
  * Is stdout a TTY? Colored output is enabled when `true`.
@@ -104,7 +111,7 @@ function formatArgs(args) {
 
   if (useColors) {
     var c = this.color;
-    var prefix = '  \u001b[3' + c + ';1m' + name + ' ' + '\u001b[0m';
+    var prefix = '  \u001b[3' + c + ';1m' + name + ':' + getDebugLine() + ' ' + '\u001b[0m';
 
     args[0] = prefix + args[0].split('\n').join('\n' + prefix);
     args.push('\u001b[3' + c + 'm+' + exports.humanize(this.diff) + '\u001b[0m');
