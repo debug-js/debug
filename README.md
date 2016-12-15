@@ -142,8 +142,13 @@ debug('this is hex: %h', new Buffer('hello world'))
 ```
 
 ## Browser support
+  You can build a browser-ready script using [browserify](https://github.com/substack/node-browserify),
+  or just use the [browserify-as-a-service](https://wzrd.in/) [build](https://wzrd.in/standalone/debug@latest),
+  if you don't want to build it yourself.
 
-  Debug works in the browser as well, currently persisted by `localStorage`. Consider the situation shown below where you have `worker:a` and `worker:b`, and wish to debug both. You can enable this using `localStorage.debug`:
+  Debug's enable state is currently persisted by `localStorage`.
+  Consider the situation shown below where you have `worker:a` and `worker:b`,
+  and wish to debug both. You can enable this using `localStorage.debug`:
 
 ```js
 localStorage.debug = 'worker:*'
