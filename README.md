@@ -1,7 +1,7 @@
 # debug
 [![Build Status](https://travis-ci.org/visionmedia/debug.svg?branch=master)](https://travis-ci.org/visionmedia/debug)
 
-tiny node.js debugging utility modelled after node core's debugging technique.
+A tiny node.js debugging utility modelled after node core's debugging technique.
 
 
 ## Installation
@@ -12,7 +12,7 @@ $ npm install debug
 
 ## Usage
 
- With `debug` you simply invoke the exported function to generate your debug function, passing it a name which will determine if a noop function is returned, or a decorated `console.error`, so all of the `console` [format string goodies](https://developer.chrome.com/devtools/docs/console-api#consolelogobject-object) you're used to work fine. A unique color is selected per-function for visibility.
+`debug` exposes a function; simply pass this function the name of your module, and it will return a decorated version of `console.error` for you to pass debug statements to. This will allow you to specify which modules you wish to see debug statements from when working an issue.
 
 Example _app.js_:
 
