@@ -1,4 +1,9 @@
 
+2.4.4 / 2016-12-14
+==================
+
+  * Fix: work around debug being loaded in preload scripts for electron (#368, @paulcbetts)
+
 2.4.3 / 2016-12-14
 ==================
 
