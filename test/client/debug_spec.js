@@ -1,3 +1,4 @@
+/* globals describe, it, expect, debug*/ 
 describe('debug', function () {
   describe('sanity check', function () {
     it('passes', function () {
