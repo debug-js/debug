@@ -34,8 +34,8 @@
     "mocha": "^3.2.0",
     "sinon": "^1.17.6"
   },
-  "main": "./index.js",
-  "browser": "./browser.js",
+  "main": "./src/index.js",
+  "browser": "./src/browser.js",
   "component": {
     "scripts": {
       "debug/index.js": "browser.js",
