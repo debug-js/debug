@@ -159,7 +159,7 @@ function enable(namespaces) {
  */
 
 function disable() {
-  exports.enable('');
+  exports.names = [];
 }
 
 /**
