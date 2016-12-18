@@ -110,7 +110,7 @@ function createDebug(namespace) {
     // apply env-specific formatting (colors, etc.)
     exports.formatArgs.call(self, args);
 
-    var logFn = enabled.log || exports.log || console.log.bind(console);
+    var logFn = debug.log || exports.log || console.log.bind(console);
     logFn.apply(self, args);
   }
 
