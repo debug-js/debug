@@ -43,7 +43,7 @@ lint: .FORCE
 	eslint debug.js
 	
 test: .FORCE
-	mocha test/server/**.js
+	mocha test/**.js
 	karma start --single-run
 	
 .PHONY: all install clean distclean
