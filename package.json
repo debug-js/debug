@@ -25,6 +25,7 @@
     "chai": "^3.5.0",
     "eslint": "^3.12.1",
     "eslint-plugin-babel": "^4.0.0",
+    "ghooks": "^1.3.2",
     "karma": "^1.3.0",
     "karma-chai": "^0.1.0",
     "karma-mocha": "^1.3.0",
@@ -39,6 +40,11 @@
     "scripts": {
       "debug/index.js": "browser.js",
       "debug/debug.js": "debug.js"
+    }
+  },
+  "config": {
+    "ghooks": {
+      "pre-commit": "scripts/precommit.sh"
     }
   }
 }
