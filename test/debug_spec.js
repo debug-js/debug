@@ -6,7 +6,7 @@ if (typeof module !== 'undefined') {
   var expect = chai.expect;
   
   var debug = require('../src/index');
-  var  = require('sinon');
+  var sinon = require('sinon');
   var sinonChai = require("sinon-chai");
   chai.use(sinonChai);
 }
@@ -36,20 +36,20 @@ describe('debug', function () {
     });
   });
   
-  describe('custom functions', () => {
-    let log;
+  describe('custom functions', function () {
+    var log;
 
-    beforeEach(() => {
+    beforeEach(function () {
       debug.enable('test');
       log = debug('test');
     });
 
-    context('with log function', () => {
-      it('uses it', () => {
+    context('with log function', function () {
+      it('uses it', function () {
         log.log = sinon.spy();
         log('using custom log function');
 
-        chai.assert.calledOnce(log.log);
+        expect(log.log).to.have.been.calledOnce;
       });
     });
   });
