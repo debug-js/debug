@@ -1,5 +1,5 @@
-/* global describe, it */
-'use strict'
+/* global describe, it, context, beforeEach */
+'use strict';
 
 if (typeof module !== 'undefined') {
   var chai = require('chai');
@@ -11,47 +11,28 @@ if (typeof module !== 'undefined') {
   chai.use(sinonChai);
 }
 
-var dummyConsole = {
-  log: function() {
-    //dummy function
-  }
-};
-
 
 describe('debug', function () {
   var log = debug('test');
   
   log.log = sinon.stub();
-    it('passes a basic sanity check', function () {
-      expect(log('hello world')).to.not.throw;
-    });
-    
-    it('Should output to the log function', function () {
-      debug.log = dummyConsole.log;
-      sinon.spy(dummyConsole, 'log');
-      log('Hello world');
-      //expect(dummyConsole.log).to.have.been.called;
-    });
-<<<<<<< HEAD
-=======
-  });
   
-  describe('custom functions', () => {
-    let log;
+  it('passes a basic sanity check', function () {
+    expect(log('hello world')).to.not.throw;
+  });
 
-    beforeEach(() => {
+  context('with log function', function () {
+        
+    beforeEach(function () {
       debug.enable('test');
       log = debug('test');
     });
+  
+    it('uses it', function () {
+      log.log = sinon.stub();
+      log('using custom log function');
 
-    context('with log function', () => {
-      it('uses it', () => {
-        log.log = spy();
-        log('using custom log function');
-
-        assert.calledOnce(log.log);
-      });
+      expect(log.log).to.have.been.calledOnce;
     });
   });
->>>>>>> upstream/master
 });
