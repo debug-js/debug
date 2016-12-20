@@ -35,4 +35,5 @@ describe('debug', function () {
       expect(log.log).to.have.been.calledOnce;
     });
   });
+
 });
