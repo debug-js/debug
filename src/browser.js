@@ -10,9 +10,9 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
-exports.storage = 'undefined' != typeof chrome
-               && 'undefined' != typeof chrome.storage
-                  ? chrome.storage.local
+exports.storage = 'undefined' != typeof window.chrome
+               && 'undefined' != typeof window.chrome.storage
+                  ? window.chrome.storage.local
                   : localstorage();
 
 /**
@@ -37,6 +37,13 @@ exports.colors = [
  */
 
 function useColors() {
+  // NB: In an Electron preload script, document will be defined but not fully
+  // initialized. Since we know we're in Chrome, we'll just detect this case
+  // explicitly
+  if (typeof window !== 'undefined' && 'process' in window && window.process.type === 'renderer') {
+    return true;
+  }
+
   // is webkit? http://stackoverflow.com/a/16459606/376773
   // document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
   return (typeof document !== 'undefined' && 'WebkitAppearance' in document.documentElement.style) ||
@@ -44,9 +51,9 @@ function useColors() {
     (typeof window !== 'undefined' && window.console && (console.firebug || (console.exception && console.table))) ||
     // is firefox >= v31?
     // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
-    (navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
+    (navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
     // double check webkit in userAgent just in case we are in a worker
-    (navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
+    (navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
 }
 
 /**
@@ -141,7 +148,6 @@ function save(namespaces) {
  */
 
 function load() {
-  var r;
   try {
     return exports.storage.debug;
   } catch(e) {}

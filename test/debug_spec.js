@@ -32,4 +32,26 @@ describe('debug', function () {
       log('Hello world');
       //expect(dummyConsole.log).to.have.been.called;
     });
+<<<<<<< HEAD
+=======
+  });
+  
+  describe('custom functions', () => {
+    let log;
+
+    beforeEach(() => {
+      debug.enable('test');
+      log = debug('test');
+    });
+
+    context('with log function', () => {
+      it('uses it', () => {
+        log.log = spy();
+        log('using custom log function');
+
+        assert.calledOnce(log.log);
+      });
+    });
+  });
+>>>>>>> upstream/master
 });

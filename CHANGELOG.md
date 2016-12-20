@@ -1,4 +1,23 @@
 
+2.4.5 / 2016-12-17
+==================
+
+  * Fix: `navigator` undefined in Rhino (#376, @jochenberger)
+  * Fix: custom log function (#379, @hsiliev)
+  * Improvement: bit of cleanup + linting fixes (@thebigredgeek)
+  * Improvement: rm non-maintainted `dist/` dir (#375, @freewil)
+  * Docs: simplified language in the opening paragraph. (#373, @yamikuronue)
+
+2.4.4 / 2016-12-14
+==================
+
+  * Fix: work around debug being loaded in preload scripts for electron (#368, @paulcbetts)
+
+2.4.3 / 2016-12-14
+==================
+
+  * Fix: navigation.userAgent error for react native (#364, @escwald)
+
 2.4.2 / 2016-12-14
 ==================
 
