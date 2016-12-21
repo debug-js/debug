@@ -3,6 +3,7 @@
 
 A tiny node.js debugging utility modelled after node core's debugging technique.
 
+**Discussion around the V3 API is under way [here](https://github.com/visionmedia/debug/issues/370)**
 
 ## Installation
 
