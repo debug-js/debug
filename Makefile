@@ -43,6 +43,10 @@ lint: .FORCE
 	eslint browser.js debug.js index.js node.js
 	
 test: .FORCE
-	mocha
-
+	istanbul cover node_modules/mocha/bin/_mocha -- test/**.js
+	karma start --single-run
+	
+coveralls: 
+	cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+	
 .PHONY: all install clean distclean
