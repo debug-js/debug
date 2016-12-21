@@ -1,3 +1,17 @@
+
+2.5.0 / 2016-12-20
+==================
+
+  * Fix: wrong reference in bower file (@thebigredgeek)
+  * Fix: webworker compatibility (@thebigredgeek)
+  * Fix: output formatting issue (#388, @kribblo)
+  * Fix: babel-loader compatibility (#383, @escwald)
+  * Misc: removed built asset from repo and publications (@thebigredgeek) 
+  * Misc: moved source files to /src (#378, @yamikuronue)
+  * Test: added karma integration and replaced babel with browserify for browser tests (#378, @yamikuronue)
+  * Test: coveralls integration (#378, @yamikuronue)
+  * Docs: simplified language in the opening paragraph (#373, @yamikuronue)
+
 2.4.5 / 2016-12-17
 ==================
 
