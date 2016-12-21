@@ -62,7 +62,7 @@ setInterval(function(){
  set DEBUG=*,-not_this
  ```
 
- Note that PowerShell using different syntax to set environment variables.
+ Note that PowerShell uses different syntax to set environment variables.
 
  ```cmd
  $env:DEBUG = "*,-not_this"
