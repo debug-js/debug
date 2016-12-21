@@ -40,7 +40,7 @@ function useColors() {
   // NB: In an Electron preload script, document will be defined but not fully
   // initialized. Since we know we're in Chrome, we'll just detect this case
   // explicitly
-  if (typeof window !== 'undefined' && 'process' in window && window.process.type === 'renderer') {
+  if (typeof window !== 'undefined' && typeof window.process !== 'undefined' && window.process.type === 'renderer') {
     return true;
   }
 
@@ -95,7 +95,7 @@ function formatArgs(args) {
   // figure out the correct index to insert the CSS into
   var index = 0;
   var lastC = 0;
-  args[0].replace(/%[a-z%]/g, function(match) {
+  args[0].replace(/%[a-zA-Z%]/g, function(match) {
     if ('%%' === match) return;
     index++;
     if ('%c' === match) {
