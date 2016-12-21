@@ -153,8 +153,10 @@ function load() {
   } catch(e) {}
 
   // If debug isn't set in LS, and we're in Electron, try to load $DEBUG
-  if (typeof process !== 'undefined' && 'env' in process) {
-    return process.env.DEBUG;
+  // We're using global.process to avoid Browserify/Webpack including all of:
+  // https://github.com/defunctzombie/node-process
+  if (typeof global !== 'undefined' && global.process && global.process.env) {
+    return global.process.env.DEBUG;
   }
 }
 
