@@ -5,3 +5,4 @@ example
 *.sock
 dist
 yarn.lock
+coverage

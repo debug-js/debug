@@ -10,9 +10,9 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
-exports.storage = 'undefined' != typeof window.chrome
-               && 'undefined' != typeof window.chrome.storage
-                  ? window.chrome.storage.local
+exports.storage = 'undefined' != typeof chrome
+               && 'undefined' != typeof chrome.storage
+                  ? chrome.storage.local
                   : localstorage();
 
 /**

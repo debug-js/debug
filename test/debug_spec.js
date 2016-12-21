@@ -1,13 +1,19 @@
 /* global describe, it, context, beforeEach */
 'use strict';
 
-if (typeof module !== 'undefined') {
-  var chai = require('chai');
-  var expect = chai.expect;
+var chai
+  , expect
+  , debug
+  , sinon
+  , sinonChai;
   
-  var debug = require('../src/index');
-  var sinon = require('sinon');
-  var sinonChai = require("sinon-chai");
+if (typeof module !== 'undefined') {
+  chai = require('chai');
+  expect = chai.expect;
+  
+  debug = require('../src/index');
+  sinon = require('sinon');
+  sinonChai = require("sinon-chai");
   chai.use(sinonChai);
 }
 
