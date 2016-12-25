@@ -149,7 +149,9 @@ function save(namespaces) {
 
 function load() {
   try {
-    return exports.storage.debug;
+    if(exports.storage.debug !== undefined) {
+      return exports.storage.debug;
+    }
   } catch(e) {}
 
   // If debug isn't set in LS, and we're in Electron, try to load $DEBUG
