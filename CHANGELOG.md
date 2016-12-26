@@ -1,4 +1,11 @@
 
+2.5.2 / 2016-12-25
+==================
+
+  * Fix: reference error on window within webworkers (#393, @KlausTrainer)
+  * Docs: fixed README typo (#391, @lurch) 
+  * Docs: added notice about v3 api discussion (@thebigredgeek)
+
 2.5.1 / 2016-12-20
 ==================
 
