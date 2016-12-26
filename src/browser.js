@@ -180,8 +180,3 @@ function localstorage() {
     return window.localStorage;
   } catch (e) {}
 }
-
-/** Attach to Window*/
-if (typeof window !== 'undefined') {
-  window.debug = exports;
-}
