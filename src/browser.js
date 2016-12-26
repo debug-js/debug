@@ -182,6 +182,6 @@ function localstorage() {
 }
 
 /** Attach to Window*/
-if (window) {
+if (typeof window !== 'undefined') {
   window.debug = exports;
 }
