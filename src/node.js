@@ -59,7 +59,7 @@ exports.inspectOpts = Object.keys(process.env).filter(function (key) {
  */
 
 if ('DEBUG_FD' in process.env) {
-  util.deprecate(() => {}, '`DEBUG_FD` is deprecated. Override `debug.log` if you want to use a different log function (https://git.io/vMUyr)')()
+  util.deprecate(function(){}, '`DEBUG_FD` is deprecated. Override `debug.log` if you want to use a different log function (https://git.io/vMUyr)')()
 }
 
 var fd = parseInt(process.env.DEBUG_FD, 10) || 2;
