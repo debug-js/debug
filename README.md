@@ -99,7 +99,6 @@ Then, run the program to be debugged as usual.
 |-----------|-------------------------------------------------|
 | `DEBUG`   | Enables/disabled specific debugging namespaces. |
 | `DEBUG_COLORS`| Whether or not to use colors in the debug output. |
-| `DEBUG_FD`| File descriptor to output debug logs to. Defaults to stderr. |
 | `DEBUG_DEPTH` | Object inspection depth. |
 | `DEBUG_SHOW_HIDDEN` | Shows hidden properties on inspected objects. |
 
@@ -109,8 +108,6 @@ Then, run the program to be debugged as usual.
   See the Node.js documentation for
   [`util.inspect()`](https://nodejs.org/api/util.html#util_util_inspect_object_options)
   for the complete list.
-
-  __Note:__ Certain IDEs (such as WebStorm) don't support colors on stderr. In these cases you must set `DEBUG_COLORS` to `1` and additionally change `DEBUG_FD` to `1`.
 
 ## Formatters
 
@@ -181,13 +178,10 @@ setInterval(function(){
 
   ![](https://cloud.githubusercontent.com/assets/71256/3139768/b98c5fd8-e8ef-11e3-862a-f7253b6f47c6.png)
 
+
 ## Output streams
 
-
-### stderr vs stdout
-  By default `debug` will log to stderr, however this can be changed by setting the environment variable `DEBUG_FD` to `1` for stdout and `2` for stderr (the default value).
-
-You can also set an alternative logging method per-namespace by overriding the `log` method on a per-namespace or globally:
+  By default `debug` will log to stderr, however this can be configured per-namespace by overriding the `log` method:
 
 Example _stdout.js_:
 
@@ -211,15 +205,6 @@ error('now goes to stdout via console.info');
 log('still goes to stdout, but via console.info now');
 ```
 
-### Save debug output to a file
-
-You can save all debug statements to a file by piping them.
-
-Example:
-
-```bash
-$ DEBUG_FD=3 node your-app.js 3> whatever.log
-```
 
 ## Authors
 
