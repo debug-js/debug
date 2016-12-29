@@ -1,4 +1,11 @@
 
+2.6.0 / 2016-12-28
+==================
+
+  * Fix: added better null pointer checks for browser useColors (@thebigredgeek)
+  * Improvement: removed explicit `window.debug` export (#404, @tootallnate)
+  * Improvement: deprecated `DEBUG_FD` environment variable (#405, @tootallnate)
+
 2.5.2 / 2016-12-25
 ==================
 
