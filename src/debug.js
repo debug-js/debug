@@ -138,6 +138,9 @@ function createDebug(namespace) {
 function enable(namespaces) {
   exports.save(namespaces);
 
+  exports.names = [];
+  exports.skips = [];
+
   var split = (namespaces || '').split(/[\s,]+/);
   var len = split.length;
 
