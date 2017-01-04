@@ -29,12 +29,6 @@ exports.skips = [];
 exports.formatters = {};
 
 /**
- * Previous log timestamp.
- */
-
-var prevTime;
-
-/**
  * Select a color.
  * @param {String} namespace
  * @return {Number}
@@ -61,6 +55,8 @@ function selectColor(namespace) {
  */
 
 function createDebug(namespace) {
+
+  var prevTime;
 
   function debug() {
     // disabled?
@@ -174,6 +170,9 @@ function disable() {
  */
 
 function enabled(name) {
+  if (name[name.length - 1] === '*') {
+    return true;
+  }
   var i, len;
   for (i = 0, len = exports.skips.length; i < len; i++) {
     if (exports.skips[i].test(name)) {
