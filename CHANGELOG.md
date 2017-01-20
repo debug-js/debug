@@ -1,3 +1,7 @@
+2.6.1 / 2017-01-16
+==================
+
+  * Fix: Module's `export default` syntax fix for IE8 `Expected identifier` error
 
 2.6.0 / 2016-12-28
 ==================
