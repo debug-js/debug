@@ -58,7 +58,7 @@ exports.inspectOpts = Object.keys(process.env).filter(function (key) {
  *   $ DEBUG_FD=3 node script.js 3>debug.log
  */
 
-if ('DEBUG_FD' in process.env && !('FORCE_COLOR' in process.env) && !('DEBUG_COLORS' in process.env)  ) {
+if ('DEBUG_FD' in process.env && !('DEBUG_COLORS' in process.env && process.env.DEBUG_FD == 1)) {
   util.deprecate(function(){}, '`DEBUG_FD` is deprecated. Override `debug.log` if you want to use a different log function (https://git.io/vMUyr)')()
 }
 
