@@ -58,11 +58,12 @@ exports.inspectOpts = Object.keys(process.env).filter(function (key) {
  *   $ DEBUG_FD=3 node script.js 3>debug.log
  */
 
-if ('DEBUG_FD' in process.env && !('DEBUG_COLORS' in process.env && process.env.DEBUG_FD == 1)) {
-  util.deprecate(function(){}, '`DEBUG_FD` is deprecated. Override `debug.log` if you want to use a different log function (https://git.io/vMUyr)')()
+var fd = parseInt(process.env.DEBUG_FD, 10) || 2;
+
+if (1 !== fd && 2 !== fd) {
+  util.deprecate(function(){}, '`DEBUG_FD` is deprecated. Override `debug.log` if you want to use a different log function (https://git.io/debug_fd)')()
 }
 
-var fd = parseInt(process.env.DEBUG_FD, 10) || 2;
 var stream = 1 === fd ? process.stdout :
              2 === fd ? process.stderr :
              createWritableStdioStream(fd);
