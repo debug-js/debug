@@ -61,7 +61,7 @@ exports.inspectOpts = Object.keys(process.env).filter(function (key) {
 var fd = parseInt(process.env.DEBUG_FD, 10) || 2;
 
 if (1 !== fd && 2 !== fd) {
-  util.deprecate(function(){}, '`DEBUG_FD` is deprecated. Override `debug.log` if you want to use a different log function (https://git.io/debug_fd)')()
+  util.deprecate(function(){}, 'except for stderr(2) and stdout(1), any other usage of DEBUG_FD is deprecated. Override debug.log if you want to use a different log function (https://git.io/debug_fd)')()
 }
 
 var stream = 1 === fd ? process.stdout :
