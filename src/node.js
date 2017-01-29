@@ -115,7 +115,7 @@ function formatArgs(args) {
     args[0] = prefix + args[0].split('\n').join('\n' + prefix);
     args.push(colorCode + 'm+' + exports.humanize(this.diff) + '\u001b[0m');
   } else {
-    args[0] = new Date().toUTCString()
+    args[0] = new Date().toISOString()
       + ' ' + name + ' ' + args[0];
   }
 }
