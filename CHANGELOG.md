@@ -1,7 +1,10 @@
-2.6.1 / 2017-01-16
+2.6.1 / 2017-02-10
 ==================
 
   * Fix: Module's `export default` syntax fix for IE8 `Expected identifier` error
+  * Fix: Whitelist DEBUG_FD for values 1 and 2 only (#415, @pi0)
+  * Fix: IE8 "Expected identifier" error (#414, @vgoma)
+  * Fix: Namespaces would not disable once enabled (#409, @musikov)
 
 2.6.0 / 2016-12-28
 ==================
