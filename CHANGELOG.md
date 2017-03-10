@@ -1,3 +1,10 @@
+
+n.n.n / 2017-03-10
+==================
+
+  * Fix: DEBUG_MAX_ARRAY_LENGTH (#420, @slavaGanzin)
+  * Docs: Add backers and sponsors from Open Collective (#422, @piamancini)
+  * Docs: Add Slackin invite badge (@tootallnate)
 2.6.1 / 2017-02-10
 ==================
 
