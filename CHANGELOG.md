@@ -1,4 +1,10 @@
 
+2.6.3 / 2017-03-13
+==================
+
+  * Fix: Fix for electron reference to `process.env.DEBUG` (#431, @paulcbetts)
+  * Docs: Changelog fix (@thebigredgeeK)
+
 2.6.2 / 2017-03-10
 ==================
 
