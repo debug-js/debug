@@ -119,6 +119,7 @@ function createDebug(namespace) {
   debug.enabled = exports.enabled(namespace);
   debug.useColors = exports.useColors();
   debug.color = selectColor(namespace);
+  debug.destroy = destroy;
 
   // env-specific initialization logic for debug instances
   if ('function' === typeof exports.init) {
@@ -128,6 +129,11 @@ function createDebug(namespace) {
   exports.instances.push(debug);
 
   return debug;
+}
+
+function destroy () {
+  const index = exports.instances.indexOf(this)
+  exports.instances.splice(index, 1)
 }
 
 /**
