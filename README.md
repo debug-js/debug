@@ -51,11 +51,29 @@ setInterval(function(){
 }, 1000);
 ```
 
- The __DEBUG__ environment variable is then used to enable these based on space or comma-delimited names. Here are some examples:
+ By default, the __DEBUG__ environment variable is then used to enable these based on space or comma-delimited names. Here are some examples:
 
   ![debug http and worker](http://f.cl.ly/items/18471z1H402O24072r1J/Screenshot.png)
 
   ![debug worker](http://f.cl.ly/items/1X413v1a3M0d3C2c1E0i/Screenshot.png)
+
+#### Are you using _DEBUG_ for something else?
+
+ You can easily set another variable to look up for debug information. Just pass that to the settings function of the debug factory as _envVarName_. This works the same with LocalStorage.
+
+```js
+var debug = require('debug')
+  , log = debug('worker');
+
+  debug.settings({
+    envVarName: 'MY_VAR'
+  });
+setInterval(function(){
+  log('doing some work');
+}, 1000); 
+```
+
+ All other variables you want to set for debug, should start with __MY_VAR__. For example: __MY_VAR_COLORS__, __MY_VAR_FD__, etc.
 
 #### Windows note
 
@@ -105,12 +123,14 @@ Then, run the program to be debugged as usual.
 | `DEBUG_DEPTH` | Object inspection depth. |
 | `DEBUG_SHOW_HIDDEN` | Shows hidden properties on inspected objects. |
 
-
   __Note:__ The environment variables beginning with `DEBUG_` end up being
   converted into an Options object that gets used with `%o`/`%O` formatters.
   See the Node.js documentation for
   [`util.inspect()`](https://nodejs.org/api/util.html#util_util_inspect_object_options)
   for the complete list.
+
+  In case the name debug cause conflicts on your project, use the settings 
+  
 
 ## Formatters
 
