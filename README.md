@@ -129,9 +129,6 @@ Then, run the program to be debugged as usual.
   [`util.inspect()`](https://nodejs.org/api/util.html#util_util_inspect_object_options)
   for the complete list.
 
-  In case the name debug cause conflicts on your project, use the settings 
-  
-
 ## Formatters
 
 
