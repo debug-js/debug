@@ -1,3 +1,13 @@
+/**
+ * Options object. Starting values are defaults.
+ */
+var options = {
+  envVarName: 'debug'
+};
+/**
+ * Collection of instances.
+ */
+var debugsCollection = [];
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -11,6 +21,7 @@ exports.coerce = coerce;
 exports.disable = disable;
 exports.enable = enable;
 exports.enabled = enabled;
+exports.settings = settings;
 exports.humanize = require('ms');
 
 /**
@@ -27,6 +38,29 @@ exports.skips = [];
  */
 
 exports.formatters = {};
+
+/**
+ * Settings getter/setter function.
+ */
+
+function settings(newSettings) {
+  if (!newSettings) return options;
+
+  // By using enable with undefined we delete the old key data.
+  enable();
+
+  options = Object.assign({}, options, newSettings);
+
+  if ('function' === typeof exports.update) {
+    // If we have an update function, run it after settings are updated.
+    exports.update(debugsCollection);
+  }
+
+  // Enable again.
+  enable(exports.load());
+
+  return options;
+}
 
 /**
  * Previous log timestamp.
@@ -64,7 +98,7 @@ function createDebug(namespace) {
 
   function debug() {
     // disabled?
-    if (!debug.enabled) return;
+    if (!debug.enabled()) return;
 
     var self = debug;
 
@@ -114,15 +148,17 @@ function createDebug(namespace) {
     logFn.apply(self, args);
   }
 
-  debug.namespace = namespace;
-  debug.enabled = exports.enabled(namespace);
-  debug.useColors = exports.useColors();
-  debug.color = selectColor(namespace);
-
   // env-specific initialization logic for debug instances
   if ('function' === typeof exports.init) {
     exports.init(debug);
   }
+
+  debug.namespace = namespace;
+  debug.enabled = exports.enabled.bind(null, namespace);
+  debug.useColors = exports.useColors;
+  debug.color = selectColor(namespace);
+
+  debugsCollection.push(debug);
 
   return debug;
 }
