@@ -55,20 +55,21 @@ function parseInspectOpts() {
 // Parse initial options
 parseInspectOpts();
 
+var stream = {};
+
 /**
  * The file descriptor to write the `debug()` calls to.
- * Set the `DEBUG_FD` env variable to override with another value. i.e.:
+ * Set the FD env variable to override with another value. i.e.:
  *
  *   $ DEBUG_FD=3 node script.js 3>debug.log
  */
-var stream = {};
 
 function setStream() {
   var FDEnvVarName = exports.settings().envVarName.toUpperCase() + '_FD';
   var fd = parseInt(process.env[FDEnvVarName], 10) || 2;  
 
   if (1 !== fd && 2 !== fd) {
-    util.deprecate(function(){}, 'except for stderr(2) and stdout(1), any other usage of DEBUG_FD is deprecated. Override debug.log if you want to use a different log function (https://git.io/debug_fd)')()
+    util.deprecate(function(){}, 'except for stderr(2) and stdout(1), any other usage of the FD variable is deprecated. Override debug.log if you want to use a different log function (https://git.io/debug_fd)')()
   }
   stream = 1 === fd ? process.stdout :
           2 === fd ? process.stderr :

@@ -155,7 +155,7 @@ function load() {
     r = exports.storage[envVarName];
   } catch(e) {}
 
-  // If debug isn't set in LS, and we're in Electron, try to load $DEBUG
+  // If debug mode isn't set in LS, and we're in Electron, try to load from process.env
   if (!r && typeof process !== 'undefined' && 'env' in process) {
     r = process.env[envVarName];
   }
