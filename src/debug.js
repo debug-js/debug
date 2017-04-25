@@ -49,7 +49,10 @@ function settings(newSettings) {
   // By using enable with undefined we delete the old key data.
   enable();
 
-  options = Object.assign({}, options, newSettings);
+  // We only care about properties we defined.
+  for (var opt in options) {
+    options[opt] = newSettings[opt];    
+  }
 
   if ('function' === typeof exports.update) {
     // If we have an update function, run it after settings are updated.
