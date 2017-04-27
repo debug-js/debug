@@ -1,4 +1,12 @@
 
+2.6.5 / 2017-04-27
+==================
+  
+  * Fix: null reference check on window.documentElement.style.WebkitAppearance (#447, @thebigredgeek)
+  * Misc: clean up browser reference checks (#447, @thebigredgeek)
+  * Misc: add npm-debug.log to .gitignore (@thebigredgeek)
+
+
 2.6.4 / 2017-04-20
 ==================
 
