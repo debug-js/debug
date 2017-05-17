@@ -40,7 +40,7 @@ function useColors() {
   // NB: In an Electron preload script, document will be defined but not fully
   // initialized. Since we know we're in Chrome, we'll just detect this case
   // explicitly
-  if (window && window.process && window.process.type === 'renderer') {
+  if (window && window.process && window.process.type === 'renderer' || !window.document) {
     return true;
   }
 
