@@ -1,4 +1,11 @@
 
+2.6.7 / 2017-05-16
+==================
+
+  * Fix: Update ms to 2.0.0 to fix regular expression denial of service vulnerability (#458, @hubdotcom)
+  * Fix: Inline extend function in node implementation (#452, @dougwilson)
+  * Docs: Fix typo (#455, @msasad)
+
 2.6.5 / 2017-04-27
 ==================
   
