@@ -18,6 +18,7 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
+exports.update = update;
 
 /**
  * Colors.
@@ -30,49 +31,61 @@ exports.colors = [6, 2, 3, 4, 5, 1];
  *
  *   $ DEBUG_COLORS=no DEBUG_DEPTH=10 DEBUG_SHOW_HIDDEN=enabled node script.js
  */
+function parseInspectOpts() {
+  exports.inspectOpts = Object.keys(process.env).filter(function (key) {
+    return new RegExp('^' + exports.settings().envVarName, 'i').test(key);
+  }).reduce(function (obj, key) {
+    // camel-case
+    var prop = key
+      .substring(exports.settings().envVarName.length)
+      .toLowerCase()
+      .replace(/_([a-z])/g, function (_, k) { return k.toUpperCase() });
 
-exports.inspectOpts = Object.keys(process.env).filter(function (key) {
-  return /^debug_/i.test(key);
-}).reduce(function (obj, key) {
-  // camel-case
-  var prop = key
-    .substring(6)
-    .toLowerCase()
-    .replace(/_([a-z])/g, function (_, k) { return k.toUpperCase() });
+    // coerce string value into JS value
+    var val = process.env[key];
+    if (/^(yes|on|true|enabled)$/i.test(val)) val = true;
+    else if (/^(no|off|false|disabled)$/i.test(val)) val = false;
+    else if (val === 'null') val = null;
+    else val = Number(val);
 
-  // coerce string value into JS value
-  var val = process.env[key];
-  if (/^(yes|on|true|enabled)$/i.test(val)) val = true;
-  else if (/^(no|off|false|disabled)$/i.test(val)) val = false;
-  else if (val === 'null') val = null;
-  else val = Number(val);
+    obj[prop] = val;
+    return obj;
+  }, {});
+}
+// Parse initial options
+parseInspectOpts();
 
-  obj[prop] = val;
-  return obj;
-}, {});
+var stream = {};
 
 /**
  * The file descriptor to write the `debug()` calls to.
- * Set the `DEBUG_FD` env variable to override with another value. i.e.:
+ * Set the FD env variable to override with another value. i.e.:
  *
  *   $ DEBUG_FD=3 node script.js 3>debug.log
  */
 
-var fd = parseInt(process.env.DEBUG_FD, 10) || 2;
+function setStream() {
+  var FDEnvVarName = exports.settings().envVarName.toUpperCase() + '_FD';
+  var fd = parseInt(process.env[FDEnvVarName], 10) || 2;  
 
-if (1 !== fd && 2 !== fd) {
-  util.deprecate(function(){}, 'except for stderr(2) and stdout(1), any other usage of DEBUG_FD is deprecated. Override debug.log if you want to use a different log function (https://git.io/debug_fd)')()
+  if (1 !== fd && 2 !== fd) {
+    util.deprecate(function(){}, 'except for stderr(2) and stdout(1), any other usage of the FD variable is deprecated. Override debug.log if you want to use a different log function (https://git.io/debug_fd)')()
+  }
+  stream = 1 === fd ? process.stdout :
+          2 === fd ? process.stderr :
+          createWritableStdioStream(fd);
 }
-
-var stream = 1 === fd ? process.stdout :
-             2 === fd ? process.stderr :
-             createWritableStdioStream(fd);
+// Set initial stream.
+setStream();
 
 /**
  * Is stdout a TTY? Colored output is enabled when `true`.
  */
 
 function useColors() {
+  var FDEnvVarName = exports.settings().envVarName.toUpperCase() + '_FD';  
+  var fd = parseInt(process.env[FDEnvVarName], 10) || 2;    
+
   return 'colors' in exports.inspectOpts
     ? Boolean(exports.inspectOpts.colors)
     : tty.isatty(fd);
@@ -83,7 +96,7 @@ function useColors() {
  */
 
 exports.formatters.o = function(v) {
-  this.inspectOpts.colors = this.useColors;
+  this.inspectOpts.colors = this.useColors();
   return util.inspect(v, this.inspectOpts)
     .replace(/\s*\n\s*/g, ' ');
 };
@@ -93,7 +106,7 @@ exports.formatters.o = function(v) {
  */
 
 exports.formatters.O = function(v) {
-  this.inspectOpts.colors = this.useColors;
+  this.inspectOpts.colors = this.useColors();
   return util.inspect(v, this.inspectOpts);
 };
 
@@ -105,7 +118,7 @@ exports.formatters.O = function(v) {
 
 function formatArgs(args) {
   var name = this.namespace;
-  var useColors = this.useColors;
+  var useColors = this.useColors();
 
   if (useColors) {
     var c = this.color;
@@ -135,12 +148,13 @@ function log() {
  */
 
 function save(namespaces) {
+  var envVarName = exports.settings().envVarName.toUpperCase();
   if (null == namespaces) {
     // If you set a process.env field to null or undefined, it gets cast to the
     // string 'null' or 'undefined'. Just delete instead.
-    delete process.env.DEBUG;
+    delete process.env[envVarName];
   } else {
-    process.env.DEBUG = namespaces;
+    process.env[envVarName] = namespaces;
   }
 }
 
@@ -152,7 +166,7 @@ function save(namespaces) {
  */
 
 function load() {
-  return process.env.DEBUG;
+  return process.env[exports.settings().envVarName.toUpperCase()];
 }
 
 /**
@@ -229,13 +243,24 @@ function createWritableStdioStream (fd) {
  * Create a new `inspectOpts` object in case `useColors` is set
  * differently for a particular `debug` instance.
  */
-
 function init (debug) {
   debug.inspectOpts = {};
 
   var keys = Object.keys(exports.inspectOpts);
   for (var i = 0; i < keys.length; i++) {
     debug.inspectOpts[keys[i]] = exports.inspectOpts[keys[i]];
+  }
+}
+/**
+ * Update logic for `debug` instances.
+ *
+ * Resets the stream, re-parses the inspect options and corrects them for the instances.
+ */
+function update(instances) {
+  parseInspectOpts();
+  setStream();
+  for (var i = 0; i < instances.length; i++) {
+    init(instances[i]);
   }
 }
 

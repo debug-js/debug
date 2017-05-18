@@ -31,6 +31,14 @@ describe('debug', function () {
     expect(debug.enable(true)).to.not.throw;
   });
 
+  it('allows for settings update', function () {
+    expect(debug.settings({ envVarName: 'test' })).to.not.throw;
+  });
+
+  it('and can continue logging after that', function () {
+    expect(log('hello world')).to.not.throw;
+  });
+
   context('with log function', function () {
 
     beforeEach(function () {
