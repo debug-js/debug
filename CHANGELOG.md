@@ -1,4 +1,9 @@
 
+2.6.8 / 2017-05-18
+==================
+
+  * Fix: Check for undefined on browser globals (#462, @marbemac)
+
 2.6.7 / 2017-05-16
 ==================
 
