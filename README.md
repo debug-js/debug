@@ -208,6 +208,18 @@ error('now goes to stdout via console.info');
 log('still goes to stdout, but via console.info now');
 ```
 
+## Checking whether a debug target is enabled
+
+Afer you've created a debug instance, you can check whether it is enabled by its `.enabled` property:
+
+```javascript
+const debug = require('debug')('http');
+
+if(debug.enabled) {
+  // ...
+}
+```
+
 
 ## Authors
 
