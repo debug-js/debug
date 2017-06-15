@@ -2,7 +2,7 @@
   "name": "debug",
   "repo": "visionmedia/debug",
   "description": "small debugging utility",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "keywords": [
     "debug",
     "log",
