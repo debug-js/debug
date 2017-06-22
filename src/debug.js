@@ -155,10 +155,10 @@ function enable(namespaces) {
       exports.names.push(new RegExp('^' + namespaces + '$'));
     }
   }
-  for (const namespace in exports._debuggers) {
+  for (var namespace in exports._debuggers) {
     exports._debuggers[namespace].enabled = false;
-    exports.names.some( (pattern) => {
-      const match = pattern.test(namespace);
+    exports.names.some( function(pattern) {
+      var match = pattern.test(namespace);
       if (match) {
         exports._debuggers[namespace].enabled = true;
       }
