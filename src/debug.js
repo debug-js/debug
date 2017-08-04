@@ -19,6 +19,7 @@ exports.humanize = require('ms');
 
 exports.names = [];
 exports.skips = [];
+exports._debuggers = Object.create(null);
 
 /**
  * Map of special "%n" handling functions, for the debug "format" argument.
@@ -123,6 +124,7 @@ function createDebug(namespace) {
   if ('function' === typeof exports.init) {
     exports.init(debug);
   }
+  exports._debuggers[namespace] = debug;
 
   return debug;
 }
@@ -152,6 +154,16 @@ function enable(namespaces) {
     } else {
       exports.names.push(new RegExp('^' + namespaces + '$'));
     }
+  }
+  for (var namespace in exports._debuggers) {
+    exports._debuggers[namespace].enabled = false;
+    exports.names.some( function(pattern) {
+      var match = pattern.test(namespace);
+      if (match) {
+        exports._debuggers[namespace].enabled = true;
+      }
+      return match;
+    });
   }
 }
 
