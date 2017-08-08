@@ -150,10 +150,11 @@ function enable(namespaces) {
   exports.names = [];
   exports.skips = [];
 
+  var i;
   var split = (typeof namespaces === 'string' ? namespaces : '').split(/[\s,]+/);
   var len = split.length;
 
-  for (var i = 0; i < len; i++) {
+  for (i = 0; i < len; i++) {
     if (!split[i]) continue; // ignore empty strings
     namespaces = split[i].replace(/\*/g, '.*?');
     if (namespaces[0] === '-') {
@@ -163,7 +164,7 @@ function enable(namespaces) {
     }
   }
 
-  for (var i = 0; i < exports.instances.length; i++) {
+  for (i = 0; i < exports.instances.length; i++) {
     var instance = exports.instances[i];
     instance.enabled = exports.enabled(instance.namespace);
   }
