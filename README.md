@@ -19,7 +19,7 @@ $ npm install debug
 
 `debug` exposes a function; simply pass this function the name of your module, and it will return a decorated version of `console.error` for you to pass debug statements to. This will allow you to toggle the debug output for different parts of your module as well as the module as a whole.
 
-Example _app.js_:
+Example [_app.js_](./examples/node/app.js):
 
 ```js
 var debug = require('debug')('http')
@@ -42,14 +42,25 @@ http.createServer(function(req, res){
 require('./worker');
 ```
 
-Example _worker.js_:
+Example [_worker.js_](./examples/node/worker.js):
 
 ```js
-var debug = require('debug')('worker');
+var a = require('debug')('worker:a')
+  , b = require('debug')('worker:b');
 
-setInterval(function(){
-  debug('doing some work');
-}, 1000);
+function work() {
+  a('doing lots of uninteresting work');
+  setTimeout(work, Math.random() * 1000);
+}
+
+work();
+
+function workb() {
+  b('doing some work');
+  setTimeout(workb, Math.random() * 2000);
+}
+
+workb();
 ```
 
 The `DEBUG` environment variable is then used to enable these based on space or
