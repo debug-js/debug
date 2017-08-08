@@ -7,8 +7,6 @@
 A tiny JavaScript debugging utility modelled after Node.js core's debugging
 technique. Works in Node.js and web browsers.
 
-**Discussion around the V3 API is under way [here](https://github.com/visionmedia/debug/issues/370)**
-
 ## Installation
 
 ```bash
