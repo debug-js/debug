@@ -132,8 +132,13 @@ function createDebug(namespace) {
 }
 
 function destroy () {
-  const index = exports.instances.indexOf(this)
-  exports.instances.splice(index, 1)
+  var index = exports.instances.indexOf(this);
+  if (index !== -1) {
+    exports.instances.splice(index, 1);
+    return true;
+  } else {
+    return false;
+  }
 }
 
 /**
