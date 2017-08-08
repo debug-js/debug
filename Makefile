@@ -24,7 +24,7 @@ node_modules: package.json
 	@touch node_modules
 
 lint: .FORCE
-	eslint browser.js debug.js index.js node.js
+	eslint *.js src/*.js
 
 test-node: .FORCE
 	istanbul cover node_modules/mocha/bin/_mocha -- test/**.js
