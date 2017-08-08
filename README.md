@@ -81,11 +81,11 @@ Then, run the program to be debugged as usual.
 
 When actively developing an application it can be useful to see when the time spent between one `debug()` call and the next. Suppose for example you invoke `debug()` before requesting a resource, and after as well, the "+NNNms" will show you how much time was spent between calls.
 
-![](http://f.cl.ly/items/2i3h1d3t121M2Z1A3Q0N/Screenshot.png)
+<img width="647" src="https://user-images.githubusercontent.com/71256/29091486-fa38524c-7c37-11e7-895f-e7ec8e1039b6.png">
 
 When stdout is not a TTY, `Date#toISOString()` is used, making it more useful for logging the debug information as shown below:
 
-![](http://f.cl.ly/items/112H3i0e0o0P0a2Q2r11/Screenshot.png)
+<img width="647" src="https://user-images.githubusercontent.com/71256/29091956-6bd78372-7c39-11e7-8c55-c948396d6edd.png">
 
 
 ## Conventions
@@ -193,9 +193,9 @@ option. These are WebKit web inspectors, Firefox ([since version
 31](https://hacks.mozilla.org/2014/05/editable-box-model-multiple-selection-sublime-text-keys-much-more-firefox-developer-tools-episode-31/))
 and the Firebug plugin for Firefox (any version).
 
-Colored output looks something like:
+Colored output looks like:
 
-![](https://cloud.githubusercontent.com/assets/71256/3139768/b98c5fd8-e8ef-11e3-862a-f7253b6f47c6.png)
+<img width="524" src="https://user-images.githubusercontent.com/71256/29092033-b65f9f2e-7c39-11e7-8e32-f6f0d8e865c1.png">
 
 
 ## Output streams
