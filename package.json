@@ -21,7 +21,7 @@
     "ms": "2.0.0"
   },
   "devDependencies": {
-    "browserify": "9.0.3",
+    "browserify": "14.4.0",
     "chai": "^3.5.0",
     "concurrently": "^3.1.0",
     "coveralls": "^2.11.15",
