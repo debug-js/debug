@@ -4,8 +4,8 @@
 // DEBUG=worker:a node example/worker
 // DEBUG=worker:b node example/worker
 
-var a = require('../')('worker:a')
-  , b = require('../')('worker:b');
+var a = require('../../')('worker:a')
+  , b = require('../../')('worker:b');
 
 function work() {
   a('doing lots of uninteresting work');

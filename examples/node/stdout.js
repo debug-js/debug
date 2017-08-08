@@ -1,4 +1,4 @@
-var debug = require('../');
+var debug = require('../../');
 var error = debug('app:error');
 
 // by default stderr is used
