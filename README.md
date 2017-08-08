@@ -77,6 +77,31 @@ $env:DEBUG = "*,-not_this"
 
 Then, run the program to be debugged as usual.
 
+
+## Namespace Colors
+
+Every debug instance has a color generated for it based on its namespace name.
+This helps when visually parsing the debug output to identify which debug instance
+a debug line belongs to.
+
+#### Node.js
+
+In Node.js, colors are enabled when stderr is a TTY. You also _should_ install
+the [`supports-color`](https://npmjs.org/supports-color) module alongside debug,
+otherwise debug will only use a small handful of basic colors.
+
+<img width="521" src="https://user-images.githubusercontent.com/71256/29092181-47f6a9e6-7c3a-11e7-9a14-1928d8a711cd.png">
+
+#### Web Browser
+
+Colors are also enabled on "Web Inspectors" that understand the `%c` formatting
+option. These are WebKit web inspectors, Firefox ([since version
+31](https://hacks.mozilla.org/2014/05/editable-box-model-multiple-selection-sublime-text-keys-much-more-firefox-developer-tools-episode-31/))
+and the Firebug plugin for Firefox (any version).
+
+<img width="524" src="https://user-images.githubusercontent.com/71256/29092033-b65f9f2e-7c39-11e7-8e32-f6f0d8e865c1.png">
+
+
 ## Millisecond diff
 
 When actively developing an application it can be useful to see when the time spent between one `debug()` call and the next. Suppose for example you invoke `debug()` before requesting a resource, and after as well, the "+NNNms" will show you how much time was spent between calls.
@@ -185,17 +210,6 @@ setInterval(function(){
   b('doing some work');
 }, 1200);
 ```
-
-#### Web Inspector Colors
-
-Colors are also enabled on "Web Inspectors" that understand the `%c` formatting
-option. These are WebKit web inspectors, Firefox ([since version
-31](https://hacks.mozilla.org/2014/05/editable-box-model-multiple-selection-sublime-text-keys-much-more-firefox-developer-tools-episode-31/))
-and the Firebug plugin for Firefox (any version).
-
-Colored output looks like:
-
-<img width="524" src="https://user-images.githubusercontent.com/71256/29092033-b65f9f2e-7c39-11e7-8e32-f6f0d8e865c1.png">
 
 
 ## Output streams
