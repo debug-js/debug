@@ -30,24 +30,29 @@ dist/debug.js: src/*.js node_modules
 		. > dist/debug.js
 
 lint:
-	eslint *.js src/*.js
+	@eslint *.js src/*.js
 
 test-node:
-	istanbul cover node_modules/mocha/bin/_mocha -- test/**.js
+	@istanbul cover node_modules/mocha/bin/_mocha -- test/**.js
+	@cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
 test-browser:
-	$(MAKE) browser
-	karma start --single-run
+	@$(MAKE) browser
+	@karma start --single-run
 
-test:
-	concurrently \
+test-all:
+	@concurrently \
 		"make test-node" \
 		"make test-browser"
 
-coveralls:
-	cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+test:
+	@if [ "x$(BROWSER_NAME)" = "x" ]; then \
+		$(MAKE) test-node; \
+		else \
+		$(MAKE) test-browser; \
+	fi
 
 clean:
-	rimraf dist
+	rimraf dist coverage
 
-.PHONY: browser install clean coveralls lint test test-node test-browser
+.PHONY: browser install clean lint test test-all test-node test-browser
