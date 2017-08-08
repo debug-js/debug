@@ -1,5 +1,5 @@
 
-var debug = require('../')('http')
+var debug = require('../../')('http')
   , http = require('http')
   , name = 'My App';
 
