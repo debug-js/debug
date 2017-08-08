@@ -46,7 +46,7 @@ test-all:
 		"make test-browser"
 
 test:
-	@if [ "x$(BROWSER_NAME)" = "x" ]; then \
+	@if [ "x$(BROWSER)" = "x" ]; then \
 		$(MAKE) test-node; \
 		else \
 		$(MAKE) test-browser; \
