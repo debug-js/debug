@@ -1,4 +1,20 @@
 
+3.0.0 / 2017-08-08
+==================
+
+  * Breaking: Remove DEBUG_FD (#406)
+  * Breaking: Use `Date#toISOString()` instead to `Date#toUTCString()` when output is not a TTY (#418)
+  * Breaking: Make millisecond timer namespace specific and allow 'always enabled' output (#408)
+  * Addition: document `enabled` flag (#465)
+  * Addition: add 256 colors mode (#481)
+  * Addition: `enabled()` updates existing debug instances, add `destroy()` function (#440)
+  * Update: component: update "ms" to v2.0.0
+  * Update: separate the Node and Browser tests in Travis-CI
+  * Update: refactor Readme, fixed documentation, added "Namespace Colors" section, redid screenshots
+  * Update: separate Node.js and web browser examples for organization
+  * Update: update "browserify" to v14.4.0
+  * Fix: fix Readme typo (#473)
+
 2.6.8 / 2017-05-18
 ==================
 
