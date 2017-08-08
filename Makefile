@@ -50,4 +50,4 @@ coveralls:
 clean:
 	rimraf dist
 
-.PHONY: all install clean distclean
+.PHONY: browser install clean coveralls lint test test-node test-browser
