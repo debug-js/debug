@@ -2,9 +2,10 @@
 [![Build Status](https://travis-ci.org/visionmedia/debug.svg?branch=master)](https://travis-ci.org/visionmedia/debug)  [![Coverage Status](https://coveralls.io/repos/github/visionmedia/debug/badge.svg?branch=master)](https://coveralls.io/github/visionmedia/debug?branch=master)  [![Slack](https://visionmedia-community-slackin.now.sh/badge.svg)](https://visionmedia-community-slackin.now.sh/) [![OpenCollective](https://opencollective.com/debug/backers/badge.svg)](#backers) 
 [![OpenCollective](https://opencollective.com/debug/sponsors/badge.svg)](#sponsors)
 
+<img width="647" src="https://user-images.githubusercontent.com/71256/29091486-fa38524c-7c37-11e7-895f-e7ec8e1039b6.png">
 
-
-A tiny node.js debugging utility modelled after node core's debugging technique.
+A tiny JavaScript debugging utility modelled after Node.js core's debugging
+technique. Works in Node.js and web browsers.
 
 **Discussion around the V3 API is under way [here](https://github.com/visionmedia/debug/issues/370)**
 
@@ -27,7 +28,7 @@ var debug = require('debug')('http')
 
 // fake app
 
-debug('booting %s', name);
+debug('booting %o', name);
 
 http.createServer(function(req, res){
   debug(req.method + ' ' + req.url);
@@ -51,52 +52,62 @@ setInterval(function(){
 }, 1000);
 ```
 
- The __DEBUG__ environment variable is then used to enable these based on space or comma-delimited names. Here are some examples:
+The `DEBUG` environment variable is then used to enable these based on space or
+comma-delimited names.
 
-  ![debug http and worker](http://f.cl.ly/items/18471z1H402O24072r1J/Screenshot.png)
+Here are some examples:
 
-  ![debug worker](http://f.cl.ly/items/1X413v1a3M0d3C2c1E0i/Screenshot.png)
+<img width="647" alt="screen shot 2017-08-08 at 12 53 04 pm" src="https://user-images.githubusercontent.com/71256/29091703-a6302cdc-7c38-11e7-8304-7c0b3bc600cd.png">
+<img width="647" alt="screen shot 2017-08-08 at 12 53 38 pm" src="https://user-images.githubusercontent.com/71256/29091700-a62a6888-7c38-11e7-800b-db911291ca2b.png">
+<img width="647" alt="screen shot 2017-08-08 at 12 53 25 pm" src="https://user-images.githubusercontent.com/71256/29091701-a62ea114-7c38-11e7-826a-2692bedca740.png">
 
 #### Windows note
 
- On Windows the environment variable is set using the `set` command.
+On Windows the environment variable is set using the `set` command.
 
- ```cmd
- set DEBUG=*,-not_this
- ```
+```cmd
+set DEBUG=*,-not_this
+```
 
- Note that PowerShell uses different syntax to set environment variables.
+Note that PowerShell uses different syntax to set environment variables.
 
- ```cmd
- $env:DEBUG = "*,-not_this"
-  ```
+```cmd
+$env:DEBUG = "*,-not_this"
+```
 
 Then, run the program to be debugged as usual.
 
 ## Millisecond diff
 
-  When actively developing an application it can be useful to see when the time spent between one `debug()` call and the next. Suppose for example you invoke `debug()` before requesting a resource, and after as well, the "+NNNms" will show you how much time was spent between calls.
+When actively developing an application it can be useful to see when the time spent between one `debug()` call and the next. Suppose for example you invoke `debug()` before requesting a resource, and after as well, the "+NNNms" will show you how much time was spent between calls.
 
-  ![](http://f.cl.ly/items/2i3h1d3t121M2Z1A3Q0N/Screenshot.png)
+![](http://f.cl.ly/items/2i3h1d3t121M2Z1A3Q0N/Screenshot.png)
 
-  When stdout is not a TTY, `Date#toISOString()` is used, making it more useful for logging the debug information as shown below:
+When stdout is not a TTY, `Date#toISOString()` is used, making it more useful for logging the debug information as shown below:
 
-  ![](http://f.cl.ly/items/112H3i0e0o0P0a2Q2r11/Screenshot.png)
+![](http://f.cl.ly/items/112H3i0e0o0P0a2Q2r11/Screenshot.png)
+
 
 ## Conventions
 
-  If you're using this in one or more of your libraries, you _should_ use the name of your library so that developers may toggle debugging as desired without guessing names. If you have more than one debuggers you _should_ prefix them with your library name and use ":" to separate features. For example "bodyParser" from Connect would then be "connect:bodyParser".  If you append a "*" to the end of your name, it will always be enabled regardless of the setting of the DEBUG environment variable.  You can then use it for normal output as well as debug output.
+If you're using this in one or more of your libraries, you _should_ use the name of your library so that developers may toggle debugging as desired without guessing names. If you have more than one debuggers you _should_ prefix them with your library name and use ":" to separate features. For example "bodyParser" from Connect would then be "connect:bodyParser".  If you append a "*" to the end of your name, it will always be enabled regardless of the setting of the DEBUG environment variable.  You can then use it for normal output as well as debug output.
 
 ## Wildcards
 
-  The `*` character may be used as a wildcard. Suppose for example your library has debuggers named "connect:bodyParser", "connect:compress", "connect:session", instead of listing all three with `DEBUG=connect:bodyParser,connect:compress,connect:session`, you may simply do `DEBUG=connect:*`, or to run everything using this module simply use `DEBUG=*`.
+The `*` character may be used as a wildcard. Suppose for example your library has
+debuggers named "connect:bodyParser", "connect:compress", "connect:session",
+instead of listing all three with
+`DEBUG=connect:bodyParser,connect:compress,connect:session`, you may simply do
+`DEBUG=connect:*`, or to run everything using this module simply use `DEBUG=*`.
 
-  You can also exclude specific debuggers by prefixing them with a "-" character.  For example, `DEBUG=*,-connect:*` would include all debuggers except those starting with "connect:".
+You can also exclude specific debuggers by prefixing them with a "-" character.
+For example, `DEBUG=*,-connect:*` would include all debuggers except those
+starting with "connect:".
 
 ## Environment Variables
 
-  When running through Node.js, you can set a few environment variables that will
-  change the behavior of the debug logging:
+When running through Node.js, you can set a few environment variables that will
+change the behavior of the debug logging:
 
 | Name      | Purpose                                         |
 |-----------|-------------------------------------------------|
@@ -106,16 +117,16 @@ Then, run the program to be debugged as usual.
 | `DEBUG_SHOW_HIDDEN` | Shows hidden properties on inspected objects. |
 
 
-  __Note:__ The environment variables beginning with `DEBUG_` end up being
-  converted into an Options object that gets used with `%o`/`%O` formatters.
-  See the Node.js documentation for
-  [`util.inspect()`](https://nodejs.org/api/util.html#util_util_inspect_object_options)
-  for the complete list.
+__Note:__ The environment variables beginning with `DEBUG_` end up being
+converted into an Options object that gets used with `%o`/`%O` formatters.
+See the Node.js documentation for
+[`util.inspect()`](https://nodejs.org/api/util.html#util_util_inspect_object_options)
+for the complete list.
 
 ## Formatters
 
-
-  Debug uses [printf-style](https://wikipedia.org/wiki/Printf_format_string) formatting. Below are the officially supported formatters:
+Debug uses [printf-style](https://wikipedia.org/wiki/Printf_format_string) formatting.
+Below are the officially supported formatters:
 
 | Formatter | Representation |
 |-----------|----------------|
@@ -126,9 +137,12 @@ Then, run the program to be debugged as usual.
 | `%j`      | JSON. Replaced with the string '[Circular]' if the argument contains circular references. |
 | `%%`      | Single percent sign ('%'). This does not consume an argument. |
 
+
 ### Custom formatters
 
-  You can add custom formatters by extending the `debug.formatters` object. For example, if you wanted to add support for rendering a Buffer as hex with `%h`, you could do something like:
+You can add custom formatters by extending the `debug.formatters` object.
+For example, if you wanted to add support for rendering a Buffer as hex with
+`%h`, you could do something like:
 
 ```js
 const createDebug = require('debug')
@@ -142,14 +156,16 @@ debug('this is hex: %h', new Buffer('hello world'))
 //   foo this is hex: 68656c6c6f20776f726c6421 +0ms
 ```
 
-## Browser support
-  You can build a browser-ready script using [browserify](https://github.com/substack/node-browserify),
-  or just use the [browserify-as-a-service](https://wzrd.in/) [build](https://wzrd.in/standalone/debug@latest),
-  if you don't want to build it yourself.
 
-  Debug's enable state is currently persisted by `localStorage`.
-  Consider the situation shown below where you have `worker:a` and `worker:b`,
-  and wish to debug both. You can enable this using `localStorage.debug`:
+## Browser Support
+
+You can build a browser-ready script using [browserify](https://github.com/substack/node-browserify),
+or just use the [browserify-as-a-service](https://wzrd.in/) [build](https://wzrd.in/standalone/debug@latest),
+if you don't want to build it yourself.
+
+Debug's enable state is currently persisted by `localStorage`.
+Consider the situation shown below where you have `worker:a` and `worker:b`,
+and wish to debug both. You can enable this using `localStorage.debug`:
 
 ```js
 localStorage.debug = 'worker:*'
@@ -172,21 +188,21 @@ setInterval(function(){
 
 #### Web Inspector Colors
 
-  Colors are also enabled on "Web Inspectors" that understand the `%c` formatting
-  option. These are WebKit web inspectors, Firefox ([since version
-  31](https://hacks.mozilla.org/2014/05/editable-box-model-multiple-selection-sublime-text-keys-much-more-firefox-developer-tools-episode-31/))
-  and the Firebug plugin for Firefox (any version).
+Colors are also enabled on "Web Inspectors" that understand the `%c` formatting
+option. These are WebKit web inspectors, Firefox ([since version
+31](https://hacks.mozilla.org/2014/05/editable-box-model-multiple-selection-sublime-text-keys-much-more-firefox-developer-tools-episode-31/))
+and the Firebug plugin for Firefox (any version).
 
-  Colored output looks something like:
+Colored output looks something like:
 
-  ![](https://cloud.githubusercontent.com/assets/71256/3139768/b98c5fd8-e8ef-11e3-862a-f7253b6f47c6.png)
+![](https://cloud.githubusercontent.com/assets/71256/3139768/b98c5fd8-e8ef-11e3-862a-f7253b6f47c6.png)
 
 
 ## Output streams
 
   By default `debug` will log to stderr, however this can be configured per-namespace by overriding the `log` method:
 
-Example _stdout.js_:
+Example [_stdout.js_](./examples/node/stdout.js):
 
 ```js
 var debug = require('debug');
@@ -210,15 +226,19 @@ log('still goes to stdout, but via console.info now');
 
 ## Checking whether a debug target is enabled
 
-After you've created a debug instance, you can check whether it is enabled by its `.enabled` property:
+After you've created a debug instance, you can determine whether or not it is
+enabled by checking the `enabled` property:
 
 ```javascript
 const debug = require('debug')('http');
 
-if(debug.enabled) {
-  // ...
+if (debug.enabled) {
+  // do stuff...
 }
 ```
+
+You can also manually toggle this property to force the debug instance to be
+enabled or disabled.
 
 
 ## Authors
@@ -302,7 +322,7 @@ Become a sponsor and get your logo on our README on Github with a link to your s
 
 (The MIT License)
 
-Copyright (c) 2014-2016 TJ Holowaychuk &lt;tj@vision-media.ca&gt;
+Copyright (c) 2014-2017 TJ Holowaychuk &lt;tj@vision-media.ca&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
