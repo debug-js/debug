@@ -130,8 +130,13 @@ function createDebug(namespace) {
     // that float must be the delta time in milliseconds.
     var args = arguments;
     var beginTime = exports.hrtime();
+    var ended = false;
 
     var mark = function (title, extraArgs) {
+      if (ended) {
+        return;
+      }
+
       section.title = title;
       section.deltaTime = exports.hrtime(beginTime);
       if (extraArgs.length) {
@@ -147,7 +152,11 @@ function createDebug(namespace) {
     var section = {
       title: '[begin]',
       end: function () {
-        return mark('[end]', arguments);
+        try {
+          return mark('[end]', arguments);
+        } finally {
+          ended = true;
+        }
       },
       mark: function () {
         return mark('[mark]', arguments);
