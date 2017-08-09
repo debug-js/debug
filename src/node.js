@@ -66,6 +66,8 @@ exports.inspectOpts = Object.keys(process.env).filter(function (key) {
   return obj;
 }, {});
 
+var isAWSLambdaEnv = Boolean(process.env.AWS_LAMBDA_LOG_STREAM_NAME);
+
 /**
  * Is stdout a TTY? Colored output is enabled when `true`.
  */
@@ -112,6 +114,8 @@ function formatArgs(args) {
 
     args[0] = prefix + args[0].split('\n').join('\n' + prefix);
     args.push(colorCode + 'm+' + exports.humanize(this.diff) + '\u001b[0m');
+  } else if (isAWSLambdaEnv) {
+    args[0] = name + ' ' + args[0];
   } else {
     args[0] = new Date().toISOString()
       + ' ' + name + ' ' + args[0];
@@ -123,6 +127,11 @@ function formatArgs(args) {
  */
 
 function log() {
+  if (isAWSLambdaEnv) {
+    // AWS Lambda env decorates console.* methods with meaningful debug info
+    // therefore we rely on them directly
+    return console.error(util.format.apply(util, arguments));
+  }
   return process.stderr.write(util.format.apply(util, arguments) + '\n');
 }
 
