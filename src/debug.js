@@ -21,7 +21,6 @@ exports.instances = [];
 /**
  * The currently active debug mode names, and names to skip.
  */
-
 exports.names = [];
 exports.skips = [];
 
@@ -63,7 +62,7 @@ function createDebug(namespace) {
 
   var prevTime;
 
-  function debug() {
+  function debugHandle(rawArgs, section) {
     // disabled?
     if (!debug.enabled) return;
 
@@ -78,9 +77,9 @@ function createDebug(namespace) {
     prevTime = curr;
 
     // turn the `arguments` into a proper Array
-    var args = new Array(arguments.length);
+    var args = new Array(rawArgs.length);
     for (var i = 0; i < args.length; i++) {
-      args[i] = arguments[i];
+      args[i] = rawArgs[i];
     }
 
     args[0] = exports.coerce(args[0]);
@@ -109,10 +108,14 @@ function createDebug(namespace) {
     });
 
     // apply env-specific formatting (colors, etc.)
-    exports.formatArgs.call(self, args);
+    exports.formatArgs.call(self, args, section);
 
     var logFn = debug.log || exports.log || console.log.bind(console);
     logFn.apply(self, args);
+  }
+
+  function debug() {
+    debugHandle(arguments);
   }
 
   debug.namespace = namespace;
@@ -120,6 +123,42 @@ function createDebug(namespace) {
   debug.useColors = exports.useColors();
   debug.color = selectColor(namespace);
   debug.destroy = destroy;
+
+  debug.begin = function () {
+    // hrtime() can return whatever it wants with no arguments;
+    // however, it must return a float when called with a second parameter;
+    // that float must be the delta time in milliseconds.
+    var args = arguments;
+    var beginTime = exports.hrtime();
+
+    var mark = function (title, extraArgs) {
+      section.title = title;
+      section.deltaTime = exports.hrtime(beginTime);
+      if (extraArgs.length) {
+        var newArgParams = [].slice.call(args, 1).concat([].slice.call(extraArgs, 1))
+        var newArgs = [(args[0] ? args[0] + ' :: ' : '') + (extraArgs[0] || '')].concat(newArgParams);
+        debugHandle(newArgs, section);
+      } else {
+        debugHandle(args, section);
+      }
+      return section;
+    }
+
+    var section = {
+      title: '[begin]',
+      end: function () {
+        return mark('[end]', arguments);
+      },
+      mark: function () {
+        return mark('[mark]', arguments);
+      }
+    };
+
+    debugHandle(args, section);
+    section.complete = true;
+
+    return section;
+  };
 
   // env-specific initialization logic for debug instances
   if ('function' === typeof exports.init) {

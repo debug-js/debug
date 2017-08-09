@@ -64,4 +64,24 @@ describe('debug', function () {
     });
   });
 
+  describe('timed sections', function () {
+    var log;
+
+    beforeEach(function () {
+      debug.enable('test');
+      log = debug('test');
+    });
+
+    context('with log function', function () {
+      it('times a critical section', function () {
+        log.log = sinon.spy();
+
+        var section = log.begin('a critical section');
+        log('something inside the section');
+        section.end();
+
+        expect(log.log).to.have.been.calledThrice;
+      });
+    });
+  });
 });
