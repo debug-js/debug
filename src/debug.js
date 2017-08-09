@@ -183,7 +183,7 @@ function createDebug(namespace) {
     var isPromise = false;
     var section = debug.begin.apply(debug, args);
     try {
-      var result = fn();
+      var result = fn(section);
 
       if (typeof Promise === 'function' && result instanceof Promise) { // eslint-disable-line no-undef
         isPromise = true;
