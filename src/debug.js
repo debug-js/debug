@@ -160,6 +160,37 @@ function createDebug(namespace) {
     return section;
   };
 
+  debug.time = function () {
+    var args = [].slice.call(arguments);
+    if (args.length < 2) {
+      throw new Error('debug.time() takes at least a debug string and a function');
+    }
+
+    var fn = args.pop();
+    if (typeof fn !== 'function') {
+      throw new Error('the last argument to debug.time() must be a function');
+    }
+
+    var isPromise = false;
+    var section = debug.begin.apply(debug, args);
+    try {
+      var result = fn();
+
+      if (typeof Promise === 'function' && result instanceof Promise) { // eslint-disable-line no-undef
+        isPromise = true;
+        result.then(function () {
+          section.end();
+        });
+      }
+
+      return result;
+    } finally {
+      if (!isPromise) {
+        section.end();
+      }
+    }
+  };
+
   // env-specific initialization logic for debug instances
   if ('function' === typeof exports.init) {
     exports.init(debug);
