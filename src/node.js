@@ -55,8 +55,6 @@ exports.inspectOpts = Object.keys(process.env).filter(function (key) {
     .toLowerCase()
     .replace(/_([a-z])/g, function (_, k) { return k.toUpperCase() });
 
-    console.log('key', key);
-
   // coerce string value into JS value
   var val = process.env[key];
   if (/^(yes|on|true|enabled)$/i.test(val)) val = true;
@@ -120,11 +118,7 @@ function formatArgs(args) {
 }
 
 function getDate() {
-<<<<<<< Updated upstream
-  if ('hideTtyDate' in this.inspectOpts && this.inspectOpts.hideTtyDate) {
-=======
   if ('hideTtyDate' in exports.inspectOpts && exports.inspectOpts.hideTtyDate) {
->>>>>>> Stashed changes
     return '';
   } else {
     return new Date().toISOString() + ' ';
