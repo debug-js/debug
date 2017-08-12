@@ -55,6 +55,8 @@ exports.inspectOpts = Object.keys(process.env).filter(function (key) {
     .toLowerCase()
     .replace(/_([a-z])/g, function (_, k) { return k.toUpperCase() });
 
+    console.log('key', key);
+
   // coerce string value into JS value
   var val = process.env[key];
   if (/^(yes|on|true|enabled)$/i.test(val)) val = true;
@@ -113,8 +115,15 @@ function formatArgs(args) {
     args[0] = prefix + args[0].split('\n').join('\n' + prefix);
     args.push(colorCode + 'm+' + exports.humanize(this.diff) + '\u001b[0m');
   } else {
-    args[0] = new Date().toISOString()
-      + ' ' + name + ' ' + args[0];
+    args[0] = getDate() + name + ' ' + args[0];
+  }
+}
+
+function getDate() {
+  if ('hideTtyDate' in this.inspectOpts && this.inspectOpts.hideTtyDate) {
+    return '';
+  } else {
+    return new Date().toISOString() + ' ';
   }
 }
 
