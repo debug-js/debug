@@ -1,5 +1,5 @@
 # debug
-[![Build Status](https://travis-ci.org/visionmedia/debug.svg?branch=master)](https://travis-ci.org/visionmedia/debug)  [![Coverage Status](https://coveralls.io/repos/github/visionmedia/debug/badge.svg?branch=master)](https://coveralls.io/github/visionmedia/debug?branch=master)  [![Slack](https://visionmedia-community-slackin.now.sh/badge.svg)](https://visionmedia-community-slackin.now.sh/) [![OpenCollective](https://opencollective.com/debug/backers/badge.svg)](#backers) 
+[![Build Status](https://travis-ci.org/visionmedia/debug.svg?branch=master)](https://travis-ci.org/visionmedia/debug)  [![Coverage Status](https://coveralls.io/repos/github/visionmedia/debug/badge.svg?branch=master)](https://coveralls.io/github/visionmedia/debug?branch=master)  [![Slack](https://visionmedia-community-slackin.now.sh/badge.svg)](https://visionmedia-community-slackin.now.sh/) [![OpenCollective](https://opencollective.com/debug/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/debug/sponsors/badge.svg)](#sponsors)
 
 <img width="647" src="https://user-images.githubusercontent.com/71256/29091486-fa38524c-7c37-11e7-895f-e7ec8e1039b6.png">
@@ -149,6 +149,7 @@ change the behavior of the debug logging:
 | `DEBUG_COLORS`| Whether or not to use colors in the debug output. |
 | `DEBUG_DEPTH` | Object inspection depth. |
 | `DEBUG_SHOW_HIDDEN` | Shows hidden properties on inspected objects. |
+| `DEBUG_HIDE_TTY_DATE` | Hide date from debug output on TTY. |
 
 
 __Note:__ The environment variables beginning with `DEBUG_` end up being
@@ -269,7 +270,7 @@ enabled or disabled.
  - TJ Holowaychuk
  - Nathan Rajlich
  - Andrew Rhyne
- 
+
 ## Backers
 
 Support us with a monthly donation and help us continue our activities. [[Become a backer](https://opencollective.com/debug#backer)]
