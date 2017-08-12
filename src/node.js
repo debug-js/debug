@@ -23,7 +23,7 @@ exports.useColors = useColors;
  * Colors.
  */
 
-exports.colors = [ 6, 2, 3, 4, 5, 1 ];
+exports.colors = [6, 2, 3, 4, 5, 1];
 
 try {
   var supportsColor = require('supports-color');
@@ -82,7 +82,7 @@ function useColors() {
  * Map %o to `util.inspect()`, all on a single line.
  */
 
-exports.formatters.o = function(v) {
+exports.formatters.o = function (v) {
   this.inspectOpts.colors = this.useColors;
   return util.inspect(v, this.inspectOpts)
     .replace(/\s*\n\s*/g, ' ');
@@ -92,7 +92,7 @@ exports.formatters.o = function(v) {
  * Map %o to `util.inspect()`, allowing multiple lines if needed.
  */
 
-exports.formatters.O = function(v) {
+exports.formatters.O = function (v) {
   this.inspectOpts.colors = this.useColors;
   return util.inspect(v, this.inspectOpts);
 };
@@ -120,7 +120,11 @@ function formatArgs(args) {
 }
 
 function getDate() {
+<<<<<<< Updated upstream
   if ('hideTtyDate' in this.inspectOpts && this.inspectOpts.hideTtyDate) {
+=======
+  if ('hideTtyDate' in exports.inspectOpts && exports.inspectOpts.hideTtyDate) {
+>>>>>>> Stashed changes
     return '';
   } else {
     return new Date().toISOString() + ' ';
@@ -170,7 +174,7 @@ function load() {
  * differently for a particular `debug` instance.
  */
 
-function init (debug) {
+function init(debug) {
   debug.inspectOpts = {};
 
   var keys = Object.keys(exports.inspectOpts);
