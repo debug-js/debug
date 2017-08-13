@@ -30,7 +30,15 @@ exports.skips = [];
  * Valid key names are a single, lower or upper-case letter, i.e. "n" and "N".
  */
 
-exports.formatters = {};
+exports.formatters = {
+  s: String,
+  i: function (v) {
+    v = Number(v);
+    return v - (v % 1);
+  },
+  d: Number,
+  f: Number
+};
 
 /**
  * Select a color.
@@ -48,6 +56,39 @@ function selectColor(namespace) {
   }
 
   return exports.colors[Math.abs(hash) % exports.colors.length];
+}
+
+/**
+ * Formats a sequence of arguments.
+ * @api private
+ */
+
+function formatInlineArgs(dbg, args) {
+  args[0] = exports.coerce(args[0]);
+
+  if ('string' !== typeof args[0]) {
+    // anything else let's inspect with %O
+    args.unshift('%O');
+  }
+
+  var index = 0;
+  args[0] = args[0].replace(/%([a-zA-Z%])/g, function(match, format) {
+    // if we encounter an escaped % then don't increase the array index
+    if (match === '%%') return match;
+    index++;
+    var formatter = exports.formatters[format];
+    if ('function' === typeof formatter) {
+      var val = args[index];
+      match = formatter.call(dbg, val);
+
+      // now we need to remove `args[index]` since it's inlined in the `format`
+      args.splice(index, 1);
+      index--;
+    }
+    return match;
+  });
+
+  return args;
 }
 
 /**
@@ -82,30 +123,8 @@ function createDebug(namespace) {
       args[i] = rawArgs[i];
     }
 
-    args[0] = exports.coerce(args[0]);
-
-    if ('string' !== typeof args[0]) {
-      // anything else let's inspect with %O
-      args.unshift('%O');
-    }
-
     // apply any `formatters` transformations
-    var index = 0;
-    args[0] = args[0].replace(/%([a-zA-Z%])/g, function(match, format) {
-      // if we encounter an escaped % then don't increase the array index
-      if (match === '%%') return match;
-      index++;
-      var formatter = exports.formatters[format];
-      if ('function' === typeof formatter) {
-        var val = args[index];
-        match = formatter.call(self, val);
-
-        // now we need to remove `args[index]` since it's inlined in the `format`
-        args.splice(index, 1);
-        index--;
-      }
-      return match;
-    });
+    formatInlineArgs(self, args);
 
     // apply env-specific formatting (colors, etc.)
     exports.formatArgs.call(self, args, section);
@@ -140,8 +159,14 @@ function createDebug(namespace) {
       section.title = title;
       section.deltaTime = exports.hrtime(beginTime);
       if (extraArgs.length) {
-        var newArgParams = [].slice.call(args, 1).concat([].slice.call(extraArgs, 1))
-        var newArgs = [(args[0] ? args[0] + ' :: ' : '') + (extraArgs[0] || '')].concat(newArgParams);
+        var leftArgs = formatInlineArgs(debug, [].slice.call(args));
+        var newArgs;
+        if (extraArgs.length > 0) {
+          var rightArgs = formatInlineArgs(debug, [].slice.call(extraArgs));
+          newArgs = leftArgs.concat(['::']).concat(rightArgs)
+        } else {
+          newArgs = leftArgs;
+        }
         debugHandle(newArgs, section);
       } else {
         debugHandle(args, section);
