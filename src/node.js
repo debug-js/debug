@@ -18,6 +18,7 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
+exports.printTimestamp = printTimestamp;
 
 /**
  * Colors.
@@ -43,7 +44,7 @@ try {
 /**
  * Build up the default `inspectOpts` object from the environment variables.
  *
- *   $ DEBUG_COLORS=no DEBUG_DEPTH=10 DEBUG_SHOW_HIDDEN=enabled node script.js
+ *   $ DEBUG_COLORS=no DEBUG_DEPTH=10 DEBUG_SHOW_HIDDEN=enabled DEBUG_TIMESTAMPS=no node script.js
  */
 
 exports.inspectOpts = Object.keys(process.env).filter(function (key) {
@@ -77,6 +78,17 @@ function useColors() {
 }
 
 /**
+ * Print timestamps when useColours() is false. This flag enables 
+ * timestamps to be turned off when useColours() is false. 
+ */
+
+function printTimestamp() {
+  return 'timestamps' in exports.inspectOpts
+    ? Boolean(exports.inspectOpts.timestamps)
+    : true;
+}
+
+/**
  * Map %o to `util.inspect()`, all on a single line.
  */
 
@@ -104,6 +116,7 @@ exports.formatters.O = function(v) {
 function formatArgs(args) {
   var name = this.namespace;
   var useColors = this.useColors;
+  var printTimestamp = this.printTimestamp;
 
   if (useColors) {
     var c = this.color;
@@ -112,9 +125,11 @@ function formatArgs(args) {
 
     args[0] = prefix + args[0].split('\n').join('\n' + prefix);
     args.push(colorCode + 'm+' + exports.humanize(this.diff) + '\u001b[0m');
-  } else {
+  } else if (printTimestamp) {
     args[0] = new Date().toISOString()
       + ' ' + name + ' ' + args[0];
+  } else {
+    args[0] = name + ' ' + args[0];
   }
 }
 

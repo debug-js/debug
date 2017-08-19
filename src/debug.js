@@ -118,6 +118,7 @@ function createDebug(namespace) {
   debug.namespace = namespace;
   debug.enabled = exports.enabled(namespace);
   debug.useColors = exports.useColors();
+  debug.printTimestamp = exports.printTimestamp ? exports.printTimestamp() : true;
   debug.color = selectColor(namespace);
   debug.destroy = destroy;
 
