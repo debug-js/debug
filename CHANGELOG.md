@@ -1,4 +1,9 @@
 
+3.0.1 / 2017-08-24
+==================
+
+  * Fix: Disable colors in Edge and Internet Explorer (#489)
+
 3.0.0 / 2017-08-08
 ==================
 
