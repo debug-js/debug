@@ -43,7 +43,7 @@
 2.6.4 / 2017-04-20
 ==================
 
-  * Fix: bug that would occure if process.env.DEBUG is a non-string value. (#444, @LucianBuzzo)
+  * Fix: bug that would occur if process.env.DEBUG is a non-string value. (#444, @LucianBuzzo)
   * Chore: ignore bower.json in npm installations. (#437, @joaovieira)
   * Misc: update "ms" to v0.7.3 (@tootallnate)
 
