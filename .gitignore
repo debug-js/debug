@@ -2,7 +2,10 @@
 node_modules
 *.sock
 build
-yarn.lock
 npm-debug.log
 dist
 coverage
+
+# lockfiles
+yarn.lock
+package-lock.json
