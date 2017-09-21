@@ -39,11 +39,5 @@
     "sinon-chai": "^2.8.0"
   },
   "main": "./src/index.js",
-  "browser": "./src/browser.js",
-  "component": {
-    "scripts": {
-      "debug/index.js": "browser.js",
-      "debug/debug.js": "debug.js"
-    }
-  }
+  "browser": "./src/browser.js"
 }
