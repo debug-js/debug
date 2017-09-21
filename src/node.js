@@ -7,11 +7,8 @@ var util = require('util');
 
 /**
  * This is the Node.js implementation of `debug()`.
- *
- * Expose `debug()` as the module.
  */
 
-exports = module.exports = require('./debug');
 exports.init = init;
 exports.log = log;
 exports.formatArgs = formatArgs;
@@ -77,27 +74,6 @@ function useColors() {
 }
 
 /**
- * Map %o to `util.inspect()`, all on a single line.
- */
-
-exports.formatters.o = function(v) {
-  this.inspectOpts.colors = this.useColors;
-  return util.inspect(v, this.inspectOpts)
-    .split('\n').map(function(str) {
-      return str.trim()
-    }).join(' ');
-};
-
-/**
- * Map %o to `util.inspect()`, allowing multiple lines if needed.
- */
-
-exports.formatters.O = function(v) {
-  this.inspectOpts.colors = this.useColors;
-  return util.inspect(v, this.inspectOpts);
-};
-
-/**
  * Adds ANSI color escape codes if enabled.
  *
  * @api public
@@ -113,7 +89,7 @@ function formatArgs(args) {
     var prefix = '  ' + colorCode + ';1m' + name + ' ' + '\u001b[0m';
 
     args[0] = prefix + args[0].split('\n').join('\n' + prefix);
-    args.push(colorCode + 'm+' + exports.humanize(this.diff) + '\u001b[0m');
+    args.push(colorCode + 'm+' + module.exports.humanize(this.diff) + '\u001b[0m');
   } else {
     args[0] = getDate() + name + ' ' + args[0];
   }
@@ -179,8 +155,25 @@ function init (debug) {
   }
 }
 
+module.exports = require('./common')(exports);
+
+var formatters = module.exports.formatters;
+
 /**
- * Enable namespaces listed in `process.env.DEBUG` initially.
+ * Map %o to `util.inspect()`, all on a single line.
  */
 
-exports.enable(load());
+formatters.o = function(v) {
+  this.inspectOpts.colors = this.useColors;
+  return util.inspect(v, this.inspectOpts)
+    .replace(/\s*\n\s*/g, ' ');
+};
+
+/**
+ * Map %O to `util.inspect()`, allowing multiple lines if needed.
+ */
+
+formatters.O = function(v) {
+  this.inspectOpts.colors = this.useColors;
+  return util.inspect(v, this.inspectOpts);
+};
