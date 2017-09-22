@@ -20,6 +20,11 @@
   * Update: update "browserify" to v14.4.0
   * Fix: fix Readme typo (#473)
 
+2.6.9 / 2017-09-22
+==================
+
+  * remove ReDoS regexp in %o formatter (#504)
+
 2.6.8 / 2017-05-18
 ==================
 
