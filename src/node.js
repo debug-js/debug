@@ -23,7 +23,7 @@ exports.useColors = useColors;
  * Colors.
  */
 
-exports.colors = [ 6, 2, 3, 4, 5, 1 ];
+exports.colors = [6, 2, 3, 4, 5, 1];
 
 try {
   var supportsColor = require('supports-color');
@@ -80,7 +80,7 @@ function useColors() {
  * Map %o to `util.inspect()`, all on a single line.
  */
 
-exports.formatters.o = function(v) {
+exports.formatters.o = function (v) {
   this.inspectOpts.colors = this.useColors;
   return util.inspect(v, this.inspectOpts)
     .split('\n').map(function(str) {
@@ -92,7 +92,7 @@ exports.formatters.o = function(v) {
  * Map %o to `util.inspect()`, allowing multiple lines if needed.
  */
 
-exports.formatters.O = function(v) {
+exports.formatters.O = function (v) {
   this.inspectOpts.colors = this.useColors;
   return util.inspect(v, this.inspectOpts);
 };
@@ -115,8 +115,15 @@ function formatArgs(args) {
     args[0] = prefix + args[0].split('\n').join('\n' + prefix);
     args.push(colorCode + 'm+' + exports.humanize(this.diff) + '\u001b[0m');
   } else {
-    args[0] = new Date().toISOString()
-      + ' ' + name + ' ' + args[0];
+    args[0] = getDate() + name + ' ' + args[0];
+  }
+}
+
+function getDate() {
+  if ('hideTtyDate' in exports.inspectOpts && exports.inspectOpts.hideTtyDate) {
+    return '';
+  } else {
+    return new Date().toISOString() + ' ';
   }
 }
 
@@ -163,7 +170,7 @@ function load() {
  * differently for a particular `debug` instance.
  */
 
-function init (debug) {
+function init(debug) {
   debug.inspectOpts = {};
 
   var keys = Object.keys(exports.inspectOpts);
