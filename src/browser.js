@@ -10,6 +10,7 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
+exports.hrtime = hrtimeInit();
 exports.storage = 'undefined' != typeof chrome
                && 'undefined' != typeof chrome.storage
                   ? chrome.storage.local
@@ -85,20 +86,28 @@ exports.formatters.j = function(v) {
  * @api public
  */
 
-function formatArgs(args) {
+function formatArgs(args, section) {
   var useColors = this.useColors;
 
   args[0] = (useColors ? '%c' : '')
     + this.namespace
     + (useColors ? ' %c' : ' ')
+    + (section ? (section.title + (useColors ? ' %c' : ' ')) : '')
     + args[0]
     + (useColors ? '%c ' : ' ')
-    + '+' + exports.humanize(this.diff);
+    + '+' + exports.humanize(this.diff)
+    + (section && section.complete ? ('%c (delta ' + (useColors ? '%c+' : '+') + exports.humanize(section.deltaTime) + (useColors ? '%c)' : ')')) : '');
 
   if (!useColors) return;
 
   var c = 'color: ' + this.color;
-  args.splice(1, 0, c, 'color: inherit')
+  var inherit = 'color: inherit';
+
+  if (section) {
+    args.splice(1, 0, c, inherit + '; font-weight: bold', 'font-weight: normal');
+  } else {
+    args.splice(1, 0, c, inherit);
+  }
 
   // the final "%c" is somewhat tricky, because there could be other
   // arguments passed either before or after the %c, so we need to
@@ -115,7 +124,11 @@ function formatArgs(args) {
     }
   });
 
-  args.splice(lastC, 0, c);
+  if (section && section.complete) {
+    args.splice(lastC - 2, 0, c, inherit, c, inherit);
+  } else {
+    args.splice(lastC, 0, c);
+  }
 }
 
 /**
@@ -169,6 +182,22 @@ function load() {
   }
 
   return r;
+}
+
+/**
+ * Browser implementation of hrtime().
+ *
+ * Follows the spec outlined in debug.begin() (see debug.js).
+ *
+ * If the browser has support for `window.performance.now()`,
+ * then it is used. Otherwise, it falls back to `Date.now()`.
+ */
+function hrtimeInit() {
+  var nowfn = window && window.performance && window.performance.now ? window.performance.now.bind(window.performance) : Date.now;
+  return function (prev) {
+    var now = nowfn();
+    return prev ? (now - prev) : now;
+  };
 }
 
 /**

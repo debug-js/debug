@@ -21,7 +21,6 @@ exports.instances = [];
 /**
  * The currently active debug mode names, and names to skip.
  */
-
 exports.names = [];
 exports.skips = [];
 
@@ -31,7 +30,15 @@ exports.skips = [];
  * Valid key names are a single, lower or upper-case letter, i.e. "n" and "N".
  */
 
-exports.formatters = {};
+exports.formatters = {
+  s: String,
+  i: function (v) {
+    v = Number(v);
+    return v - (v % 1);
+  },
+  d: Number,
+  f: Number
+};
 
 /**
  * Select a color.
@@ -52,6 +59,39 @@ function selectColor(namespace) {
 }
 
 /**
+ * Formats a sequence of arguments.
+ * @api private
+ */
+
+function formatInlineArgs(dbg, args) {
+  args[0] = exports.coerce(args[0]);
+
+  if ('string' !== typeof args[0]) {
+    // anything else let's inspect with %O
+    args.unshift('%O');
+  }
+
+  var index = 0;
+  args[0] = args[0].replace(/%([a-zA-Z%])/g, function(match, format) {
+    // if we encounter an escaped % then don't increase the array index
+    if (match === '%%') return match;
+    index++;
+    var formatter = exports.formatters[format];
+    if ('function' === typeof formatter) {
+      var val = args[index];
+      match = formatter.call(dbg, val);
+
+      // now we need to remove `args[index]` since it's inlined in the `format`
+      args.splice(index, 1);
+      index--;
+    }
+    return match;
+  });
+
+  return args;
+}
+
+/**
  * Create a debugger with the given `namespace`.
  *
  * @param {String} namespace
@@ -63,7 +103,7 @@ function createDebug(namespace) {
 
   var prevTime;
 
-  function debug() {
+  function debugHandle(rawArgs, section) {
     // disabled?
     if (!debug.enabled) return;
 
@@ -78,41 +118,23 @@ function createDebug(namespace) {
     prevTime = curr;
 
     // turn the `arguments` into a proper Array
-    var args = new Array(arguments.length);
+    var args = new Array(rawArgs.length);
     for (var i = 0; i < args.length; i++) {
-      args[i] = arguments[i];
-    }
-
-    args[0] = exports.coerce(args[0]);
-
-    if ('string' !== typeof args[0]) {
-      // anything else let's inspect with %O
-      args.unshift('%O');
+      args[i] = rawArgs[i];
     }
 
     // apply any `formatters` transformations
-    var index = 0;
-    args[0] = args[0].replace(/%([a-zA-Z%])/g, function(match, format) {
-      // if we encounter an escaped % then don't increase the array index
-      if (match === '%%') return match;
-      index++;
-      var formatter = exports.formatters[format];
-      if ('function' === typeof formatter) {
-        var val = args[index];
-        match = formatter.call(self, val);
-
-        // now we need to remove `args[index]` since it's inlined in the `format`
-        args.splice(index, 1);
-        index--;
-      }
-      return match;
-    });
+    formatInlineArgs(self, args);
 
     // apply env-specific formatting (colors, etc.)
-    exports.formatArgs.call(self, args);
+    exports.formatArgs.call(self, args, section);
 
     var logFn = debug.log || exports.log || console.log.bind(console);
     logFn.apply(self, args);
+  }
+
+  function debug() {
+    debugHandle(arguments);
   }
 
   debug.namespace = namespace;
@@ -120,6 +142,88 @@ function createDebug(namespace) {
   debug.useColors = exports.useColors();
   debug.color = selectColor(namespace);
   debug.destroy = destroy;
+
+  debug.begin = function () {
+    // hrtime() can return whatever it wants with no arguments;
+    // however, it must return a float when called with a second parameter;
+    // that float must be the delta time in milliseconds.
+    var args = arguments;
+    var beginTime = exports.hrtime();
+    var ended = false;
+
+    var mark = function (title, extraArgs) {
+      if (ended) {
+        return;
+      }
+
+      section.title = title;
+      section.deltaTime = exports.hrtime(beginTime);
+      if (extraArgs.length) {
+        var leftArgs = formatInlineArgs(debug, [].slice.call(args));
+        var newArgs;
+        if (extraArgs.length > 0) {
+          var rightArgs = formatInlineArgs(debug, [].slice.call(extraArgs));
+          newArgs = leftArgs.concat(['::']).concat(rightArgs)
+        } else {
+          newArgs = leftArgs;
+        }
+        debugHandle(newArgs, section);
+      } else {
+        debugHandle(args, section);
+      }
+      return section;
+    }
+
+    var section = {
+      title: '[begin]',
+      end: function () {
+        try {
+          return mark('[end]', arguments);
+        } finally {
+          ended = true;
+        }
+      },
+      mark: function () {
+        return mark('[mark]', arguments);
+      }
+    };
+
+    debugHandle(args, section);
+    section.complete = true;
+
+    return section;
+  };
+
+  debug.time = function () {
+    var args = [].slice.call(arguments);
+    if (args.length < 2) {
+      throw new Error('debug.time() takes at least a debug string and a function');
+    }
+
+    var fn = args.pop();
+    if (typeof fn !== 'function') {
+      throw new Error('the last argument to debug.time() must be a function');
+    }
+
+    var isPromise = false;
+    var section = debug.begin.apply(debug, args);
+    try {
+      var result = fn(section);
+
+      if (typeof Promise === 'function' && result instanceof Promise) { // eslint-disable-line no-undef
+        isPromise = true;
+        result.then(function () {
+          section.end();
+        });
+      }
+
+      return result;
+    } finally {
+      if (!isPromise) {
+        section.end();
+      }
+    }
+  };
 
   // env-specific initialization logic for debug instances
   if ('function' === typeof exports.init) {

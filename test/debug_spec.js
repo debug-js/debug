@@ -64,4 +64,81 @@ describe('debug', function () {
     });
   });
 
+  describe('timed sections', function () {
+    var log;
+
+    beforeEach(function () {
+      debug.enable('test');
+      log = debug('test');
+    });
+
+    context('with log function', function () {
+      it('times a critical section', function () {
+        log.log = sinon.spy();
+
+        var section = log.begin('a critical section');
+        log('something inside the section');
+        section.end();
+
+        expect(log.log).to.have.been.calledThrice;
+      });
+
+      it('times a critical function', function () {
+        log.log = sinon.spy();
+
+        var result = log.time('a critical function', function () {
+          log('hello from inside');
+          return 1234;
+        });
+
+        expect(result).to.equal(1234);
+        expect(log.log).to.have.been.calledThrice;
+      });
+
+      if (typeof Promise !== 'undefined') {
+        it('times a critical asynchronous function', function (cb) {
+          log.log = sinon.spy();
+
+          log.time('a critical function', function () {
+            return new Promise(function (resolve) {
+              log('hello from the inside');
+              resolve(1234);
+            });
+          }).then(function (result) {
+            expect(result).to.equal(1234);
+            expect(log.log).to.have.been.calledThrice;
+            cb();
+          }).catch(cb);
+        });
+      }
+
+      it('should throw if there aren\'t enough arguments', function () {
+        log.log = sinon.stub();
+
+        expect(function () {
+          log.time();
+        }).to.throw('debug.time() takes at least a debug string and a function');
+
+        expect(function () {
+          log.time('hello');
+        }).to.throw('debug.time() takes at least a debug string and a function');
+
+        expect(function () {
+          log.time(function () {});
+        }).to.throw('debug.time() takes at least a debug string and a function');
+      });
+
+      it('should throw if last argument isn\'t a function', function () {
+        log.log = sinon.stub();
+
+        expect(function () {
+          log.time('hello', 1234);
+        }).to.throw('the last argument to debug.time() must be a function');
+
+        expect(function () {
+          log.time('hello', function () {}, 1235);
+        }).to.throw('the last argument to debug.time() must be a function');
+      });
+    });
+  });
 });

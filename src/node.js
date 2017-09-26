@@ -18,6 +18,7 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
+exports.hrtime = hrtime;
 
 /**
  * Colors.
@@ -103,17 +104,22 @@ exports.formatters.O = function(v) {
  * @api public
  */
 
-function formatArgs(args) {
+function formatArgs(args, section) {
   var name = this.namespace;
   var useColors = this.useColors;
 
   if (useColors) {
     var c = this.color;
     var colorCode = '\u001b[3' + (c < 8 ? c : '8;5;' + c);
-    var prefix = '  ' + colorCode + ';1m' + name + ' ' + '\u001b[0m';
+    var prefix = '  ' + colorCode + ';1m' + name + '\u001b[0m ';
+    var sectionPrefix = section ? ('\u001b[1m' + section.title + '\u001b[0m ') : '';
 
-    args[0] = prefix + args[0].split('\n').join('\n' + prefix);
+    args[0] = prefix + sectionPrefix + args[0].split('\n').join('\n' + prefix);
     args.push(colorCode + 'm+' + exports.humanize(this.diff) + '\u001b[0m');
+
+    if (section && section.complete) {
+      args.push('(delta ' + colorCode + 'm+' + exports.humanize(section.deltaTime) + '\u001b[0m)');
+    }
   } else {
     args[0] = getDate() + name + ' ' + args[0];
   }
@@ -177,6 +183,23 @@ function init (debug) {
   for (var i = 0; i < keys.length; i++) {
     debug.inspectOpts[keys[i]] = exports.inspectOpts[keys[i]];
   }
+}
+
+/**
+ * Wrapper around Node's process.hrtime().
+ *
+ * As per the spec defined by debug.begin() (see debug.js),
+ * this function returns normally when there is no argument,
+ * but returns a delta float in the event that there is.
+ */
+
+function hrtime(prev) {
+  if (prev) {
+    var delta = process.hrtime(prev);
+    return (delta[0] * 1000) + (delta[1] / 1e6);
+  }
+
+  return process.hrtime();
 }
 
 /**
