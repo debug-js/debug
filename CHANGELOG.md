@@ -1,4 +1,16 @@
 
+3.1.0 / 2017-09-26
+==================
+
+  * Add `DEBUG_HIDE_DATE` env var (#486)
+  * Remove ReDoS regexp in %o formatter (#504)
+  * Remove "component" from package.json
+  * Remove `component.json`
+  * Ignore package-lock.json
+  * Examples: fix colors printout
+  * Fix: browser detection
+  * Fix: spelling mistake (#496, @EdwardBetts)
+
 3.0.1 / 2017-08-24
 ==================
 
