@@ -146,10 +146,10 @@ change the behavior of the debug logging:
 | Name      | Purpose                                         |
 |-----------|-------------------------------------------------|
 | `DEBUG`   | Enables/disables specific debugging namespaces. |
+| `DEBUG_HIDE_DATE` | Hide date from debug output (non-TTY).  |
 | `DEBUG_COLORS`| Whether or not to use colors in the debug output. |
-| `DEBUG_DEPTH` | Object inspection depth. |
+| `DEBUG_DEPTH` | Object inspection depth.                    |
 | `DEBUG_SHOW_HIDDEN` | Shows hidden properties on inspected objects. |
-| `DEBUG_HIDE_TTY_DATE` | Hide date from debug output on TTY. |
 
 
 __Note:__ The environment variables beginning with `DEBUG_` end up being

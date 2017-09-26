@@ -120,7 +120,7 @@ function formatArgs(args) {
 }
 
 function getDate() {
-  if (exports.inspectOpts.hideTtyDate) {
+  if (exports.inspectOpts.hideDate) {
     return '';
   } else {
     return new Date().toISOString() + ' ';
