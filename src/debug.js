@@ -221,5 +221,6 @@ function enabled(name) {
 
 function coerce(val) {
   if (val instanceof Error) return val.stack || val.message;
+  if (typeof val === 'function') return val();
   return val;
 }
