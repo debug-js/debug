@@ -1,10 +1,7 @@
 /**
  * This is the web browser implementation of `debug()`.
- *
- * Expose `debug()` as the module.
  */
 
-exports = module.exports = require('./debug');
 exports.log = log;
 exports.formatArgs = formatArgs;
 exports.save = save;
@@ -67,19 +64,6 @@ function useColors() {
 }
 
 /**
- * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
- */
-
-exports.formatters.j = function(v) {
-  try {
-    return JSON.stringify(v);
-  } catch (err) {
-    return '[UnexpectedJSONParseError]: ' + err.message;
-  }
-};
-
-
-/**
  * Colorize log arguments if enabled.
  *
  * @api public
@@ -93,7 +77,7 @@ function formatArgs(args) {
     + (useColors ? ' %c' : ' ')
     + args[0]
     + (useColors ? '%c ' : ' ')
-    + '+' + exports.humanize(this.diff);
+    + '+' + module.exports.humanize(this.diff);
 
   if (!useColors) return;
 
@@ -172,12 +156,6 @@ function load() {
 }
 
 /**
- * Enable namespaces listed in `localStorage.debug` initially.
- */
-
-exports.enable(load());
-
-/**
  * Localstorage attempts to return the localstorage.
  *
  * This is necessary because safari throws
@@ -193,3 +171,19 @@ function localstorage() {
     return window.localStorage;
   } catch (e) {}
 }
+
+module.exports = require('./common')(exports);
+
+var formatters = module.exports.formatters;
+
+/**
+ * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
+ */
+
+formatters.j = function(v) {
+  try {
+    return JSON.stringify(v);
+  } catch (err) {
+    return '[UnexpectedJSONParseError]: ' + err.message;
+  }
+};
