@@ -248,6 +248,41 @@ error('now goes to stdout via console.info');
 log('still goes to stdout, but via console.info now');
 ```
 
+## Set dynamically
+
+You can also enable debug dynamically by calling the `enable()` method :
+
+```js
+let debug = require('debug');
+
+console.log(1, debug.enabled('test'));
+
+debug.enable('test');
+console.log(2, debug.enabled('test'));
+
+debug.disable();
+console.log(3, debug.enabled('test'));
+
+```
+
+print :   
+```
+1 false
+2 true
+3 false
+```
+
+Usage :  
+`enable(namespaces)`  
+`namespaces` can include modes separated by a colon and wildcards.
+   
+Note that calling `enable()` completely overrides previously set DEBUG variable : 
+
+```
+$ DEBUG=foo node -e 'var dbg = require("debug"); dbg.enable("bar"); console.log(dbg.enabled("foo"))'
+=> false
+```
+
 ## Checking whether a debug target is enabled
 
 After you've created a debug instance, you can determine whether or not it is
