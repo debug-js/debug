@@ -64,4 +64,23 @@ describe('debug', function () {
     });
   });
 
+   context('disable()', function () {
+     beforeEach(function () {
+       debug.enable('*');
+       debug('should disable')
+     });
+
+     it('disable itself', function () {
+       debug.disable('*');
+       expect(debug.enabled('*')).to.be.false;
+     });
+   });
+
+   it('should avoid namespace conflict', function () {
+     debug.enable('test1*');
+     debug.enable('test2*');
+
+     expect(debug('test1').enabled).to.be.true;
+     expect(debug('test2').enabled).to.be.true;
+   });
 });
