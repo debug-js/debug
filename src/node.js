@@ -24,7 +24,7 @@ exports.colors = [ 6, 2, 3, 4, 5, 1 ];
 
 try {
   var supportsColor = require('supports-color');
-  if (supportsColor && supportsColor.level >= 2) {
+  if (supportsColor && supportsColor.stdout.level >= 2) {
     exports.colors = [
       20, 21, 26, 27, 32, 33, 38, 39, 40, 41, 42, 43, 44, 45, 56, 57, 62, 63, 68,
       69, 74, 75, 76, 77, 78, 79, 80, 81, 92, 93, 98, 99, 112, 113, 128, 129, 134,
