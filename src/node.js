@@ -15,6 +15,7 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
+exports.getDate = getDate;
 
 /**
  * Colors.
