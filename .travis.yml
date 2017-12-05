@@ -1,20 +1,25 @@
 sudo: false
-
 language: node_js
-
 node_js:
-  - "4"
-  - "6"
-  - "8"
-
+  - '4'
+  - '6'
+  - '8'
 install:
-  - make install
-
+  - 'make install'
 script:
-  - make lint
-  - make test
-
+  - 'make lint'
+  - 'make test'
 matrix:
   include:
-  - node_js: '8'
-    env: BROWSER=1
+    -
+      node_js: '8'
+      env: BROWSER=1
+notifications:
+  webhooks:
+    urls:
+      - 'https://www.travisbuddy.com/'
+    on_success: never
+    on_failure: always
+    on_start: never
+    on_cancel: never
+    on_error: never
