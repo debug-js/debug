@@ -131,7 +131,7 @@ module.exports = function setup(env) {
       createDebug.init(debug);
     }
 
-    if (!debug.enabled) {
+    if (debug.enabled) {
       createDebug.instances.push(debug);
     }
    
