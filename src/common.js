@@ -65,6 +65,24 @@ module.exports = function setup(env) {
 
   function createDebug(namespace) {
     var prevTime;
+    var lastId = 0;
+
+    function prepareArgs() {
+      // turn the `arguments` into a proper Array
+      var args = new Array(arguments.length);
+      for (var i = 0; i < args.length; i++) {
+        args[i] = arguments[i];
+      }
+
+      args[0] = createDebug.coerce(args[0]);
+
+      if ('string' !== typeof args[0]) {
+        // anything else let's inspect with %O
+        args.unshift('%O');
+      }
+
+      return args;
+    }
 
     function debug() {
       // disabled?
@@ -80,18 +98,7 @@ module.exports = function setup(env) {
       self.curr = curr;
       prevTime = curr;
 
-      // turn the `arguments` into a proper Array
-      var args = new Array(arguments.length);
-      for (var i = 0; i < args.length; i++) {
-        args[i] = arguments[i];
-      }
-
-      args[0] = createDebug.coerce(args[0]);
-
-      if ('string' !== typeof args[0]) {
-        // anything else let's inspect with %O
-        args.unshift('%O');
-      }
+      var args = prepareArgs.apply(self, arguments);
 
       // apply any `formatters` transformations
       var index = 0;
@@ -118,11 +125,45 @@ module.exports = function setup(env) {
       logFn.apply(self, args);
     }
 
+    function unique (format) {
+      var uniqueId = null;
+
+      format = format ? format + ' ' : '%d ';
+
+      function subdebug () {
+        // disabled?
+        if (!debug.enabled) return;
+
+        var self = debug;
+
+        var args = prepareArgs.apply(self, arguments);
+
+        args[0] = format + args[0];
+        args.splice(1, 0, id());
+
+        return debug.apply(self, args);
+      }
+
+      function id () {
+        if (!debug.enabled) return;
+
+        if (uniqueId === null)
+          uniqueId = lastId++;
+
+        return uniqueId;
+      }
+
+      subdebug.id = id;
+
+      return subdebug;
+    }
+
     debug.namespace = namespace;
     debug.enabled = createDebug.enabled(namespace);
     debug.useColors = createDebug.useColors();
     debug.color = selectColor(namespace);
     debug.destroy = destroy;
+    debug.unique = unique;
     //debug.formatArgs = formatArgs;
     //debug.rawLog = rawLog;
 
