@@ -62,6 +62,21 @@ describe('debug', function () {
         expect(log.log).to.have.been.calledOnce;
       });
     });
+
+    context('with `log.id` function', function () {
+      it('increments internal id when enabled', function () {
+        expect(log.id()).to.equal(0);
+        expect(log.id()).to.equal(1);
+        expect(log.id()).to.equal(2);
+      });
+
+      it('does not increment internal id when disabled', function () {
+        debug.disable('test');
+
+        expect(log.id()).to.equal(undefined);
+        expect(log.id()).to.equal(undefined);
+      });
+    });
   });
 
 });

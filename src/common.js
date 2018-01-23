@@ -65,6 +65,7 @@ module.exports = function setup(env) {
 
   function createDebug(namespace) {
     var prevTime;
+    var lastId = 0;
 
     function debug() {
       // disabled?
@@ -118,11 +119,19 @@ module.exports = function setup(env) {
       logFn.apply(self, args);
     }
 
+    function id () {
+      // disabled?
+      if (!debug.enabled) return;
+
+      return lastId++;
+    }
+
     debug.namespace = namespace;
     debug.enabled = createDebug.enabled(namespace);
     debug.useColors = createDebug.useColors();
     debug.color = selectColor(namespace);
     debug.destroy = destroy;
+    debug.id = id;
     //debug.formatArgs = formatArgs;
     //debug.rawLog = rawLog;
 
