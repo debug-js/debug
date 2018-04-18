@@ -10,6 +10,16 @@ exports.load = load;
 exports.useColors = useColors;
 exports.storage = localstorage();
 
+
+/**
+ * Are we in Electron?
+ * @returns {boolean}
+ */
+function isElectron() {
+  return typeof window !== 'undefined' && window.process &&
+		(window.process.type === 'renderer' || window.process.__nwjs);
+}
+
 /**
  * Colors.
  */
@@ -106,7 +116,7 @@ function useColors() {
 	// NB: In an Electron preload script, document will be defined but not fully
 	// initialized. Since we know we're in Chrome, we'll just detect this case
 	// explicitly
-	if (typeof window !== 'undefined' && window.process && (window.process.type === 'renderer' || window.process.__nwjs)) {
+  if (isElectron()) {
 		return true;
 	}
 
@@ -212,9 +222,10 @@ function load() {
 		// XXX (@Qix-) should we be logging these?
 	}
 
+
 	// If debug isn't set in LS, and we're in Electron, try to load $DEBUG
-	if (!r && typeof process !== 'undefined' && 'env' in process) {
-		r = process.env.DEBUG;
+  if (!r && isElectron()) {
+    r = require('./env').DEBUG;
 	}
 
 	return r;
