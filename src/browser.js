@@ -2,7 +2,6 @@
  * This is the web browser implementation of `debug()`.
  */
 
-
 exports.log = log;
 exports.formatArgs = formatArgs;
 exports.save = save;
@@ -12,7 +11,6 @@ exports.storage = 'undefined' != typeof chrome
                && 'undefined' != typeof chrome.storage
                   ? chrome.storage.local
                   : localstorage();
-
 
 /**
  * Are we in Electron?
