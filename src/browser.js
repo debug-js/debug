@@ -15,8 +15,7 @@ exports.storage = localstorage();
  * @returns {boolean}
  */
 function isElectron() {
-  return typeof window !== 'undefined' && window.process &&
-		(window.process.type === 'renderer' || window.process.__nwjs);
+  return typeof process !== 'undefined' && (process.type === 'renderer' || process.__nwjs);
 }
 
 /**
@@ -215,18 +214,16 @@ function save(namespaces) {
 function load() {
 	let r;
 	try {
-		r = exports.storage.getItem('debug');
+		return exports.storage.getItem('debug');
 	} catch (error) {
 		// Swallow
 		// XXX (@Qix-) should we be logging these?
 	}
 
-
 	// If debug isn't set in LS, and we're in Electron, try to load $DEBUG
-  if (!r && isElectron()) {
-    r = require('./env').DEBUG;
+	if (!r && isElectron()) {
+		r = require('./env').DEBUG;
 	}
-
 	return r;
 }
 
@@ -252,6 +249,10 @@ function localstorage() {
 	}
 }
 
+if (isElectron()) {
+  module.exports = exports;
+  module.exports.humanize = require('ms');
+} else {
 module.exports = require('./common')(exports);
 
 const {formatters} = module.exports;
@@ -265,5 +266,6 @@ formatters.j = function (v) {
 		return JSON.stringify(v);
 	} catch (error) {
 		return '[UnexpectedJSONParseError]: ' + error.message;
-	}
+    }
 };
+}

@@ -4,7 +4,8 @@
  */
 
 if (typeof process === 'undefined' || process.type === 'renderer' || process.browser === true || process.__nwjs) {
-	module.exports = require('./browser.js');
+  module.exports = require('./browser.js');
+  module.exports = require('./electron.js');
 } else {
 	module.exports = require('./node.js');
 }
