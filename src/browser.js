@@ -2,6 +2,7 @@
  * This is the web browser implementation of `debug()`.
  */
 
+
 exports.log = log;
 exports.formatArgs = formatArgs;
 exports.save = save;
@@ -11,6 +12,15 @@ exports.storage = 'undefined' != typeof chrome
                && 'undefined' != typeof chrome.storage
                   ? chrome.storage.local
                   : localstorage();
+
+
+/**
+ * Are we in Electron?
+ * @returns {boolean}
+ */
+function isElectron() {
+  return (typeof window !== 'undefined' && window.process && window.process.type === 'renderer');
+}
 
 /**
  * Colors.
@@ -42,7 +52,7 @@ function useColors() {
   // NB: In an Electron preload script, document will be defined but not fully
   // initialized. Since we know we're in Chrome, we'll just detect this case
   // explicitly
-  if (typeof window !== 'undefined' && window.process && window.process.type === 'renderer') {
+  if (isElectron()) {
     return true;
   }
 
@@ -147,9 +157,10 @@ function load() {
     r = exports.storage.debug;
   } catch(e) {}
 
+
   // If debug isn't set in LS, and we're in Electron, try to load $DEBUG
-  if (!r && typeof process !== 'undefined' && 'env' in process) {
-    r = process.env.DEBUG;
+  if (!r && isElectron()) {
+    r = require('./env').DEBUG;
   }
 
   return r;
