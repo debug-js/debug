@@ -10,7 +10,6 @@ exports.load = load;
 exports.useColors = useColors;
 exports.storage = localstorage();
 
-
 /**
  * Are we in Electron?
  * @returns {boolean}
