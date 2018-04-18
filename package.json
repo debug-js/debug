@@ -39,5 +39,17 @@
     "sinon-chai": "^2.8.0"
   },
   "main": "./src/index.js",
-  "browser": "./src/browser.js"
+  "browser": "./src/browser.js",
+  "scripts": {
+    "prebuild": "mkdir dist || echo",
+    "build": "./node_modules/.bin/browserify --standalone debug . > dist/debug.js",
+    "lint": "npx eslint *.js src/*.js",
+    "test": "npm run test-all",
+    "test-browser": "npx karma start --single-run",
+    "test-electron": "npm --electron=1 run test-electron-internal",
+    "test-electron-internal": "npx mocha test/**.js",
+    "test-node": "npx istanbul cover node_modules/mocha/bin/_mocha -- test/**.js",
+    "test-all": "npx concurrently \"npm run test-node\" \"npm run test-browser\" \"npm run test-electron\"",
+    "clean": "npx rimraf dist coverage"
+  }
 }

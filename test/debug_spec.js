@@ -5,20 +5,27 @@ var chai
   , expect
   , debug
   , sinon
-  , sinonChai;
+  , sinonChai
+  , env = 'browser';
 
 if (typeof module !== 'undefined') {
   chai = require('chai');
   expect = chai.expect;
+  env = 'node';
 
+  if (process.env.npm_config_electron) {
+    // force Electron mode
+    process.type = 'renderer';
+    env = 'Electron';
+  }
   debug = require('../src/index');
   sinon = require('sinon');
   sinonChai = require("sinon-chai");
   chai.use(sinonChai);
 }
+env = ' (' + env + ')';
 
-
-describe('debug', function () {
+describe('debug' + env, function () {
   var log = debug('test');
 
   log.log = sinon.stub();

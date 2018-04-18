@@ -17,7 +17,7 @@ exports.storage = 'undefined' != typeof chrome
  * @returns {boolean}
  */
 function isElectron() {
-  return (typeof window !== 'undefined' && window.process && window.process.type === 'renderer');
+  return (typeof process !== 'undefined' && process.type === 'renderer');
 }
 
 /**
@@ -150,18 +150,9 @@ function save(namespaces) {
  */
 
 function load() {
-  var r;
   try {
-    r = exports.storage.debug;
+    return exports.storage.debug;
   } catch(e) {}
-
-
-  // If debug isn't set in LS, and we're in Electron, try to load $DEBUG
-  if (!r && isElectron()) {
-    r = require('./env').DEBUG;
-  }
-
-  return r;
 }
 
 /**
@@ -181,18 +172,23 @@ function localstorage() {
   } catch (e) {}
 }
 
-module.exports = require('./common')(exports);
+if (isElectron()) {
+  module.exports = exports;
+  module.exports.humanize = require('ms');
+} else {
+  module.exports = require('./common')(exports);
 
-var formatters = module.exports.formatters;
+  var formatters = module.exports.formatters;
 
-/**
- * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
- */
+  /**
+   * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
+   */
 
-formatters.j = function(v) {
-  try {
-    return JSON.stringify(v);
-  } catch (err) {
-    return '[UnexpectedJSONParseError]: ' + err.message;
-  }
-};
+  formatters.j = function (v) {
+    try {
+      return JSON.stringify(v);
+    } catch (err) {
+      return '[UnexpectedJSONParseError]: ' + err.message;
+    }
+  };
+}

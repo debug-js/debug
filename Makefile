@@ -36,6 +36,9 @@ test-node:
 	@istanbul cover node_modules/mocha/bin/_mocha -- test/**.js
 	@cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
+test-electron:
+	node_modules/mocha/bin/_mocha -- test/**.js
+
 test-browser:
 	@$(MAKE) browser
 	@karma start --single-run
@@ -43,6 +46,7 @@ test-browser:
 test-all:
 	@concurrently \
 		"make test-node" \
+		"make test-electron" \
 		"make test-browser"
 
 test:
