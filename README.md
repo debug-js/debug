@@ -150,6 +150,7 @@ change the behavior of the debug logging:
 | `DEBUG_COLORS`| Whether or not to use colors in the debug output. |
 | `DEBUG_DEPTH` | Object inspection depth.                    |
 | `DEBUG_SHOW_HIDDEN` | Shows hidden properties on inspected objects. |
+| `DEBUG_MAX_ARRAY_LENGTH` | Array inspection size.           |
 
 
 __Note:__ The environment variables beginning with `DEBUG_` end up being
