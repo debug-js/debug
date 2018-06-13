@@ -15,14 +15,18 @@ if (typeof module !== 'undefined') {
   sinon = require('sinon');
   sinonChai = require('sinon-chai');
   chai.use(sinonChai);
+  debug = require('../src/index');
 }
 
 describe('debug', function () {
   function withDebug(cb) {
     function requireDebug() {
-      delete require.cache[require.resolve('../src/index')];
-      delete require.cache[require.resolve('../src/node.js')];
-      return require('../src/index');
+      if (typeof module !== 'undefined') {
+        delete require.cache[require.resolve('../src/index')];
+        delete require.cache[require.resolve('../src/node.js')];
+        return require('../src/index');
+      }
+      return debug;
     }
 
     cb(requireDebug());
@@ -86,6 +90,11 @@ describe('debug', function () {
   });
 
   context('toggle namespace in logs', function () {
+    // namespace hiding relies on environment variable and does not apply to browser
+    if (typeof process === 'undefined') {
+      return;
+    }
+
     it('produces the log with namespace (default behavior)', function () {
       process.env.DEBUG_HIDE_DATE = true;
       withDebug(function(debugInstance) {
