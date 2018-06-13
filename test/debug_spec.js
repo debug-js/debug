@@ -9,6 +9,14 @@ var chai
   , log;
 
 
+if (typeof module !== 'undefined') {
+  chai = require('chai');
+  expect = chai.expect;
+  sinon = require('sinon');
+  sinonChai = require('sinon-chai');
+  chai.use(sinonChai);
+}
+
 describe('debug', function () {
   function withDebug(cb) {
     function requireDebug() {
@@ -19,16 +27,6 @@ describe('debug', function () {
 
     cb(requireDebug());
   }
-
-  before(function () {
-    if (typeof module !== 'undefined') {
-      chai = require('chai');
-      expect = chai.expect;
-      sinon = require('sinon');
-      sinonChai = require("sinon-chai");
-      chai.use(sinonChai);
-    }
-  });
 
   context('start up', function () {
     beforeEach(function () {
