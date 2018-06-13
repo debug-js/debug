@@ -80,6 +80,11 @@ function useColors() {
  */
 
 function formatArgs(args) {
+  if (exports.inspectOpts.hideNamespace) {
+    args[0] = getDate() + ' ' + args[0];
+    return;
+  }
+
   var name = this.namespace;
   var useColors = this.useColors;
 
