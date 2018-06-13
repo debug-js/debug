@@ -85,26 +85,37 @@ describe('debug', function () {
     });
   });
 
-  context('when hiding namespace', function () {
-    beforeEach(function () {
-      process.env.DEBUG_HIDE_NAMESPACE = true;
+  context('toggle namespace in logs', function () {
+    it('produces the log with namespace (default behavior)', function () {
       process.env.DEBUG_HIDE_DATE = true;
+      withDebug(function(debugInstance) {
+        debug = debugInstance;
+        debug.enable('some-namespace');
+        log = debug('some-namespace');
+      });
+      log.log = sinon.spy();
+      log('some message');
+      expect(log.log.getCall(0).args[0].trim()).to.match(/some\-namespace/);
+      expect(log.log.getCall(0).args[0].trim()).to.match(/some message/);
+      delete process.env.DEBUG_HIDE_DATE;
+    });
+
+    it('produces the log without namespace when DEBUG_HIDE_NAMESPACE is set', function () {
+      process.env.DEBUG_HIDE_DATE = true;
+      process.env.DEBUG_HIDE_NAMESPACE = true;
+
       withDebug(function(debugInstance) {
         debug = debugInstance;
         debug.enable('test');
         log = debug('test');
       });
-    });
 
-    afterEach(function () {
-      delete process.env.DEBUG_HIDE_NAMESPACE;
-      delete process.env.DEBUG_HIDE_DATE;
-    });
-
-    it('produces the log without namespace', function () {
       log.log = sinon.spy();
       log('some message');
       expect(log.log.getCall(0).args[0].trim()).to.equal('some message');
+
+      delete process.env.DEBUG_HIDE_DATE;
+      delete process.env.DEBUG_HIDE_NAMESPACE;
     });
   });
 });
