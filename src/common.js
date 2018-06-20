@@ -63,9 +63,9 @@ module.exports = function setup(env) {
    * @api public
    */
 
+  var prevTime;
+  
   function createDebug(namespace) {
-    var prevTime;
-
     function debug() {
       // disabled?
       if (!debug.enabled) return;
