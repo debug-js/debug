@@ -105,9 +105,7 @@ Then, run the program to be debugged as usual.
 npm script example:
 ```js
   "windowsDebug": "@powershell -Command $env:DEBUG='*';node app.js",
-
 ```
-
 
 ## Namespace Colors
 
