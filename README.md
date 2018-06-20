@@ -70,7 +70,9 @@ Here are some examples:
 <img width="647" alt="screen shot 2017-08-08 at 12 53 38 pm" src="https://user-images.githubusercontent.com/71256/29091700-a62a6888-7c38-11e7-800b-db911291ca2b.png">
 <img width="647" alt="screen shot 2017-08-08 at 12 53 25 pm" src="https://user-images.githubusercontent.com/71256/29091701-a62ea114-7c38-11e7-826a-2692bedca740.png">
 
-#### Windows note
+#### Windows command prompt notes
+
+##### CMD
 
 On Windows the environment variable is set using the `set` command.
 
@@ -78,14 +80,32 @@ On Windows the environment variable is set using the `set` command.
 set DEBUG=*,-not_this
 ```
 
-Note that PowerShell uses different syntax to set environment variables.
+Example:
+
+```cmd
+set DEBUG=* & node app.js
+```
+
+##### PowerShell (VS Code default)
+
+PowerShell uses different syntax to set environment variables.
 
 ```cmd
 $env:DEBUG = "*,-not_this"
 ```
 
+Example:
+
+```cmd
+$env:DEBUG='app';node app.js
+```
+
 Then, run the program to be debugged as usual.
 
+npm script example:
+```js
+  "windowsDebug": "@powershell -Command $env:DEBUG='*';node app.js",
+```
 
 ## Namespace Colors
 
