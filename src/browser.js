@@ -169,11 +169,8 @@ function load() {
 function localstorage() {
   try {
     // TVMLKit (Apple TV JS Runtime) does not have a window object, just localStorage in the global context
-    if (typeof window === 'undefined' && typeof navigationDocument !== 'undefined') {
-      return localStorage;
-    }
-
-    return window.localStorage;
+    // The Browser also has localStorage in the global context.
+    return localStorage;
   } catch (e) {}
 }
 
