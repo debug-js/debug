@@ -126,7 +126,7 @@ function save(namespaces) {
     if (null == namespaces) {
       exports.storage.removeItem('debug');
     } else {
-      exports.storage.debug = namespaces;
+      exports.storage.setItem('debug', namespaces);
     }
   } catch(e) {}
 }
@@ -141,7 +141,7 @@ function save(namespaces) {
 function load() {
   var r;
   try {
-    r = exports.storage.debug;
+    r = exports.storage.getItem('debug');
   } catch(e) {}
 
   // If debug isn't set in LS, and we're in Electron, try to load $DEBUG
@@ -165,7 +165,9 @@ function load() {
 
 function localstorage() {
   try {
-    return window.localStorage;
+    // TVMLKit (Apple TV JS Runtime) does not have a window object, just localStorage in the global context
+    // The Browser also has localStorage in the global context.
+    return localStorage;
   } catch (e) {}
 }
 
