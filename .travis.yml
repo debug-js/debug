@@ -10,6 +10,10 @@ node_js:
 install:
   - make install
 
+cache:
+  directories:
+    - "node_modules"
+
 script:
   - make lint
   - make test
