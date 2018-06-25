@@ -42,26 +42,29 @@ try {
  *
  *   $ DEBUG_COLORS=no DEBUG_DEPTH=10 DEBUG_SHOW_HIDDEN=enabled node script.js
  */
+exports.loadInspectOpts = function () {
+  exports.inspectOpts = Object.keys(process.env).filter(function (key) {
+    return /^debug_/i.test(key);
+  }).reduce(function (obj, key) {
+    // camel-case
+    var prop = key
+      .substring(6)
+      .toLowerCase()
+      .replace(/_([a-z])/g, function (_, k) { return k.toUpperCase() });
 
-exports.inspectOpts = Object.keys(process.env).filter(function (key) {
-  return /^debug_/i.test(key);
-}).reduce(function (obj, key) {
-  // camel-case
-  var prop = key
-    .substring(6)
-    .toLowerCase()
-    .replace(/_([a-z])/g, function (_, k) { return k.toUpperCase() });
+    // coerce string value into JS value
+    var val = process.env[key];
+    if (/^(yes|on|true|enabled)$/i.test(val)) val = true;
+    else if (/^(no|off|false|disabled)$/i.test(val)) val = false;
+    else if (val === 'null') val = null;
+    else val = Number(val);
 
-  // coerce string value into JS value
-  var val = process.env[key];
-  if (/^(yes|on|true|enabled)$/i.test(val)) val = true;
-  else if (/^(no|off|false|disabled)$/i.test(val)) val = false;
-  else if (val === 'null') val = null;
-  else val = Number(val);
+    obj[prop] = val;
+    return obj;
+  }, {});
+};
 
-  obj[prop] = val;
-  return obj;
-}, {});
+exports.loadInspectOpts();
 
 /**
  * Is stdout a TTY? Colored output is enabled when `true`.
