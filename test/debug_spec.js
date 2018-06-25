@@ -64,4 +64,24 @@ describe('debug', function () {
     });
   });
 
+  describe('colors', function () {
+    var log;
+
+    it('should default to true', function () {
+      console.log(debug.useColors());
+      expect(debug.useColors()).to.be.true;
+    });
+
+    it('can turn off explicitly', function () {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('debug_colors', false);
+      } else if (typeof process !== 'undefined' && 'env' in process) {
+        process.env.DEBUG_COLORS = 'false';
+        debug.loadInspectOpts();
+      }
+
+      expect(debug.useColors()).to.be.false;
+    });
+  });
+
 });

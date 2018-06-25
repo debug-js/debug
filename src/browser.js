@@ -31,14 +31,19 @@ exports.colors = [
  * Currently only WebKit-based Web Inspectors, Firefox >= v31,
  * and the Firebug extension (any Firefox version) are known
  * to support "%c" CSS customizations.
- *
- * TODO: add a `localStorage` variable to explicitly enable/disable colors
  */
 
 function useColors() {
   // NB: In an Electron preload script, document will be defined but not fully
   // initialized. Since we know we're in Chrome, we'll just detect this case
   // explicitly
+
+  var useColorsOption = getOption('colors');
+
+  if (/^(no|off|false|disabled)$/i.test(useColorsOption)) {
+    return false;
+  }
+
   if (typeof window !== 'undefined' && window.process && window.process.type === 'renderer') {
     return true;
   }
@@ -50,14 +55,14 @@ function useColors() {
 
   // is webkit? http://stackoverflow.com/a/16459606/376773
   // document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
-  return (typeof document !== 'undefined' && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance) ||
+  return Boolean((typeof document !== 'undefined' && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance) ||
     // is firebug? http://stackoverflow.com/a/398120/376773
     (typeof window !== 'undefined' && window.console && (window.console.firebug || (window.console.exception && window.console.table))) ||
     // is firefox >= v31?
     // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
     (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
     // double check webkit in userAgent just in case we are in a worker
-    (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
+    (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/)));
 }
 
 /**
@@ -150,6 +155,18 @@ function load() {
   }
 
   return r;
+}
+
+function getOption(key) {
+  var storageKey = 'debug_' + key.toLowerCase();
+  try {
+    return exports.storage.getItem(storageKey);
+  } catch (err) {
+    if (typeof process !== 'undefined' && 'env' in process) {
+      return process.env[storageKey.toUpperCase()];
+    }
+    return undefined;
+  }
 }
 
 /**
