@@ -148,7 +148,7 @@ module.exports = function setup(env) {
   }
 
   function extend (namespace, delimiter) {
-    return createDebug(this.namespace + (delimiter || ':') + namespace);
+    return createDebug(this.namespace + (typeof delimiter !== 'undefined' ? delimiter : ':') + namespace);
   }
 
   /**
