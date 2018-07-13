@@ -119,12 +119,13 @@ function log() {
  */
 
 function save(namespaces) {
+  var env = process.env; // alias env to avoid problems with webpack DefinePlugin
   if (null == namespaces) {
     // If you set a process.env field to null or undefined, it gets cast to the
     // string 'null' or 'undefined'. Just delete instead.
-    delete process.env.DEBUG;
+    delete env.DEBUG;
   } else {
-    process.env.DEBUG = namespaces;
+    env.DEBUG = namespaces;
   }
 }
 
