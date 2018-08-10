@@ -15,6 +15,8 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
+exports.now = process.env.DEBUG_USE_MICROSECONDS ?
+  require('../build/Release/module').gettimeofday : () => { return +new Date() }
 
 /**
  * Colors.

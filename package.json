@@ -11,6 +11,9 @@
     "log",
     "debugger"
   ],
+  "scripts": {
+    "test": "./node_modules/mocha/bin/_mocha"
+  },
   "author": "TJ Holowaychuk <tj@vision-media.ca>",
   "contributors": [
     "Nathan Rajlich <nathan@tootallnate.net> (http://n8.io)",

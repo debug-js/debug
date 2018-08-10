@@ -73,7 +73,7 @@ module.exports = function setup(env) {
       var self = debug;
 
       // set `diff` timestamp
-      var curr = +new Date();
+      var curr = createDebug.now() 
       var ms = curr - (prevTime || curr);
       self.diff = ms;
       self.prev = prevTime;

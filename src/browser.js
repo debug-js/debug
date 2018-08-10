@@ -8,6 +8,7 @@ exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
 exports.storage = localstorage();
+exports.now = function () { return +new Date() }
 
 /**
  * Colors.
