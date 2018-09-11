@@ -1,4 +1,4 @@
-/* global describe, it, context, beforeEach */
+/* eslint-env mocha */
 'use strict';
 
 let chai;
@@ -7,84 +7,76 @@ let expect;
 
 let debug;
 
-let sinon;
-
-let sinonChai;
-
 if (typeof module !== 'undefined') {
 	chai = require('chai');
 	expect = chai.expect;
-
 	debug = require('../src');
-	sinon = require('sinon');
-	sinonChai = require('sinon-chai');
-	chai.use(sinonChai);
 }
 
 describe('debug', () => {
-	let log = debug('test');
-
-	log.log = sinon.stub();
-
 	it('passes a basic sanity check', () => {
-		expect(log('hello world')).to.not.throw();
+		const log = debug('test');
+		log.enabled = true;
+		log.log = () => {};
+
+		expect(() => log('hello world')).to.not.throw();
 	});
 
 	it('allows namespaces to be a non-string value', () => {
-		expect(debug.enable(true)).to.not.throw();
+		const log = debug('test');
+		log.enabled = true;
+		log.log = () => {};
+
+		expect(() => debug.enable(true)).to.not.throw();
 	});
 
-	context('with log function', () => {
-		beforeEach(() => {
-			debug.enable('test');
-			log = debug('test');
-		});
+	it('honors global debug namespace enable calls', () => {
+		expect(debug('test:12345').enabled).to.equal(false);
+		expect(debug('test:67890').enabled).to.equal(false);
 
-		it('uses it', () => {
-			log.log = sinon.stub();
-			log('using custom log function');
-
-			expect(log.log).to.have.been.calledOnce();
-		});
+		debug.enable('test:12345');
+		expect(debug('test:12345').enabled).to.equal(true);
+		expect(debug('test:67890').enabled).to.equal(false);
 	});
 
-	describe('custom functions', () => {
-		let log;
+	it('uses custom log function', () => {
+		const log = debug('test');
+		log.enabled = true;
 
-		beforeEach(() => {
-			debug.enable('test');
-			log = debug('test');
-		});
+		const messages = [];
+		log.log = (...args) => messages.push(args);
 
-		context('with log function', () => {
-			it('uses it', () => {
-				log.log = sinon.spy();
-				log('using custom log function');
+		log('using custom log function');
+		log('using custom log function again');
+		log('%O', 12345);
 
-				expect(log.log).to.have.been.calledOnce();
-			});
-		});
+		expect(messages.length).to.equal(3);
 	});
 
 	describe('extend namespace', () => {
-		let log;
-
-		beforeEach(() => {
-			debug.enable('foo');
-			log = debug('foo');
-		});
-
 		it('should extend namespace', () => {
+			const log = debug('foo');
+			log.enabled = true;
+			log.log = () => {};
+
 			const logBar = log.extend('bar');
 			expect(logBar.namespace).to.be.equal('foo:bar');
 		});
 
 		it('should extend namespace with custom delimiter', () => {
+			const log = debug('foo');
+			log.enabled = true;
+			log.log = () => {};
+
 			const logBar = log.extend('bar', '--');
 			expect(logBar.namespace).to.be.equal('foo--bar');
 		});
 
 		it('should extend namespace with empty delimiter', () => {
+			const log = debug('foo');
+			log.enabled = true;
+			log.log = () => {};
+
 			const logBar = log.extend('bar', '');
 			expect(logBar.namespace).to.be.equal('foobar');
 		});
