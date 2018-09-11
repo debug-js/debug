@@ -15,22 +15,16 @@ YARN ?= $(shell which yarn)
 PKG ?= $(if $(YARN),$(YARN),$(NODE) $(shell which npm))
 BROWSERIFY ?= $(NODE) $(BIN)/browserify
 
-install: node_modules
+all: lint test
 
 browser: dist/debug.js
 
-node_modules: package.json
-	@NODE_ENV= $(PKG) install
-	@touch node_modules
-
-dist/debug.js: src/*.js node_modules
+dist/debug.js: src/*.js
 	@mkdir -p dist
-	@$(BROWSERIFY) \
-		--standalone debug \
-		. > dist/debug.js
+	@$(BROWSERIFY) --standalone debug . > dist/debug.js
 
 lint:
-	@eslint *.js src/*.js
+	@xo
 
 test-node:
 	@istanbul cover node_modules/mocha/bin/_mocha -- test/**.js
@@ -40,19 +34,9 @@ test-browser:
 	@$(MAKE) browser
 	@karma start --single-run
 
-test-all:
-	@concurrently \
-		"make test-node" \
-		"make test-browser"
-
-test:
-	@if [ "x$(BROWSER)" = "x" ]; then \
-		$(MAKE) test-node; \
-		else \
-		$(MAKE) test-browser; \
-	fi
+test: test-node test-browser
 
 clean:
-	rimraf dist coverage
+	rm -rf dist coverage
 
-.PHONY: browser install clean lint test test-all test-node test-browser
+.PHONY: all browser install clean lint test test-node test-browser
