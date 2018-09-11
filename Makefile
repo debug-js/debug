@@ -10,10 +10,7 @@ PATH := node_modules/.bin:$(PATH)
 SHELL := /bin/bash
 
 # applications
-NODE ?= $(shell which node)
-YARN ?= $(shell which yarn)
-PKG ?= $(if $(YARN),$(YARN),$(NODE) $(shell which npm))
-BROWSERIFY ?= $(NODE) $(BIN)/browserify
+BROWSERIFY ?= $(BIN)/browserify
 
 all: lint test
 
