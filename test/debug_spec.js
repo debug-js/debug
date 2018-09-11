@@ -64,4 +64,30 @@ describe('debug', function () {
     });
   });
 
+
+  describe('extend namespace', function () {
+    var log;
+
+    beforeEach(function () {
+      debug.enable('foo');
+      log = debug('foo');
+    });
+
+    it('should extend namespace', function () {
+      var logBar = log.extend('bar');
+      expect(logBar.namespace).to.be.equal('foo:bar');
+    });
+
+    it('should extend namespace with custom delimiter', function () {
+      var logBar = log.extend('bar', '--');
+      expect(logBar.namespace).to.be.equal('foo--bar');
+    });
+
+    it('should extend namespace with empty delimiter', function () {
+      var logBar = log.extend('bar', '');
+      expect(logBar.namespace).to.be.equal('foobar');
+    });
+
+  });
+
 });

@@ -123,6 +123,7 @@ module.exports = function setup(env) {
     debug.useColors = createDebug.useColors();
     debug.color = selectColor(namespace);
     debug.destroy = destroy;
+    debug.extend = extend;
     //debug.formatArgs = formatArgs;
     //debug.rawLog = rawLog;
 
@@ -144,6 +145,10 @@ module.exports = function setup(env) {
     } else {
       return false;
     }
+  }
+
+  function extend (namespace, delimiter) {
+    return createDebug(this.namespace + (typeof delimiter !== 'undefined' ? delimiter : ':') + namespace);
   }
 
   /**
