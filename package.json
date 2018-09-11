@@ -1,6 +1,6 @@
 {
   "name": "debug",
-  "version": "3.2.3",
+  "version": "3.2.4",
   "repository": {
     "type": "git",
     "url": "git://github.com/visionmedia/debug.git"
@@ -13,6 +13,7 @@
   ],
   "files": [
     "src",
+    "node.js",
     "dist/debug.js",
     "LICENSE",
     "README.md"
