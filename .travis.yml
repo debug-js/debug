@@ -8,11 +8,10 @@ node_js:
   - "10"
 
 install:
-  - make install
+  - npm install
 
 script:
-  - make lint
-  - make test
+  - make all
 
 matrix:
   include:
