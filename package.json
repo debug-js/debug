@@ -46,5 +46,6 @@
     "xo": "^0.23.0"
   },
   "main": "./src/index.js",
-  "browser": "./dist/debug.js"
+  "browser": "./src/browser.js",
+  "unpkg": "./dist/debug.js"
 }

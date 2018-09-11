@@ -11,7 +11,7 @@ dist: dist/debug.js dist/test.js
 .INTERMEDIATE: dist/debug.es6.js
 dist/debug.es6.js: src/*.js
 	@mkdir -p dist
-	browserify --standalone debug $< > $@
+	browserify --standalone debug . > $@
 
 dist/debug.js: dist/debug.es6.js
 	@mkdir -p dist
