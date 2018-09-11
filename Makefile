@@ -17,17 +17,25 @@ BROWSERIFY ?= $(NODE) $(BIN)/browserify
 
 all: lint test
 
-browser: dist/debug.js
+browser: dist/debug.js dist/test.js
 
 dist/debug.js: src/*.js
 	@mkdir -p dist
-	@$(BROWSERIFY) --standalone debug . > dist/debug.js
+	@$(BROWSERIFY) --standalone debug . > $@.es6.js
+	@babel $@.es6.js > $@
+	@rm $@.es6.js
+
+dist/test.js: test.js
+	@mkdir -p dist
+	@cp $< $@.es6.js
+	@babel $@.es6.js > $@
+	@rm $@.es6.js
 
 lint:
 	@xo
 
 test-node:
-	@istanbul cover node_modules/mocha/bin/_mocha -- test/**.js
+	@istanbul cover node_modules/mocha/bin/_mocha -- test.js
 	@cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
 test-browser:

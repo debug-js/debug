@@ -10,7 +10,7 @@ let debug;
 if (typeof module !== 'undefined') {
 	chai = require('chai');
 	expect = chai.expect;
-	debug = require('../src');
+	debug = require('./src');
 }
 
 describe('debug', () => {
