@@ -1,8 +1,8 @@
-var debug = require('../../')
+const debug = require('../..');
 
-debug.enable('*')
+debug.enable('*');
 
-for (var i=0; i < debug.colors.length; i++) {
-  const d = debug('example:' + i);
-  d('The color is %o', d.color);
+for (let i = 0; i < debug.colors.length; i++) {
+	const d = debug('example:' + i);
+	d('The color is %o', d.color);
 }

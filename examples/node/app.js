@@ -1,19 +1,20 @@
+const http = require('http');
 
-var debug = require('../../')('http')
-  , http = require('http')
-  , name = 'My App';
+const debug = require('../..')('http');
 
-// fake app
+const name = 'My App';
+
+// Fake app
 
 debug('booting %o', name);
 
-http.createServer(function(req, res){
-  debug(req.method + ' ' + req.url);
-  res.end('hello\n');
-}).listen(3000, function(){
-  debug('listening');
+http.createServer((req, res) => {
+	debug(req.method + ' ' + req.url);
+	res.end('hello\n');
+}).listen(3000, () => {
+	debug('listening');
 });
 
-// fake worker of some kind
-
+// Fake worker of some kind
+// eslint-disable-next-line import/no-unassigned-import
 require('./worker');

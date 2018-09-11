@@ -6,6 +6,9 @@
     "url": "git://github.com/visionmedia/debug.git"
   },
   "description": "small debugging utility",
+  "scripts": {
+    "test": "xo && mocha"
+  },
   "keywords": [
     "debug",
     "log",
