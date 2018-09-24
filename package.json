@@ -39,6 +39,9 @@
   "dependencies": {
     "ms": "^2.1.1"
   },
+  "scripts": {
+    "test": "mocha"
+  },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
@@ -48,10 +51,10 @@
     "concurrently": "^3.1.0",
     "coveralls": "^3.0.2",
     "istanbul": "^0.4.5",
-    "karma": "^3.0.0",
+    "karma": "^2.0.0",
     "karma-chai": "^0.1.0",
     "karma-mocha": "^1.3.0",
-    "karma-phantomjs-launcher": "^1.0.2",
+    "karma-chrome-launcher": "^2.2.0",
     "mocha": "^5.2.0",
     "mocha-lcov-reporter": "^1.2.0",
     "rimraf": "^2.5.4",
