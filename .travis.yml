@@ -11,4 +11,5 @@ install:
   - npm install
 
 script:
-  - make all
+  - npm run lint
+  - npm test
