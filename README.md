@@ -317,6 +317,24 @@ $ DEBUG=foo node -e 'var dbg = require("debug"); dbg.enable("bar"); console.log(
 => false
 ```
 
+`disable()`
+
+Will disable all namespaces. The functions returns the namespaces currently
+enabled (and skipped). This can be useful if you want to disable debugging
+temporarily without knowing what was enabled to begin with.
+
+For example:
+
+```js
+let debug = require('debug');
+debug.enable('foo:*,-foo:bar');
+let namespaces = debug.disable();
+debug.enable(namespaces);
+```
+
+Note: There is no guarantee that the string will be identical to the initial
+enable string, but semantically they will be identical.
+
 ## Checking whether a debug target is enabled
 
 After you've created a debug instance, you can determine whether or not it is
