@@ -81,4 +81,43 @@ describe('debug', () => {
 			expect(logBar.namespace).to.be.equal('foobar');
 		});
 	});
+
+	describe('rebuild namespaces string (disable)', () => {
+		it('handle names, skips, and wildcards', () => {
+			debug.enable('test,abc*,-abc');
+			const namespaces = debug.disable();
+			expect(namespaces).to.equal('test,abc*,-abc');
+		});
+
+		it('handles empty', () => {
+			debug.enable('');
+			const namespaces = debug.disable();
+			expect(namespaces).to.equal('');
+			expect(debug.names).to.deep.equal([]);
+			expect(debug.skips).to.deep.equal([]);
+		});
+
+		it('handles all', () => {
+			debug.enable('*');
+			const namespaces = debug.disable();
+			expect(namespaces).to.equal('*');
+		});
+
+		it('handles skip all', () => {
+			debug.enable('-*');
+			const namespaces = debug.disable();
+			expect(namespaces).to.equal('-*');
+		});
+
+		it('names+skips same with new string', () => {
+			debug.enable('test,abc*,-abc');
+			const oldNames = [...debug.names];
+			const oldSkips = [...debug.skips];
+			const namespaces = debug.disable();
+			expect(namespaces).to.equal('test,abc*,-abc');
+			debug.enable(namespaces);
+			expect(oldNames.map(String)).to.deep.equal(debug.names.map(String));
+			expect(oldSkips.map(String)).to.deep.equal(debug.skips.map(String));
+		});
+	});
 });
