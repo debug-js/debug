@@ -64,13 +64,13 @@ function setup(env) {
     var prevTime;
 
     function debug() {
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-
       // Disabled?
       if (!debug.enabled) {
         return;
+      }
+
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
       }
 
       var self = debug; // Set `diff` timestamp
