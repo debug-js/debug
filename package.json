@@ -39,9 +39,6 @@
   "dependencies": {
     "ms": "^2.1.1"
   },
-  "scripts": {
-    "test": "mocha"
-  },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
