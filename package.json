@@ -1,6 +1,6 @@
 {
   "name": "debug",
-  "version": "3.2.5",
+  "version": "3.2.6",
   "repository": {
     "type": "git",
     "url": "git://github.com/visionmedia/debug.git"
