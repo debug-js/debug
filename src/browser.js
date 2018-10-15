@@ -4,6 +4,8 @@
  * This is the web browser implementation of `debug()`.
  */
 
+var exports = {};
+
 exports.log = log;
 exports.formatArgs = formatArgs;
 exports.save = save;

@@ -6,7 +6,12 @@
         "targets": {
           "chrome": "58",
           "ie": "8"
-        }
+        },
+        "exclude": [
+          "transform-typeof-symbol",
+          "transform-function-name",
+          "transform-classes"
+        ]
       }
     ]
   ]
