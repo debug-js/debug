@@ -4,7 +4,7 @@
  * This is the web browser implementation of `debug()`.
  */
 
-var exports = {};
+const exports = {};
 
 exports.log = log;
 exports.formatArgs = formatArgs;
