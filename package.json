@@ -37,7 +37,7 @@
     "clean": "rimraf dist coverage"
   },
   "dependencies": {
-    "ms": "^2.1.1"
+    "ms": "^2.6.8"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
