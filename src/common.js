@@ -38,8 +38,52 @@ function setup(env) {
 
 	/**
 	* Map of formatting handling functions, for output formatting.
+	* m and _time are special hardcoded keys.
 	*/
 	createDebug.outputFormatters = {};
+
+	/**
+	 * Map %m to outputting diff
+	 */
+
+	createDebug.outputFormatters.m = function(format, args) {
+		return args;
+	}
+
+	/**
+	 * Map %+ to outputting diff
+	 */
+
+	createDebug.outputFormatters['+'] = function(format, args) {
+		const diff = '+' + createDebug.humanize(this.diff);
+		if (this.useColors) {
+			return this.applyColor(diff);
+		} else {
+			return diff;
+		}
+	}
+
+	/**
+	 * Map %n to outputting namespace prefix
+	 */
+
+	createDebug.outputFormatters.n = function(format, args) {
+		if (this.useColors) {
+			return this.applyColor(this.name, true);
+		} else {
+			return this.name;
+		}
+	}
+
+	/**
+	 * Map %_time to handling time...?
+	 */
+
+	createDebug.outputFormatters._time = function(format, args) {
+		//doesn't respect `exports.inspectOpts.hideDate`
+		//browser doesn't have date
+		return new Date().toISOString();
+	}
 
 	/**
 	* Selects a color for a debug namespace
@@ -112,18 +156,56 @@ function setup(env) {
 				return match;
 			});
 
-			// Apply env-specific formatting (colors, etc.)
-			createDebug.formatArgs.call(self, args);
+			// Apply relevant `outputFormatters` to `format`
+			let reg = /%(J?[a-zA-Z+]|J?\{.+\})/, formattedArgs = [], res;
+			let outputFormat = self.format; //make a copy of the format
+			while (res = outputFormat.match(reg)) {
+				let [matched, formatToken] = res, stringify = false, formatter, formatted;
+				//split out the part before the matched format token
+				let split = outputFormat.slice(0, res.index);
+				outputFormat = outputFormat.slice(res.index + matched.length);
+
+				//and add it to the arguments
+				if (split.length > 0) {
+					formattedArgs.push(split);
+				}
+
+				//%J* are passed to JSON.stringify
+				if (formatToken.startsWith('J')) {
+					formatToken = formatToken.replace(/^J/, '');
+					stringify = true;
+				}
+
+				//not really sure how to handle time at this point
+				if (formatToken.startsWith('{')) {
+					formatter = createDebug.outputFormatters._time;
+				} else {
+					formatter = createDebug.outputFormatters[formatToken];
+				}
+				if (typeof formatter === 'function') {
+					formatted = formatter.call(self, formatToken, args);
+					if (stringify) {
+						formatted = JSON.stringify(formatted)
+					}
+
+					if (Array.isArray(formatted)) { //intended to concatenate %m's args in the middle of the format
+						formattedArgs = formattedArgs.concat(formatted);
+					} else {
+						formattedArgs.push(formatted);
+					}
+				}
+			}
 
 			const logFn = self.log || createDebug.log;
-			logFn.apply(self, args);
+			logFn.apply(self, formattedArgs);
 		}
 
 		debug.namespace = namespace;
 		debug.enabled = createDebug.enabled(namespace);
 		debug.useColors = createDebug.useColors();
-		debug.format = createDebug.getFormat() || '%{H:M-Z} %n %m %+';
+		debug.format = createDebug.getFormat() || '%{H:M-Z}%n%m%+'; //'  %n%m%+'
 		debug.color = selectColor(namespace);
+		debug.applyColor = createDebug.applyColor.bind(debug);
 		debug.destroy = destroy;
 		debug.extend = extend;
 		// Debug.formatArgs = formatArgs;

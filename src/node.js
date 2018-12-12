@@ -11,7 +11,7 @@ const util = require('util');
 
 exports.init = init;
 exports.log = log;
-exports.formatArgs = formatArgs;
+exports.applyColor = applyColor;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
@@ -172,43 +172,12 @@ function getFormat() {
  * @api public
  */
 
-function formatArgs(args) {
-	var formatted = this.format;
+function applyColor(str, bold = false) {
+	//I think doing this each time is a waste, colorCode could be stored in some variable?
+	const c = this.color;
+	const colorCode = '\u001B[3' + (c < 8 ? c : '8;5;' + c);
 
-	// Apply any `outputFormatters` transformations
-	formatted = formatted.replace(/%(J?[a-zA-Z+]|J?\{.+\})/g, (match, format) => {
-		//%J* are passed to JSON.stringify
-		let stringify = false;
-		if (format.startsWith('J')) {
-			format = format.replace(/^J/, '');
-			stringify = true;
-		}
-
-		let formatter;
-		//not really sure how to handle time at this point
-		if (format.startsWith('{')) {
-			formatter = outputFormatters._time;
-		} else {
-			 formatter = outputFormatters[format];
-		}
-		if (typeof formatter === 'function') {
-			match = formatter.call(this, format, args);
-			if (stringify) {
-				match = JSON.stringify(match)
-			}
-		}
-
-		return match;
-	});
-
-	args[0] = formatted;
-}
-
-function getDate() {
-	if (exports.inspectOpts.hideDate) {
-		return '';
-	}
-	return new Date().toISOString() + ' ';
+	return colorCode + (bold ? ';1' : '') + 'm' + str + '\u001B[0m';
 }
 
 /**
@@ -284,55 +253,3 @@ formatters.O = function (v) {
 	this.inspectOpts.colors = this.useColors;
 	return util.inspect(v, this.inspectOpts);
 };
-
-const { outputFormatters } = module.exports;
-
-/**
- * Map %m to outputting message
- */
-
-outputFormatters.m = function(format, args) {
-	return args;
-}
-
-/**
- * Map %m to outputting diff
- */
-
-outputFormatters['+'] = function(format, args) {
-	const diff = 'm+' + module.exports.humanize(this.diff);
-
-	if (this.useColors) {
-		const c = this.color;
-		const colorCode = '\u001B[3' + (c < 8 ? c : '8;5;' + c);
-
-		return colorCode + diff + '\u001B[0m';
-	} else {
-		return diff;
-	}
-}
-
-/**
- * Map %n to outputting namespace prefix
- */
-
-outputFormatters.n = function(format, args) {
-	if (this.useColors) {
-		const c = this.color;
-		const colorCode = '\u001B[3' + (c < 8 ? c : '8;5;' + c);
-
-		return `  ${colorCode};1m${this.name} \u001B[0m`;;
-	} else {
-		return this.name;
-	}
-}
-
-
-/**
- * Map %_time to handling time...?
- */
-
-outputFormatters._time = function(format, args) {
-	return getDate();
-}
-
