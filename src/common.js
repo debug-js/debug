@@ -37,6 +37,11 @@ function setup(env) {
 	createDebug.formatters = {};
 
 	/**
+	* Map of formatting handling functions, for output formatting.
+	*/
+	createDebug.outputFormatters = {};
+
+	/**
 	* Selects a color for a debug namespace
 	* @param {String} namespace The namespace string for the for the debug instance to be colored
 	* @return {Number|String} An ANSI color code for the given namespace
@@ -117,6 +122,7 @@ function setup(env) {
 		debug.namespace = namespace;
 		debug.enabled = createDebug.enabled(namespace);
 		debug.useColors = createDebug.useColors();
+		debug.format = createDebug.getFormat() || '%{H:M-Z} %n %m %+';
 		debug.color = selectColor(namespace);
 		debug.destroy = destroy;
 		debug.extend = extend;

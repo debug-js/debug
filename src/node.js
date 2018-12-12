@@ -15,6 +15,7 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
+exports.getFormat = getFormat;
 
 /**
  * Colors.
@@ -137,7 +138,10 @@ exports.inspectOpts = Object.keys(process.env).filter(key => {
 	} else if (val === 'null') {
 		val = null;
 	} else {
-		val = Number(val);
+		let asNumber = Number(val);
+		if (!isNaN(asNumber)) {
+			val = asNumber;
+		}
 	}
 
 	obj[prop] = val;
@@ -155,24 +159,49 @@ function useColors() {
 }
 
 /**
+ * Returns DEBUG_FORMAT if specified, or false otherwise
+ */
+
+function getFormat() {
+	return 'format' in exports.inspectOpts && exports.inspectOpts.format;
+}
+
+/**
  * Adds ANSI color escape codes if enabled.
  *
  * @api public
  */
 
 function formatArgs(args) {
-	const {namespace: name, useColors} = this;
+	var formatted = this.format;
 
-	if (useColors) {
-		const c = this.color;
-		const colorCode = '\u001B[3' + (c < 8 ? c : '8;5;' + c);
-		const prefix = `  ${colorCode};1m${name} \u001B[0m`;
+	// Apply any `outputFormatters` transformations
+	formatted = formatted.replace(/%(J?[a-zA-Z+]|J?\{.+\})/g, (match, format) => {
+		//%J* are passed to JSON.stringify
+		let stringify = false;
+		if (format.startsWith('J')) {
+			format = format.replace(/^J/, '');
+			stringify = true;
+		}
 
-		args[0] = prefix + args[0].split('\n').join('\n' + prefix);
-		args.push(colorCode + 'm+' + module.exports.humanize(this.diff) + '\u001B[0m');
-	} else {
-		args[0] = getDate() + name + ' ' + args[0];
-	}
+		let formatter;
+		//not really sure how to handle time at this point
+		if (format.startsWith('{')) {
+			formatter = outputFormatters._time;
+		} else {
+			 formatter = outputFormatters[format];
+		}
+		if (typeof formatter === 'function') {
+			match = formatter.call(this, format, args);
+			if (stringify) {
+				match = JSON.stringify(match)
+			}
+		}
+
+		return match;
+	});
+
+	args[0] = formatted;
 }
 
 function getDate() {
@@ -255,3 +284,55 @@ formatters.O = function (v) {
 	this.inspectOpts.colors = this.useColors;
 	return util.inspect(v, this.inspectOpts);
 };
+
+const { outputFormatters } = module.exports;
+
+/**
+ * Map %m to outputting message
+ */
+
+outputFormatters.m = function(format, args) {
+	return args;
+}
+
+/**
+ * Map %m to outputting diff
+ */
+
+outputFormatters['+'] = function(format, args) {
+	const diff = 'm+' + module.exports.humanize(this.diff);
+
+	if (this.useColors) {
+		const c = this.color;
+		const colorCode = '\u001B[3' + (c < 8 ? c : '8;5;' + c);
+
+		return colorCode + diff + '\u001B[0m';
+	} else {
+		return diff;
+	}
+}
+
+/**
+ * Map %n to outputting namespace prefix
+ */
+
+outputFormatters.n = function(format, args) {
+	if (this.useColors) {
+		const c = this.color;
+		const colorCode = '\u001B[3' + (c < 8 ? c : '8;5;' + c);
+
+		return `  ${colorCode};1m${this.name} \u001B[0m`;;
+	} else {
+		return this.name;
+	}
+}
+
+
+/**
+ * Map %_time to handling time...?
+ */
+
+outputFormatters._time = function(format, args) {
+	return getDate();
+}
+
