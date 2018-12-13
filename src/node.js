@@ -159,11 +159,26 @@ function useColors() {
 }
 
 /**
- * Returns DEBUG_FORMAT if specified, or false otherwise
+ * If DEBUG_FORMAT if specified, returns it.
+ * Otherwise, returns a format matching previous version's based on DEBUG_COLORS and DEBUG_HIDE_DATE
  */
 
 function getFormat() {
-	return 'format' in exports.inspectOpts && exports.inspectOpts.format;
+	const useColors = 'colors' in exports.inspectOpts ?
+		Boolean(exports.inspectOpts.colors) :
+		tty.isatty(process.stderr.fd);
+
+	if ('format' in exports.inspectOpts) {
+		return exports.inspectOpts.format;
+	} else {
+		if (useColors) {
+			return ' %n%m%+'; //'  %n %m %+'
+		} else if (exports.inspectOpts.hideDate) {
+			return '%n%m'; //'%n %m'
+		} else {
+			return '%{%FT%T.%LZ%M-Z}%n%m'; //'%{%FT%T.%LZ%M-Z} %n %m'
+		}
+	}
 }
 
 /**
