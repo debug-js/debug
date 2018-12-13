@@ -69,9 +69,9 @@ function setup(env) {
 
 	createDebug.outputFormatters.n = function(format, args) {
 		if (this.useColors) {
-			return this.applyColor(this.name, true);
+			return this.applyColor(this.namespace, true);
 		} else {
-			return this.name;
+			return this.namespace;
 		}
 	}
 
