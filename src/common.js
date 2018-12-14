@@ -47,6 +47,38 @@ function setup(env) {
 	 */
 
 	createDebug.outputFormatters.m = function(format, args) {
+		args[0] = createDebug.coerce(args[0]);
+
+		if (typeof args[0] !== 'string') {
+			// Anything else let's inspect with %O
+			/**
+			 * Note: This only inspects the first argument,
+			 * so if debug({foo: "bar"}, {foo: "bar"}) is passed
+			 * only the first object will be colored by node's formatters.O
+			 */
+			args.unshift('%O');
+		}
+
+		// Apply any `formatters` transformations
+		let index = 0;
+		args[0] = args[0].replace(/%([a-zA-Z%])/g, (match, format) => {
+			// If we encounter an escaped % then don't increase the array index
+			if (match === '%%') {
+				return match;
+			}
+			index++;
+			const formatter = createDebug.formatters[format];
+			if (typeof formatter === 'function') {
+				const val = args[index];
+				match = formatter.call(this, val);
+
+				// Now we need to remove `args[index]` since it's inlined in the `format`
+				args.splice(index, 1);
+				index--;
+			}
+			return match;
+		});
+
 		return args;
 	}
 
@@ -128,33 +160,6 @@ function setup(env) {
 			self.prev = prevTime;
 			self.curr = curr;
 			prevTime = curr;
-
-			args[0] = createDebug.coerce(args[0]);
-
-			if (typeof args[0] !== 'string') {
-				// Anything else let's inspect with %O
-				args.unshift('%O');
-			}
-
-			// Apply any `formatters` transformations
-			let index = 0;
-			args[0] = args[0].replace(/%([a-zA-Z%])/g, (match, format) => {
-				// If we encounter an escaped % then don't increase the array index
-				if (match === '%%') {
-					return match;
-				}
-				index++;
-				const formatter = createDebug.formatters[format];
-				if (typeof formatter === 'function') {
-					const val = args[index];
-					match = formatter.call(self, val);
-
-					// Now we need to remove `args[index]` since it's inlined in the `format`
-					args.splice(index, 1);
-					index--;
-				}
-				return match;
-			});
 
 			// Apply relevant `outputFormatters` to `format`
 			let reg = /%(J?[a-zA-Z+]|J?\{.+\})/, formattedArgs = [], res;
