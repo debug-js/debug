@@ -87,12 +87,7 @@ function setup(env) {
 	 */
 
 	createDebug.outputFormatters['+'] = function(format, args) {
-		const diff = '+' + createDebug.humanize(this.diff);
-		if (this.useColors) {
-			return this.applyColor(diff);
-		} else {
-			return diff;
-		}
+		return '+' + createDebug.humanize(this.diff);
 	}
 
 	/**
@@ -100,11 +95,7 @@ function setup(env) {
 	 */
 
 	createDebug.outputFormatters.n = function(format, args) {
-		if (this.useColors) {
-			return this.applyColor(this.namespace, true);
-		} else {
-			return this.namespace;
-		}
+		return this.namespace;
 	}
 
 	/**
@@ -112,9 +103,46 @@ function setup(env) {
 	 */
 
 	createDebug.outputFormatters._time = function(format, args) {
-		//doesn't respect `exports.inspectOpts.hideDate`
 		//browser doesn't have date
 		return new Date().toISOString();
+	}
+
+
+	/**
+	* Map of meta-formatters which are applied to outputFormatters
+	*/
+	createDebug.metaFormatters = {};
+
+	/**
+	 * Map %J* to `JSON.stringify()`
+	 */
+
+	createDebug.outputFormatters.J = function(v) {
+		return JSON.stringify(v);
+	}
+
+	/**
+	 * Map %c* to to `applyColor()`
+	 */
+
+	createDebug.outputFormatters.c = function(v) {
+		if (this.useColors) {
+			return this.applyColor(v);
+		} else {
+			return v;
+		}
+	}
+
+	/**
+	 * Map %C* to to `applyColor(arg, bold = true)` (node)
+	 */
+
+	createDebug.outputFormatters.C = function(v) {
+		if (this.useColors) {
+			return this.applyColor(v, true);
+		} else {
+			return v;
+		}
 	}
 
 	/**
@@ -162,10 +190,10 @@ function setup(env) {
 			prevTime = curr;
 
 			// Apply relevant `outputFormatters` to `format`
-			let reg = /%(J?[a-zA-Z+]|J?\{.+\})/, formattedArgs = [], res;
+			let reg = /%([a-zA-Z+]+|[a-zA-Z]*?\{.+\})/, formattedArgs = [], res;
 			let outputFormat = self.format; //make a copy of the format
 			while (res = outputFormat.match(reg)) {
-				let [matched, formatToken] = res, stringify = false, formatter, formatted;
+				let [matched, formatToken] = res, formatter, formatted;
 				//split out the part before the matched format token
 				let split = outputFormat.slice(0, res.index);
 				outputFormat = outputFormat.slice(res.index + matched.length);
@@ -175,10 +203,12 @@ function setup(env) {
 					formattedArgs.push(split);
 				}
 
-				//%J* are passed to JSON.stringify
-				if (formatToken.startsWith('J')) {
-					formatToken = formatToken.replace(/^J/, '');
-					stringify = true;
+				let metaFormatters = [];
+				// Extract metaformatters
+				while (formatToken.length > 1 && !formatToken.startsWith('{')) {
+					const metaFormatterToken = formatToken.slice(0, 1);
+					formatToken = formatToken.slice(1);
+					metaFormatters.push(createDebug.outputFormatters[metaFormatterToken]);
 				}
 
 				//not really sure how to handle time at this point
@@ -189,9 +219,13 @@ function setup(env) {
 				}
 				if (typeof formatter === 'function') {
 					formatted = formatter.call(self, formatToken, args);
-					if (stringify) {
-						formatted = JSON.stringify(formatted)
-					}
+
+					// Apply metaFormatters
+					metaFormatters.forEach(metaFormatter => {
+						if (typeof metaFormatter === "function") {
+							formatted = metaFormatter.call(self, formatted);
+						}
+					});
 
 					if (Array.isArray(formatted)) { //intended to concatenate %m's args in the middle of the format
 						formattedArgs = formattedArgs.concat(formatted);

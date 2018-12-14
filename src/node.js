@@ -172,7 +172,7 @@ function getFormat() {
 		return exports.inspectOpts.format;
 	} else {
 		if (useColors) {
-			return ' %n%m%+'; //'  %n %m %+'
+			return ' %Cn%m%c+'; //'  %n %m %+'
 		} else if (exports.inspectOpts.hideDate) {
 			return '%n%m'; //'%n %m'
 		} else {
