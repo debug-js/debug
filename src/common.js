@@ -83,11 +83,19 @@ function setup(env) {
 	}
 
 	/**
-	 * Map %+ to outputting diff
+	 * Map %+ to humanize()'s defaults (1000ms diff => "1s")
 	 */
 
 	createDebug.outputFormatters['+'] = function(format, args) {
 		return '+' + createDebug.humanize(this.diff);
+	}
+
+	/**
+	 * Map %d to returning milliseconds
+	 */
+
+	createDebug.outputFormatters.d = function(format, args) {
+		return '+' + this.diff + "ms";
 	}
 
 	/**
