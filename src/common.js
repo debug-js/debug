@@ -43,10 +43,10 @@ function setup(env) {
 	createDebug.outputFormatters = {};
 
 	/**
-	 * Map %m to outputting diff
+	 * Map %m to applying formatters to arguments
 	 */
 
-	createDebug.outputFormatters.m = function(format, args) {
+	createDebug.outputFormatters.m = function (_, args) {
 		args[0] = createDebug.coerce(args[0]);
 
 		if (typeof args[0] !== 'string') {
@@ -80,41 +80,40 @@ function setup(env) {
 		});
 
 		return args;
-	}
+	};
 
 	/**
 	 * Map %+ to humanize()'s defaults (1000ms diff => "1s")
 	 */
 
-	createDebug.outputFormatters['+'] = function(format, args) {
+	createDebug.outputFormatters['+'] = function () {
 		return '+' + createDebug.humanize(this.diff);
-	}
+	};
 
 	/**
 	 * Map %d to returning milliseconds
 	 */
 
-	createDebug.outputFormatters.d = function(format, args) {
-		return '+' + this.diff + "ms";
-	}
+	createDebug.outputFormatters.d = function () {
+		return '+' + this.diff + 'ms';
+	};
 
 	/**
 	 * Map %n to outputting namespace prefix
 	 */
 
-	createDebug.outputFormatters.n = function(format, args) {
+	createDebug.outputFormatters.n = function () {
 		return this.namespace;
-	}
+	};
 
 	/**
 	 * Map %_time to handling time...?
 	 */
 
-	createDebug.outputFormatters._time = function(format, args) {
-		//browser doesn't have date
+	createDebug.outputFormatters._time = function (format) {
+		// Browser doesn't have date
 		return new Date().toISOString();
-	}
-
+	};
 
 	/**
 	* Map of meta-formatters which are applied to outputFormatters
@@ -125,33 +124,33 @@ function setup(env) {
 	 * Map %J* to `JSON.stringify()`
 	 */
 
-	createDebug.outputFormatters.J = function(v) {
+	createDebug.outputFormatters.J = function (v) {
 		return JSON.stringify(v);
-	}
+	};
 
 	/**
 	 * Map %c* to to `applyColor()`
 	 */
 
-	createDebug.outputFormatters.c = function(v) {
+	createDebug.outputFormatters.c = function (v) {
 		if (this.useColors) {
 			return this.applyColor(v);
 		} else {
 			return v;
 		}
-	}
+	};
 
 	/**
 	 * Map %C* to to `applyColor(arg, bold = true)` (node)
 	 */
 
-	createDebug.outputFormatters.C = function(v) {
+	createDebug.outputFormatters.C = function (v) {
 		if (this.useColors) {
 			return this.applyColor(v, true);
 		} else {
 			return v;
 		}
-	}
+	};
 
 	/**
 	* Selects a color for a debug namespace
@@ -198,20 +197,25 @@ function setup(env) {
 			prevTime = curr;
 
 			// Apply relevant `outputFormatters` to `format`
-			let reg = /%([a-zA-Z+]+|[a-zA-Z]*?\{.+\})/, formattedArgs = [], res;
-			let outputFormat = self.format; //make a copy of the format
+			const reg = /%([a-zA-Z+]+|[a-zA-Z]*?\{.+\})/;
+			let formattedArgs = [];
+			let res;
+			let outputFormat = self.format; // Make a copy of the format
 			while (res = outputFormat.match(reg)) {
-				let [matched, formatToken] = res, formatter, formatted;
-				//split out the part before the matched format token
-				let split = outputFormat.slice(0, res.index);
+				let [matched, formatToken] = res;
+				let formatter;
+				let formatted;
+
+				// Split out the part before the matched format token
+				const split = outputFormat.slice(0, res.index);
 				outputFormat = outputFormat.slice(res.index + matched.length);
 
-				//and add it to the arguments
+				// And add it to the arguments
 				if (split.length > 0) {
 					formattedArgs.push(split);
 				}
 
-				let metaFormatters = [];
+				const metaFormatters = [];
 				// Extract metaformatters
 				while (formatToken.length > 1 && !formatToken.startsWith('{')) {
 					const metaFormatterToken = formatToken.slice(0, 1);
@@ -219,7 +223,7 @@ function setup(env) {
 					metaFormatters.push(createDebug.outputFormatters[metaFormatterToken]);
 				}
 
-				//not really sure how to handle time at this point
+				// Not really sure how to handle time at this point
 				if (formatToken.startsWith('{')) {
 					formatter = createDebug.outputFormatters._time;
 				} else {
@@ -230,12 +234,12 @@ function setup(env) {
 
 					// Apply metaFormatters
 					metaFormatters.forEach(metaFormatter => {
-						if (typeof metaFormatter === "function") {
+						if (typeof metaFormatter === 'function') {
 							formatted = metaFormatter.call(self, formatted);
 						}
 					});
 
-					if (Array.isArray(formatted)) { //intended to concatenate %m's args in the middle of the format
+					if (Array.isArray(formatted)) { // Intended to concatenate %m's args in the middle of the format
 						formattedArgs = formattedArgs.concat(formatted);
 					} else {
 						formattedArgs.push(formatted);
@@ -250,7 +254,7 @@ function setup(env) {
 		debug.namespace = namespace;
 		debug.enabled = createDebug.enabled(namespace);
 		debug.useColors = createDebug.useColors();
-		debug.format = createDebug.getFormat() || '%{H:M-Z}%n%m%+'; //'  %n%m%+'
+		debug.format = createDebug.getFormat() || '%{H:M-Z}%n%m%+'; // '  %n%m%+'
 		debug.color = selectColor(namespace);
 		debug.applyColor = createDebug.applyColor.bind(debug);
 		debug.destroy = destroy;

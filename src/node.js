@@ -138,7 +138,7 @@ exports.inspectOpts = Object.keys(process.env).filter(key => {
 	} else if (val === 'null') {
 		val = null;
 	} else {
-		let asNumber = Number(val);
+		const asNumber = Number(val);
 		if (!isNaN(asNumber)) {
 			val = asNumber;
 		}
@@ -172,11 +172,11 @@ function getFormat() {
 		return exports.inspectOpts.format;
 	} else {
 		if (useColors) {
-			return ' %Cn%m%c+'; //'  %n %m %+'
+			return ' %Cn%m%c+'; // '  %n %m %+'
 		} else if (exports.inspectOpts.hideDate) {
-			return '%n%m'; //'%n %m'
+			return '%n%m'; // '%n %m'
 		} else {
-			return '%{%FT%T.%LZ%M-Z}%n%m'; //'%{%FT%T.%LZ%M-Z} %n %m'
+			return '%{%FT%T.%LZ%M-Z}%n%m'; // '%{%FT%T.%LZ%M-Z} %n %m'
 		}
 	}
 }
@@ -188,7 +188,7 @@ function getFormat() {
  */
 
 function applyColor(str, bold = false) {
-	//I think doing this each time is a waste, colorCode could be stored in some variable?
+	// I think doing this each time is a waste, colorCode could be stored in some variable?
 	const c = this.color;
 	const colorCode = '\u001B[3' + (c < 8 ? c : '8;5;' + c);
 
