@@ -80,6 +80,14 @@ describe('debug', () => {
 			const logBar = log.extend('bar', '');
 			expect(logBar.namespace).to.be.equal('foobar');
 		});
+
+		it('should keep the log function between extensions', () => {
+			const log = debug('foo');
+			log.log = () => {};
+
+			const logBar = log.extend('bar');
+			expect(log.log).to.be.equal(logBar.log);
+		});
 	});
 
 	describe('rebuild namespaces string (disable)', () => {
