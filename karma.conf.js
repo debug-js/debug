@@ -1,31 +1,15 @@
-// Karma configuration
-// Generated on Fri Dec 16 2016 13:09:51 GMT+0000 (UTC)
-
 module.exports = function (config) {
 	config.set({
-
-		// Base path that will be used to resolve all patterns (eg. files, exclude)
-		basePath: '',
-
 		// Frameworks to use
 		// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-		frameworks: ['mocha', 'chai'],
+		frameworks: ['browserify', 'mocha'],
 
 		// List of files / patterns to load in the browser
 		files: [
-			'dist/debug.js',
-			'dist/test.js'
+			'src/browser.js',
+			'src/common.js',
+			'test.js'
 		],
-
-		// List of files to exclude
-		exclude: [
-			'src/node.js'
-		],
-
-		// Preprocess matching files before serving them to the browser
-		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-		preprocessors: {
-		},
 
 		// Test results reporter to use
 		// possible values: 'dots', 'progress'
@@ -40,10 +24,7 @@ module.exports = function (config) {
 
 		// Level of logging
 		// possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-		logLevel: config.LOG_INFO,
-
-		// Enable / disable watching file and executing tests whenever any file changes
-		autoWatch: true,
+		logLevel: config.LOG_DEBUG,
 
 		// Start these browsers
 		// available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
@@ -55,12 +36,22 @@ module.exports = function (config) {
 			}
 		},
 
+		preprocessors: {
+			// *Sigh* what a glob, folks!
+			'{{!(node_modules),*.js},!(node_modules)/**/*.js}': ['browserify']
+		},
+
+		browserify: {
+			debug: true,
+			transform: ['brfs']
+		},
+
 		// Continuous Integration mode
 		// if true, Karma captures browsers, runs the tests and exits
-		singleRun: false,
+		singleRun: true,
 
 		// Concurrency level
 		// how many browser should be started simultaneous
-		concurrency: Infinity
+		concurrency: 1
 	});
 };
