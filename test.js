@@ -1,17 +1,7 @@
 /* eslint-env mocha */
-'use strict';
 
-let chai;
-
-let expect;
-
-let debug;
-
-if (typeof module !== 'undefined') {
-	chai = require('chai');
-	expect = chai.expect;
-	debug = require('./src');
-}
+const assert = require('assert');
+const debug = require('./src');
 
 describe('debug', () => {
 	it('passes a basic sanity check', () => {
@@ -19,7 +9,7 @@ describe('debug', () => {
 		log.enabled = true;
 		log.log = () => {};
 
-		expect(() => log('hello world')).to.not.throw();
+		assert.doesNotThrow(() => log('hello world'));
 	});
 
 	it('allows namespaces to be a non-string value', () => {
@@ -27,16 +17,16 @@ describe('debug', () => {
 		log.enabled = true;
 		log.log = () => {};
 
-		expect(() => debug.enable(true)).to.not.throw();
+		assert.doesNotThrow(() => debug.enable(true));
 	});
 
 	it('honors global debug namespace enable calls', () => {
-		expect(debug('test:12345').enabled).to.equal(false);
-		expect(debug('test:67890').enabled).to.equal(false);
+		assert.deepStrictEqual(debug('test:12345').enabled, false);
+		assert.deepStrictEqual(debug('test:67890').enabled, false);
 
 		debug.enable('test:12345');
-		expect(debug('test:12345').enabled).to.equal(true);
-		expect(debug('test:67890').enabled).to.equal(false);
+		assert.deepStrictEqual(debug('test:12345').enabled, true);
+		assert.deepStrictEqual(debug('test:67890').enabled, false);
 	});
 
 	it('uses custom log function', () => {
@@ -50,7 +40,7 @@ describe('debug', () => {
 		log('using custom log function again');
 		log('%O', 12345);
 
-		expect(messages.length).to.equal(3);
+		assert.deepStrictEqual(messages.length, 3);
 	});
 
 	describe('extend namespace', () => {
@@ -60,7 +50,7 @@ describe('debug', () => {
 			log.log = () => {};
 
 			const logBar = log.extend('bar');
-			expect(logBar.namespace).to.be.equal('foo:bar');
+			assert.deepStrictEqual(logBar.namespace, 'foo:bar');
 		});
 
 		it('should extend namespace with custom delimiter', () => {
@@ -69,7 +59,7 @@ describe('debug', () => {
 			log.log = () => {};
 
 			const logBar = log.extend('bar', '--');
-			expect(logBar.namespace).to.be.equal('foo--bar');
+			assert.deepStrictEqual(logBar.namespace, 'foo--bar');
 		});
 
 		it('should extend namespace with empty delimiter', () => {
@@ -78,7 +68,7 @@ describe('debug', () => {
 			log.log = () => {};
 
 			const logBar = log.extend('bar', '');
-			expect(logBar.namespace).to.be.equal('foobar');
+			assert.deepStrictEqual(logBar.namespace, 'foobar');
 		});
 	});
 
@@ -86,27 +76,27 @@ describe('debug', () => {
 		it('handle names, skips, and wildcards', () => {
 			debug.enable('test,abc*,-abc');
 			const namespaces = debug.disable();
-			expect(namespaces).to.equal('test,abc*,-abc');
+			assert.deepStrictEqual(namespaces, 'test,abc*,-abc');
 		});
 
 		it('handles empty', () => {
 			debug.enable('');
 			const namespaces = debug.disable();
-			expect(namespaces).to.equal('');
-			expect(debug.names).to.deep.equal([]);
-			expect(debug.skips).to.deep.equal([]);
+			assert.deepStrictEqual(namespaces, '');
+			assert.deepStrictEqual(debug.names, []);
+			assert.deepStrictEqual(debug.skips, []);
 		});
 
 		it('handles all', () => {
 			debug.enable('*');
 			const namespaces = debug.disable();
-			expect(namespaces).to.equal('*');
+			assert.deepStrictEqual(namespaces, '*');
 		});
 
 		it('handles skip all', () => {
 			debug.enable('-*');
 			const namespaces = debug.disable();
-			expect(namespaces).to.equal('-*');
+			assert.deepStrictEqual(namespaces, '-*');
 		});
 
 		it('names+skips same with new string', () => {
@@ -114,10 +104,10 @@ describe('debug', () => {
 			const oldNames = [...debug.names];
 			const oldSkips = [...debug.skips];
 			const namespaces = debug.disable();
-			expect(namespaces).to.equal('test,abc*,-abc');
+			assert.deepStrictEqual(namespaces, 'test,abc*,-abc');
 			debug.enable(namespaces);
-			expect(oldNames.map(String)).to.deep.equal(debug.names.map(String));
-			expect(oldSkips.map(String)).to.deep.equal(debug.skips.map(String));
+			assert.deepStrictEqual(oldNames.map(String), debug.names.map(String));
+			assert.deepStrictEqual(oldSkips.map(String), debug.skips.map(String));
 		});
 	});
 });
