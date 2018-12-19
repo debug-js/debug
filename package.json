@@ -20,7 +20,8 @@
   "author": "TJ Holowaychuk <tj@vision-media.ca>",
   "contributors": [
     "Nathan Rajlich <nathan@tootallnate.net> (http://n8.io)",
-    "Andrew Rhyne <rhyneandrew@gmail.com>"
+    "Andrew Rhyne <rhyneandrew@gmail.com>",
+    "Josh Junon <josh@junon.me>"
   ],
   "license": "MIT",
   "scripts": {
