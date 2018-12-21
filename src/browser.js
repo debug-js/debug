@@ -3,18 +3,18 @@
 /**
  * This is the web browser implementation of `debug()`.
  */
-
-exports.formatArgs = formatArgs;
-exports.save = save;
-exports.load = load;
-exports.useColors = useColors;
-exports.storage = localstorage();
+let browserExports = {};
+browserExports.formatArgs = formatArgs;
+browserExports.save = save;
+browserExports.load = load;
+browserExports.useColors = useColors;
+browserExports.storage = localstorage();
 
 /**
  * Colors.
  */
 
-exports.colors = [
+browserExports.colors = [
 	'#0000CC',
 	'#0000FF',
 	'#0033CC',
@@ -176,7 +176,7 @@ function formatArgs(args) {
  *
  * @api public
  */
-exports.log = console.debug || console.log || (() => {});
+browserExports.log = console.debug || console.log || (() => {});
 
 /**
  * Save `namespaces`.
@@ -187,9 +187,9 @@ exports.log = console.debug || console.log || (() => {});
 function save(namespaces) {
 	try {
 		if (namespaces) {
-			exports.storage.setItem('debug', namespaces);
+			browserExports.storage.setItem('debug', namespaces);
 		} else {
-			exports.storage.removeItem('debug');
+			browserExports.storage.removeItem('debug');
 		}
 	} catch (error) {
 		// Swallow
@@ -206,7 +206,7 @@ function save(namespaces) {
 function load() {
 	let r;
 	try {
-		r = exports.storage.getItem('debug');
+		r = browserExports.storage.getItem('debug');
 	} catch (error) {
 		// Swallow
 		// XXX (@Qix-) should we be logging these?
@@ -242,7 +242,7 @@ function localstorage() {
 	}
 }
 
-module.exports = require('./common')(exports);
+module.exports = require('./common')(browserExports);
 
 const {formatters} = module.exports;
 
