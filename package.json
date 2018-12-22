@@ -27,14 +27,14 @@
     "lint": "xo",
     "test": "npm run test:node && npm run test:browser",
     "test:node": "istanbul cover _mocha -- test.js",
-    "posttest:node": "cat ./coverage/lcov.info | coveralls",
     "pretest:browser": "npm run build",
     "test:browser": "karma start --single-run",
     "prebuild:debug": "mkdir -p dist && browserify --standalone debug -o dist/debug.es6.js .",
     "build:debug": "babel -o dist/debug.js dist/debug.es6.js > dist/debug.js",
     "build:test": "babel -d dist test.js",
     "build": "npm run build:debug && npm run build:test",
-    "clean": "rimraf dist coverage"
+    "clean": "rimraf dist coverage",
+    "test:coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
     "ms": "^2.1.1"
