@@ -28,7 +28,7 @@
     "test": "npm run test:node && npm run test:browser",
     "test:node": "istanbul cover _mocha -- test.js",
     "test:browser": "karma start --single-run",
-    "posttest:node": "cat ./coverage/lcov.info | coveralls"
+    "test:coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
     "ms": "^2.1.1"
