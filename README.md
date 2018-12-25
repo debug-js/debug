@@ -111,7 +111,11 @@ npm script example:
 
 Every debug instance has a color generated for it based on its namespace name.
 This helps when visually parsing the debug output to identify which debug instance
-a debug line belongs to.
+a debug line belongs to. The Namespace is the Object Name that u assign the debug instance to
+
+```js
+const myDebuger = require('debug') //=> myDebugger is the namespace
+```
 
 #### Node.js
 
