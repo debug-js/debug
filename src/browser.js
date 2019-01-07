@@ -153,7 +153,7 @@ function formatArgs(args) {
 	// figure out the correct index to insert the CSS into
 	let index = 0;
 	let lastC = 0;
-	args[0].replace(/%[a-zA-Z%]/g, match => {
+	args[0].replace(/%[a-zA-Z%]/g, function (match) {
 		if (match === '%%') {
 			return;
 		}
@@ -176,7 +176,7 @@ function formatArgs(args) {
  *
  * @api public
  */
-exports.log = console.debug || console.log || (() => {});
+exports.log = console.debug || console.log || (function () {});
 
 /**
  * Save `namespaces`.
