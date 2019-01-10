@@ -25,10 +25,11 @@
   "license": "MIT",
   "scripts": {
     "lint": "xo",
-    "test": "npm run test:node && npm run test:browser",
+    "test": "npm run test:es5compat && npm run test:node && npm run test:browser",
     "test:node": "istanbul cover _mocha -- test.js",
     "test:browser": "karma start --single-run",
-    "test:coverage": "cat ./coverage/lcov.info | coveralls"
+    "test:coverage": "cat ./coverage/lcov.info | coveralls",
+    "test:es5compat": "browserify src/browser.js | uglifyjs > /dev/null"
   },
   "dependencies": {
     "ms": "^2.1.1"
@@ -44,8 +45,17 @@
     "karma-mocha": "^1.3.0",
     "mocha": "^5.2.0",
     "mocha-lcov-reporter": "^1.2.0",
+    "uglify-js": "^3.4.9",
     "xo": "^0.23.0"
   },
   "main": "./src/index.js",
-  "browser": "./src/browser.js"
+  "browser": "./src/browser.js",
+  "xo": {
+    "rules": {
+      "no-var": 0,
+      "prefer-arrow-callback": 0,
+      "prefer-destructuring": 0,
+      "prefer-rest-params": 0
+    }
+  }
 }

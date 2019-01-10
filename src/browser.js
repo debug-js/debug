@@ -145,15 +145,15 @@ function formatArgs(args) {
 		return;
 	}
 
-	const c = 'color: ' + this.color;
+	var c = 'color: ' + this.color;
 	args.splice(1, 0, c, 'color: inherit');
 
 	// The final "%c" is somewhat tricky, because there could be other
 	// arguments passed either before or after the %c, so we need to
 	// figure out the correct index to insert the CSS into
-	let index = 0;
-	let lastC = 0;
-	args[0].replace(/%[a-zA-Z%]/g, match => {
+	var index = 0;
+	var lastC = 0;
+	args[0].replace(/%[a-zA-Z%]/g, function (match) {
 		if (match === '%%') {
 			return;
 		}
@@ -176,7 +176,7 @@ function formatArgs(args) {
  *
  * @api public
  */
-exports.log = console.debug || console.log || (() => {});
+exports.log = console.debug || console.log || function () {};
 
 /**
  * Save `namespaces`.
@@ -204,7 +204,7 @@ function save(namespaces) {
  * @api private
  */
 function load() {
-	let r;
+	var r;
 	try {
 		r = exports.storage.getItem('debug');
 	} catch (error) {
@@ -244,7 +244,7 @@ function localstorage() {
 
 module.exports = require('./common')(exports);
 
-const {formatters} = module.exports;
+var formatters = module.exports.formatters;
 
 /**
  * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
