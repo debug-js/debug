@@ -12,6 +12,6 @@ target the browsers that make sense for
 your project.
 
 For more information, please see:
-https://github.com/visionmedia/debug/pull/672
+https://github.com/sindresorhus/ama/issues/446#issuecomment-281014491
 
 -->
