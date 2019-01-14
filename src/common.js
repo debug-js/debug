@@ -14,7 +14,7 @@ function setup(env) {
 	createDebug.humanize = require('ms');
 
 	for (let i = 0; i < Object.keys(env).length; i++) {
-		let key = Object.keys(env)[i];
+		const key = Object.keys(env)[i];
 		createDebug[key] = env[key];
 	}
 
