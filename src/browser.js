@@ -15,7 +15,7 @@ exports.storage = localstorage();
  * @returns {boolean}
  */
 function isElectron() {
-  return typeof process !== 'undefined' && (process.type === 'renderer' || process.__nwjs);
+	return typeof process !== 'undefined' && (process.type === 'renderer' || process.__nwjs);
 }
 
 /**
@@ -114,7 +114,7 @@ function useColors() {
 	// NB: In an Electron preload script, document will be defined but not fully
 	// initialized. Since we know we're in Chrome, we'll just detect this case
 	// explicitly
-  if (isElectron()) {
+	if (isElectron()) {
 		return true;
 	}
 
@@ -212,18 +212,14 @@ function save(namespaces) {
  * @api private
  */
 function load() {
-	let r;
 	try {
 		return exports.storage.getItem('debug');
 	} catch (error) {
 		// Swallow
 		// XXX (@Qix-) should we be logging these?
 	}
+}
 
-	// If debug isn't set in LS, and we're in Electron, try to load $DEBUG
-	if (!r && isElectron()) {
-		r = require('./env').DEBUG;
-	}
 /**
  * Localstorage attempts to return the localstorage.
  *
@@ -247,22 +243,22 @@ function localstorage() {
 }
 
 if (isElectron()) {
-  module.exports = exports;
-  module.exports.humanize = require('ms');
+	module.exports = exports;
+	module.exports.humanize = require('ms');
 } else {
-module.exports = require('./common')(exports);
+	module.exports = require('./common')(exports);
 
-const {formatters} = module.exports;
+	const {formatters} = module.exports;
 
-/**
- * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
- */
+	/**
+	 * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
+	 */
 
-formatters.j = function (v) {
-	try {
-		return JSON.stringify(v);
-	} catch (error) {
-		return '[UnexpectedJSONParseError]: ' + error.message;
-    }
-};
+	formatters.j = function (v) {
+		try {
+			return JSON.stringify(v);
+		} catch (error) {
+			return '[UnexpectedJSONParseError]: ' + error.message;
+		}
+	};
 }

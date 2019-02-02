@@ -2,8 +2,18 @@
 
 const assert = require('assert');
 const debug = require('./src');
+let env = 'browser';
 
-describe('debug', () => {
+if (process.env.npm_config_electron) {
+	// force Electron mode
+	process.type = 'renderer';
+	env = 'Electron';
+} else if (process.env.npm_config_node) {
+	env = 'node';
+}
+env = ' (' + env + ')';
+
+describe('debug' + env, () => {
 	it('passes a basic sanity check', () => {
 		const log = debug('test');
 		log.enabled = true;
