@@ -224,9 +224,6 @@ function load() {
 	if (!r && isElectron()) {
 		r = require('./env').DEBUG;
 	}
-	return r;
-}
-
 /**
  * Localstorage attempts to return the localstorage.
  *
