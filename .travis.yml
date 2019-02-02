@@ -3,18 +3,15 @@ sudo: false
 language: node_js
 
 node_js:
-  - "4"
   - "6"
   - "8"
+  - "10"
+  - "11"
 
 install:
-  - make install
+  - npm install
 
 script:
-  - make lint
-  - make test
-
-matrix:
-  include:
-  - node_js: '8'
-    env: BROWSER=1
+  - npm run lint
+  - npm test
+  - npm run test:coverage
