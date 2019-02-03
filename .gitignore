@@ -6,6 +6,7 @@ npm-debug.log
 yarn-error.log
 /dist/
 /coverage/
+.nyc_output/
 
 # lockfiles
 yarn.lock
