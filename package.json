@@ -26,7 +26,7 @@
   "scripts": {
     "lint": "xo",
     "pretest": "rm -rf .nyc_output",
-    "test": "npm --node run test:node && npm --electron run test:electron && npm run test:browser",
+    "test": "npm --env=node run test:node && npm --env=electron run test:electron && npm run test:browser",
     "test:browser": "karma start --single-run",
     "test:node": "nyc --no-clean mocha --exit",
     "test:electron": "nyc --no-clean  mocha --exit",

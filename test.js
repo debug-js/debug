@@ -2,11 +2,11 @@
 
 /** pre-load conditions */
 let env = 'browser';
-if (process.env.npm_config_electron) {
+if (process.env.npm_config_env === 'electron') {
 	// Force Electron mode
 	process.type = 'renderer';
 	env = 'Electron';
-} else if (process.env.npm_config_node) {
+} else if (process.env.npm_config_env === 'node') {
 	env = 'node';
 }
 env = ' (' + env + ')';
