@@ -29,7 +29,7 @@
     "test:browser": "karma start --single-run",
     "test:node": "istanbul cover --dir coverage/node -x test.js node_modules/mocha/bin/_mocha",
     "test:electron": "istanbul cover --dir coverage/electron -x test.js node_modules/mocha/bin/_mocha",
-    "posttest": "istanbul report --include coverage/**/coverage.json",
+    "posttest": "istanbul report --include coverage/**/coverage.json lcov",
     "test:coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
