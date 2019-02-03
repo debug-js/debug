@@ -1,4 +1,4 @@
-const exports = require('./browser');
+exports = require('./browser');
 
 const browserLoad = exports.load;
 

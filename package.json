@@ -25,10 +25,11 @@
   "license": "MIT",
   "scripts": {
     "lint": "xo",
-    "test": "npm --node run test:node && npm run test:browser && npm --electron run test:electron",
-    "test:node": "istanbul cover _mocha -- test.js",
+    "test": "npm --node run test:node && npm --electron run test:electron && npm run test:browser",
     "test:browser": "karma start --single-run",
-    "test:electron": "mocha test.js",
+    "test:node": "istanbul cover --dir coverage/node -x test.js node_modules/mocha/bin/_mocha",
+    "test:electron": "istanbul cover --dir coverage/electron -x test.js node_modules/mocha/bin/_mocha",
+    "posttest": "istanbul report --include coverage/**/coverage.json",
     "test:coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {

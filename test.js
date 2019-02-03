@@ -1,17 +1,22 @@
 /* eslint-env mocha */
 
-const assert = require('assert');
-const debug = require('./src');
+/** pre-load conditions */
 let env = 'browser';
-
 if (process.env.npm_config_electron) {
-	// force Electron mode
+	// Force Electron mode
 	process.type = 'renderer';
 	env = 'Electron';
 } else if (process.env.npm_config_node) {
 	env = 'node';
 }
 env = ' (' + env + ')';
+process.env.DEBUG_YES = 'yes';
+process.env.DEBUG_NO = 'no';
+process.env.DEBUG_NULL = 'null';
+process.env.DEBUG_NUM = 111;
+
+const assert = require('assert');
+const debug = require('./src');
 
 describe('debug' + env, () => {
 	it('passes a basic sanity check', () => {
@@ -40,6 +45,7 @@ describe('debug' + env, () => {
 	});
 
 	it('uses custom log function', () => {
+		debug.useColors = () => false;
 		const log = debug('test');
 		log.enabled = true;
 
@@ -49,8 +55,13 @@ describe('debug' + env, () => {
 		log('using custom log function');
 		log('using custom log function again');
 		log('%O', 12345);
+		log('%o', 12345);
+		log('%j', {abc: 12345});
+		assert.deepStrictEqual(messages.length, 5);
 
-		assert.deepStrictEqual(messages.length, 3);
+		const numInstance = debug.instances.length;
+		assert(log.destroy());
+		assert.strictEqual(debug.instances.length, numInstance - 1);
 	});
 
 	describe('extend namespace', () => {
@@ -128,4 +139,16 @@ describe('debug' + env, () => {
 			assert.deepStrictEqual(oldSkips.map(String), debug.skips.map(String));
 		});
 	});
+
+	if (env === 'node') {
+		describe('inspectOpts', () => {
+			it('handles env vars', () => {
+				const d = debug.inspectOpts;
+				assert.strictEqual(d.no, false);
+				assert.strictEqual(d.null, null);
+				assert.strictEqual(d.num, 111);
+				assert.strictEqual(d.yes, true);
+			});
+		});
+	}
 });
