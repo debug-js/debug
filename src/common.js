@@ -63,9 +63,10 @@ function setup(env) {
 	* @api public
 	*/
 	function createDebug(namespace) {
-		let prevTime, value = createDebug.instances[namespace];
+		let prevTime;
+		const value = createDebug.instances[namespace];
 
-		if (!!value) {
+		if (value !== undefined) {
 			return value;
 		}
 
@@ -138,7 +139,7 @@ function setup(env) {
 	}
 
 	function destroy() {
-		if (createDebug.instances.hasOwnProperty(this.namespace)) {
+		if (createDebug.instances[this.namespace] !== undefined) {
 			delete createDebug.instances[this.namespace];
 			return true;
 		}
