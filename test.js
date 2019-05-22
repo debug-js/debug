@@ -118,4 +118,45 @@ describe('debug', () => {
 			assert.deepStrictEqual(oldSkips.map(String), debug.skips.map(String));
 		});
 	});
+
+	describe('check if a name is enabled', () => {
+		it('handles a name', () => {
+			debug.enable('test');
+			assert(debug.enabled('test'));
+			assert(!debug.enabled('abc'));
+		});
+
+		it('handles skip', () => {
+			debug.enable('test,abc*,-abc');
+			assert(debug.enabled('test'));
+			assert(!debug.enabled('abc'));
+		});
+
+		it('handles wildcards', () => {
+			debug.enable('test,abc*');
+			assert(!debug.enabled('foo:*'));
+			assert(debug.enabled('test'));
+			assert(debug.enabled('abc'));
+
+			debug.enable('abc:*');
+			assert(!debug.enabled('test:*'));
+			assert(!debug.enabled('test'));
+			assert(!debug.enabled('abc'));
+			assert(debug.enabled('abc:*'));
+
+			debug.enable('abc:*');
+			assert(debug.enabled('abc:foo'));
+		});
+
+		it('handles the * wildcard', () => {
+			debug.enable('test,abc*');
+			assert(debug.enabled('*'));
+
+			debug.enable('');
+			assert(debug.enabled('*'));
+
+			debug.enable('-*');
+			assert(debug.enabled('*'));
+		});
+	});
 });
