@@ -47,5 +47,13 @@
     "xo": "^0.23.0"
   },
   "main": "./src/index.js",
-  "browser": "./src/browser.js"
+  "browser": "./src/browser.js",
+  "peerDependencies": {
+    "supports-color": "^6.1.0"
+  },
+  "peerDependenciesMeta": {
+    "supports-color": {
+      "optional": true
+    }
+  }
 }
