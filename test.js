@@ -6,7 +6,7 @@ const debug = require('./src');
 
 describe('debug', () => {
 	afterEach(() => {
-		// undo any damage done via sinon mocking
+		// Undo any damage done via sinon mocking
 		sinon.restore();
 	});
 
@@ -18,8 +18,8 @@ describe('debug', () => {
 		assert.doesNotThrow(() => log('hello world'));
 	});
 
-	it('should log errors with full stack', function () {
-		// fake the current time to be 1970-01-01T00:00:00.000Z
+	it('should log errors with full stack', () => {
+		// Fake the current time to be 1970-01-01T00:00:00.000Z
 		sinon.useFakeTimers(new Date(0));
 
 		const log = debug('test');
