@@ -18,7 +18,7 @@ describe('debug', () => {
 		log.enabled = true;
 
 		let loggedMessage;
-		log.log = (msg) => {
+		log.log = msg => {
 			loggedMessage = msg;
 		};
 
@@ -29,8 +29,9 @@ describe('debug', () => {
 
 		// +0ms format for the browser,
 		// ISO8601 format for node.js
-		assert.ok(loggedMessage != null);
-		assert.ok(/(?:.* )?test Error: test\n    at test:1:1(?: +0ms)?/.test(loggedMessage));
+		assert.notStrictEqual(loggedMessage, undefined);
+		assert.notStrictEqual(loggedMessage, null);
+		assert.ok(/(?:.* )?test Error: test\n {4}at test:1:1(?: +0ms)?/.test(loggedMessage));
 	});
 
 	it('allows namespaces to be a non-string value', () => {
