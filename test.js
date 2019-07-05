@@ -28,7 +28,7 @@ describe('debug', () => {
 		log(fakeError);
 
 		// +0ms format for the browser,
-		// ISO8601 format for node.js
+		// ISO8601 format for Node.js
 		assert.notStrictEqual(loggedMessage, undefined);
 		assert.notStrictEqual(loggedMessage, null);
 		assert.ok(/(?:.* )?test Error: test\n {4}at test:1:1(?: +0ms)?/.test(loggedMessage));
