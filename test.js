@@ -1,15 +1,9 @@
 /* eslint-env mocha */
 
 const assert = require('assert');
-const sinon = require('sinon');
 const debug = require('./src');
 
 describe('debug', () => {
-	afterEach(() => {
-		// Undo any damage done via sinon mocking
-		sinon.restore();
-	});
-
 	it('passes a basic sanity check', () => {
 		const log = debug('test');
 		log.enabled = true;
@@ -19,13 +13,14 @@ describe('debug', () => {
 	});
 
 	it('should log errors with full stack', () => {
-		// Fake the current time to be 1970-01-01T00:00:00.000Z
-		sinon.useFakeTimers(new Date(0));
-
 		const log = debug('test');
 		log.useColors = false;
 		log.enabled = true;
-		log.log = sinon.fake();
+
+		let loggedMessage;
+		log.log = (msg) => {
+			loggedMessage = msg;
+		};
 
 		const fakeError = new Error('test');
 		fakeError.stack = 'Error: test\n    at test:1:1';
@@ -34,8 +29,8 @@ describe('debug', () => {
 
 		// +0ms format for the browser,
 		// ISO8601 format for node.js
-		assert.ok(log.log.calledOnceWithExactly('test Error: test\n    at test:1:1 +0ms') ||
-			log.log.calledOnceWithExactly('1970-01-01T00:00:00.000Z test Error: test\n    at test:1:1'));
+		assert.ok(loggedMessage != null);
+		assert.ok(/(?:.* )?test Error: test\n    at test:1:1(?: +0ms)?/.test(loggedMessage));
 	});
 
 	it('allows namespaces to be a non-string value', () => {
