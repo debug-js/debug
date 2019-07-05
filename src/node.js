@@ -235,7 +235,7 @@ function init(debug) {
 }
 
 /**
- * Coerce `val`. In Node.JS, no values need to be coerced (errors are already being formatted for us
+ * Coerce `val`. In Node.js, no values need to be coerced (errors are already being formatted for us
  * by util.format, so this function just returns whatever argument it is given (identitiy function).
  *
  * @param {Mixed} val
