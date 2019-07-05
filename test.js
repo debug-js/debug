@@ -1,15 +1,41 @@
 /* eslint-env mocha */
 
 const assert = require('assert');
+const sinon = require('sinon');
 const debug = require('./src');
 
 describe('debug', () => {
+	afterEach(() => {
+		// undo any damage done via sinon mocking
+		sinon.restore();
+	});
+
 	it('passes a basic sanity check', () => {
 		const log = debug('test');
 		log.enabled = true;
 		log.log = () => {};
 
 		assert.doesNotThrow(() => log('hello world'));
+	});
+
+	it('should log errors with full stack', function () {
+		// fake the current time to be 1970-01-01T00:00:00.000Z
+		sinon.useFakeTimers(new Date(0));
+
+		const log = debug('test');
+		log.useColors = false;
+		log.enabled = true;
+		log.log = sinon.fake();
+
+		const fakeError = new Error('test');
+		fakeError.stack = 'Error: test\n    at test:1:1';
+
+		log(fakeError);
+
+		// +0ms format for the browser,
+		// ISO8601 format for node.js
+		assert.ok(log.log.calledOnceWithExactly('test Error: test\n    at test:1:1 +0ms') ||
+			log.log.calledOnceWithExactly('1970-01-01T00:00:00.000Z test Error: test\n    at test:1:1'));
 	});
 
 	it('allows namespaces to be a non-string value', () => {

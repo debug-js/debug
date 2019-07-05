@@ -15,6 +15,7 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
+exports.coerce = coerce;
 
 /**
  * Colors.
@@ -231,6 +232,18 @@ function init(debug) {
 	for (let i = 0; i < keys.length; i++) {
 		debug.inspectOpts[keys[i]] = exports.inspectOpts[keys[i]];
 	}
+}
+
+/**
+ * Coerce `val`. In Node.JS, no values need to be coerced (errors are already being formatted for us
+ * by util.format, so this function just returns whatever argument it is given (identitiy function).
+ *
+ * @param {Mixed} val
+ * @return {Mixed}
+ * @api private
+ */
+function coerce(val) {
+	return val;
 }
 
 module.exports = require('./common')(exports);
