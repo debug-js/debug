@@ -128,16 +128,18 @@ exports.inspectOpts = Object.keys(process.env).filter(key => {
 			return k.toUpperCase();
 		});
 
-	// Coerce string value into JS value
 	let val = process.env[key];
-	if (/^(yes|on|true|enabled)$/i.test(val)) {
-		val = true;
-	} else if (/^(no|off|false|disabled)$/i.test(val)) {
-		val = false;
-	} else if (val === 'null') {
-		val = null;
-	} else {
-		val = Number(val);
+	if (prop !== 'process') { // Don't coerce known string values
+		// Coerce string value into JS value
+		if (/^(yes|on|true|enabled)$/i.test(val)) {
+			val = true;
+		} else if (/^(no|off|false|disabled)$/i.test(val)) {
+			val = false;
+		} else if (val === 'null') {
+			val = null;
+		} else {
+			val = Number(val);
+		}
 	}
 
 	obj[prop] = val;
