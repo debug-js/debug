@@ -20,9 +20,9 @@ describe('debug', () => {
 		assert.doesNotThrow(() => debug.enable(true));
 	});
 
-	it('honors process decoration', function() {
+	it('honors process decoration', function () {
 		const options = debug.inspectOpts;
-		if (!options) { // browser
+		if (!options) { // Browser
 			this.skip();
 			return;
 		}
@@ -36,17 +36,21 @@ describe('debug', () => {
 			let messageArgs;
 			const log = debug('bar');
 			log.enabled = true;
-			log.log = (...args) => (messageArgs = args);
+			log.log = (...args) => {
+				messageArgs = args;
+			};
 
 			options.processPid = true;
 			log('baz');
-			assert.equal(messageArgs[0], `[${process.pid}] bar baz`, 'should reflect DEBUG_PROCESS_PID');
+			assert.strictEqual(messageArgs[0], `[${process.pid}] bar baz`, 'should reflect DEBUG_PROCESS_PID');
 
 			options.process = 'foo';
 			log('baz');
-			assert.equal(messageArgs[0], '[foo] bar baz', 'should reflect DEBUG_PROCESS');
+			assert.strictEqual(messageArgs[0], '[foo] bar baz', 'should reflect DEBUG_PROCESS');
 		} finally {
-			optionKeys.forEach((k, i) => options[k] = oldValues[i]);
+			optionKeys.forEach((k, i) => {
+				options[k] = oldValues[i];
+			});
 		}
 	});
 
