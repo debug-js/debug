@@ -161,7 +161,12 @@ function useColors() {
  */
 
 function formatArgs(args) {
-	const {namespace: name, useColors} = this;
+	let {namespace: name, useColors} = this;
+
+	const proc = exports.inspectOpts.process || (exports.inspectOpts.processPid ? process.pid : undefined);
+	if (proc) {
+		name = `[${proc}] ${name}`;
+	}
 
 	if (useColors) {
 		const c = this.color;
