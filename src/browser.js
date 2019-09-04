@@ -214,9 +214,14 @@ function load() {
 
 	// If debug isn't set in LS, and we're in Electron, try to load $DEBUG
 	// process.env is undefined in sometimes, and it will throw a exception
-	if (!r && typeof process !== 'undefined' && process.env) {
-		r = process.env.DEBUG;
+	try {
+		if (!r && typeof process !== 'undefined' && 'env' in process) {
+			r = process.env.DEBUG;
+		}
+	} catch(error) {
+		// Browser throw `process.env is undefined`
 	}
+	
 
 	return r;
 }
