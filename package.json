@@ -46,6 +46,11 @@
     "mocha-lcov-reporter": "^1.2.0",
     "xo": "^0.23.0"
   },
+  "peerDependenciesMeta": {
+    "supports-color": {
+      "optional": true
+    }
+  },
   "main": "./src/index.js",
   "browser": "./src/browser.js"
 }
