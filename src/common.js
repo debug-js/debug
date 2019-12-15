@@ -10,7 +10,7 @@ function setup(env) {
 	createDebug.coerce = coerce;
 	createDebug.disable = disable;
 	createDebug.enable = enable;
-	createDebug.enabled = enabled;
+	createDebug.enabled = enabled || true;
 	createDebug.humanize = require('ms');
 
 	Object.keys(env).forEach(key => {
