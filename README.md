@@ -76,14 +76,14 @@ An object of [printf-style](https://wikipedia.org/wiki/Printf_format_string) for
 
 Officially supported formatters:
 
-| Formatter | Representation |
-|-----------|----------------|
-| `%O`      | Pretty-print an Object on multiple lines. |
-| `%o`      | Pretty-print an Object all on a single line. |
-| `%s`      | String. |
-| `%d`      | Number (both integer and float). |
+| Formatter | Representation                                                                            |
+|-----------|-------------------------------------------------------------------------------------------|
+| `%O`      | Pretty-print an Object on multiple lines.                                                 |
+| `%o`      | Pretty-print an Object all on a single line.                                              |
+| `%s`      | String.                                                                                   |
+| `%d`      | Number (both integer and float).                                                          |
 | `%j`      | JSON. Replaced with the string '[Circular]' if the argument contains circular references. |
-| `%%`      | Single percent sign ('%'). This does not consume an argument. |
+| `%%`      | Single percent sign ('%'). This does not consume an argument.                             |
 
 You can add your own custom formatters by extending it. For example, if you wanted to add support for rendering a Buffer as hex with `%h`, you could do something like:
 
@@ -192,13 +192,13 @@ The timestamp on which the current debug message was logged.
 
 When running `debug` in NodeJS, you can set a few environment variables that can change the behavior of the debug logging:
 
-| Name      | Purpose                                         |
-|-----------|-------------------------------------------------|
-| `DEBUG`   | Enables/disables specific debugging namespaces. |
-| `DEBUG_HIDE_DATE` | Hide date from debug output (non-TTY).  |
-| `DEBUG_COLORS`| Whether or not to use colors in the debug output. |
-| `DEBUG_DEPTH` | Object inspection depth.                    |
-| `DEBUG_SHOW_HIDDEN` | Shows hidden properties on inspected objects. |
+| Name                | Purpose                                           |
+|---------------------|---------------------------------------------------|
+| `DEBUG`             | Enables/disables specific debugging namespaces.   |
+| `DEBUG_HIDE_DATE`   | Hide date from debug output (non-TTY).            |
+| `DEBUG_COLORS`      | Whether or not to use colors in the debug output. |
+| `DEBUG_DEPTH`       | Object inspection depth.                          |
+| `DEBUG_SHOW_HIDDEN` | Shows hidden properties on inspected objects.     |
 
 
 __Note:__ The environment variables that begin with `DEBUG_` end up being
@@ -262,7 +262,7 @@ NPM script example:
 
 ## Authors
 
-| ![TJ Holowaychuk](https://github.com/tj.png?size=100)(https://github.com/tj) | [![Nathan Rajlich](https://github.com/tootallnate.png?size=100)](https://github.com/tootallnate) | [![Andrew Rhyne](https://github.com/thebigredgeek.png?size=100)](https://github.com/thebigredgeek) |
+| [![TJ Holowaychuk](https://github.com/tj.png?size=100)](https://github.com/tj) | [![Nathan Rajlich](https://github.com/tootallnate.png?size=100)](https://github.com/tootallnate) | [![Andrew Rhyne](https://github.com/thebigredgeek.png?size=100)](https://github.com/thebigredgeek) |
 |-----------|-----------|-----------|
 | TJ Holowaychuk | Nathan Rajlich | Andrew Rhyne |
 
