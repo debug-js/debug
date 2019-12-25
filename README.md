@@ -262,9 +262,9 @@ NPM script example:
 
 ## Authors
 
-[![TJ Holowaychuk](https://github.com/tj.png?size=100)](https://github.com/tj) | [![Nathan Rajlich](https://github.com/tootallnate.png?size=100)](https://github.com/tootallnate) | [![Andrew Rhyne](https://github.com/thebigredgeek.png?size=100)](https://github.com/thebigredgeek)
----|---|---|---|---
-TJ Holowaychuk | Nathan Rajlich | Andrew Rhyne
+| ![TJ Holowaychuk](https://github.com/tj.png?size=100)](https://github.com/tj) | [![Nathan Rajlich](https://github.com/tootallnate.png?size=100)](https://github.com/tootallnate) | [![Andrew Rhyne](https://github.com/thebigredgeek.png?size=100)](https://github.com/thebigredgeek) |
+|-----------|-----------|-----------|
+| TJ Holowaychuk | Nathan Rajlich | Andrew Rhyne |
 
 ## Backers
 
