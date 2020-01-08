@@ -47,5 +47,8 @@
     "xo": "^0.23.0"
   },
   "main": "./src/index.js",
-  "browser": "./src/browser.js"
+  "browser": "./src/browser.js",
+  "engines": {
+    "node": ">=6.0" 
+  }
 }
