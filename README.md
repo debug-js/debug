@@ -7,11 +7,13 @@
 A tiny JavaScript debugging utility modelled after Node.js core's debugging
 technique. Works in Node.js and web browsers.
 
+
 ## Installation
 
 ```bash
 $ npm install debug
 ```
+
 
 ## Usage
 
@@ -19,7 +21,7 @@ $ npm install debug
 
 Example [_app.js_](./examples/node/app.js):
 
-```js
+```javascript
 var debug = require('debug')('http')
   , http = require('http')
   , name = 'My App';
@@ -42,7 +44,7 @@ require('./worker');
 
 Example [_worker.js_](./examples/node/worker.js):
 
-```js
+```javascript
 var a = require('debug')('worker:a')
   , b = require('debug')('worker:b');
 
@@ -103,9 +105,10 @@ $env:DEBUG='app';node app.js
 Then, run the program to be debugged as usual.
 
 npm script example:
-```js
+```javascript
   "windowsDebug": "@powershell -Command $env:DEBUG='*';node app.js",
 ```
+
 
 ## Namespace Colors
 
@@ -146,6 +149,7 @@ When stdout is not a TTY, `Date#toISOString()` is used, making it more useful fo
 
 If you're using this in one or more of your libraries, you _should_ use the name of your library so that developers may toggle debugging as desired without guessing names. If you have more than one debuggers you _should_ prefix them with your library name and use ":" to separate features. For example "bodyParser" from Connect would then be "connect:bodyParser".  If you append a "*" to the end of your name, it will always be enabled regardless of the setting of the DEBUG environment variable.  You can then use it for normal output as well as debug output.
 
+
 ## Wildcards
 
 The `*` character may be used as a wildcard. Suppose for example your library has
@@ -157,6 +161,7 @@ instead of listing all three with
 You can also exclude specific debuggers by prefixing them with a "-" character.
 For example, `DEBUG=*,-connect:*` would include all debuggers except those
 starting with "connect:".
+
 
 ## Environment Variables
 
@@ -178,6 +183,7 @@ See the Node.js documentation for
 [`util.inspect()`](https://nodejs.org/api/util.html#util_util_inspect_object_options)
 for the complete list.
 
+
 ## Formatters
 
 Debug uses [printf-style](https://wikipedia.org/wiki/Printf_format_string) formatting.
@@ -193,13 +199,13 @@ Below are the officially supported formatters:
 | `%%`      | Single percent sign ('%'). This does not consume an argument. |
 
 
-### Custom formatters
+#### Custom formatters
 
 You can add custom formatters by extending the `debug.formatters` object.
 For example, if you wanted to add support for rendering a Buffer as hex with
 `%h`, you could do something like:
 
-```js
+```javascript
 const createDebug = require('debug')
 createDebug.formatters.h = (v) => {
   return v.toString('hex')
@@ -222,13 +228,13 @@ Debug's enable state is currently persisted by `localStorage`.
 Consider the situation shown below where you have `worker:a` and `worker:b`,
 and wish to debug both. You can enable this using `localStorage.debug`:
 
-```js
+```javascript
 localStorage.debug = 'worker:*'
 ```
 
 And then refresh the page.
 
-```js
+```javascript
 a = debug('worker:a');
 b = debug('worker:b');
 
@@ -248,7 +254,7 @@ setInterval(function(){
 
 Example [_stdout.js_](./examples/node/stdout.js):
 
-```js
+```javascript
 var debug = require('debug');
 var error = debug('app:error');
 
@@ -268,9 +274,12 @@ error('now goes to stdout via console.info');
 log('still goes to stdout, but via console.info now');
 ```
 
+
 ## Extend
-You can simply extend debugger 
-```js
+
+You can simply extend debugger:
+
+```javascript
 const log = require('debug')('auth');
 
 //creates new debug instance with extended namespace
@@ -284,9 +293,9 @@ logLogin('hello'); //auth:login hello
 
 ## Set dynamically
 
-You can also enable debug dynamically by calling the `enable()` method :
+You can also enable debug dynamically by calling the `enable()` method:
 
-```js
+```javascript
 let debug = require('debug');
 
 console.log(1, debug.enabled('test'));
@@ -325,7 +334,7 @@ temporarily without knowing what was enabled to begin with.
 
 For example:
 
-```js
+```javascript
 let debug = require('debug');
 debug.enable('foo:*,-foo:bar');
 let namespaces = debug.disable();
@@ -334,6 +343,7 @@ debug.enable(namespaces);
 
 Note: There is no guarantee that the string will be identical to the initial
 enable string, but semantically they will be identical.
+
 
 ## Checking whether a debug target is enabled
 
@@ -352,11 +362,39 @@ You can also manually toggle this property to force the debug instance to be
 enabled or disabled.
 
 
+## Destroying a debug instance
+
+If debug instances are created dynamically (rather than a static debug instance per file as usual), the application must call `destroy()` on the dynamically created debug instance. Otherwise it would leak memory.
+
+For example:
+
+```javascript
+const debug = require('debug');
+
+class Foo {
+  constructor(id) {
+    // Per Foo instance debug instance.
+    this.debug = debug(`foo:${id}`);
+  }
+
+  close() {
+    // Must call destroy() on the debug instance, otherwise it would leak.
+    this.debug.destroy();
+  }
+}
+
+const foo = new Foo(1234);}
+```
+
+Here the application may create many instances of the `Foo` class. The application should ensure that, when those `Foo` instances are no longer needed, it calls a method on them (i.e. `foo.close()`) that destroys the debug instance.
+
+
 ## Authors
 
  - TJ Holowaychuk
  - Nathan Rajlich
  - Andrew Rhyne
+
 
 ## Backers
 
@@ -428,6 +466,7 @@ Become a sponsor and get your logo on our README on Github with a link to your s
 <a href="https://opencollective.com/debug/sponsor/27/website" target="_blank"><img src="https://opencollective.com/debug/sponsor/27/avatar.svg"></a>
 <a href="https://opencollective.com/debug/sponsor/28/website" target="_blank"><img src="https://opencollective.com/debug/sponsor/28/avatar.svg"></a>
 <a href="https://opencollective.com/debug/sponsor/29/website" target="_blank"><img src="https://opencollective.com/debug/sponsor/29/avatar.svg"></a>
+
 
 ## License
 
