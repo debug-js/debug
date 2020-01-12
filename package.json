@@ -25,7 +25,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "xo",
-    "test": "npm run test:node && npm run test:browser",
+    "test": "npm run test:node && npm run test:browser && npm run lint",
     "test:node": "istanbul cover _mocha -- test.js",
     "test:browser": "karma start --single-run",
     "test:coverage": "cat ./coverage/lcov.info | coveralls"
@@ -49,6 +49,6 @@
   "main": "./src/index.js",
   "browser": "./src/browser.js",
   "engines": {
-    "node": ">=6.0" 
+    "node": ">=6.0"
   }
 }
