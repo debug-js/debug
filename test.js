@@ -117,5 +117,24 @@ describe('debug', () => {
 			assert.deepStrictEqual(oldNames.map(String), debug.names.map(String));
 			assert.deepStrictEqual(oldSkips.map(String), debug.skips.map(String));
 		});
+
+		it('handles re-enabling existing instances', () => {
+			debug.disable('*');
+			const inst = debug('foo');
+			const messages = [];
+			inst.log = msg => messages.push(msg.replace(/^[^@]*@([^@]+)@.*$/, '$1'));
+
+			inst('@test@');
+			assert.deepStrictEqual(messages, []);
+			debug.enable('foo');
+			assert.deepStrictEqual(messages, []);
+			inst('@test2@');
+			assert.deepStrictEqual(messages, ['test2']);
+			inst('@test3@');
+			assert.deepStrictEqual(messages, ['test2', 'test3']);
+			debug.disable('*');
+			inst('@test4@');
+			assert.deepStrictEqual(messages, ['test2', 'test3']);
+		});
 	});
 });
