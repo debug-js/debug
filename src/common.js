@@ -120,10 +120,8 @@ function setup(env) {
 		debug.color = selectColor(namespace);
 		debug.destroy = destroy;
 		debug.extend = extend;
-		// Debug.formatArgs = formatArgs;
-		// debug.rawLog = rawLog;
 
-		// env-specific initialization logic for debug instances
+		// Env-specific initialization logic for debug instances
 		if (typeof createDebug.init === 'function') {
 			createDebug.init(debug);
 		}
