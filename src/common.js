@@ -117,7 +117,7 @@ function setup(env) {
 		debug.namespace = namespace;
 		debug.enabled = createDebug.enabled(namespace);
 		debug.useColors = createDebug.useColors();
-		debug.color = selectColor(namespace);
+		debug.color = createDebug.selectColor(namespace);
 		debug.destroy = destroy;
 		debug.extend = extend;
 
