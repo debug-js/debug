@@ -31,7 +31,7 @@
     "test:coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
-    "ms": "^2.1.1"
+    "ms": "2.1.2"
   },
   "devDependencies": {
     "brfs": "^2.0.1",
