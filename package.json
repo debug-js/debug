@@ -1,6 +1,6 @@
 {
   "name": "debug",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/visionmedia/debug.git"
@@ -45,6 +45,11 @@
     "mocha": "^5.2.0",
     "mocha-lcov-reporter": "^1.2.0",
     "xo": "^0.23.0"
+  },
+  "peerDependenciesMeta": {
+    "supports-color": {
+      "optional": true
+    }
   },
   "main": "./src/index.js",
   "browser": "./src/browser.js",
