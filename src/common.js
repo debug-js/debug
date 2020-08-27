@@ -26,6 +26,11 @@ function setup(env) {
 	createDebug.skips = [];
 
 	/**
+	* Revision id of the currently active debug mode names, and names to skip, configuration.
+	*/
+	createDebug.namesRev = '';
+
+	/**
 	* Map of special "%n" handling functions, for the debug "format" argument.
 	*
 	* Valid key names are a single, lower or upper-case letter, i.e. "n" and "N".
@@ -59,7 +64,6 @@ function setup(env) {
 	*/
 	function createDebug(namespace) {
 		let prevTime;
-		let enableOverride = null;
 
 		function debug(...args) {
 			// Disabled?
@@ -119,10 +123,16 @@ function setup(env) {
 
 		Object.defineProperty(debug, 'enabled', {
 			enumerable: true,
-			configurable: false,
-			get: () => enableOverride === null ? createDebug.enabled(namespace) : enableOverride,
-			set: v => {
-				enableOverride = v;
+			get() {
+				if (this._namesRev !== createDebug.namesRev) {
+					this._enabled = createDebug.enabled(namespace);
+					this._namesRev = createDebug.namesRev;
+				}
+				return this._enabled;
+			},
+			set(v) {
+				this._namesRev = createDebug.namesRev;
+				this._enabled = v;
 			}
 		});
 
@@ -152,6 +162,10 @@ function setup(env) {
 
 		createDebug.names = [];
 		createDebug.skips = [];
+
+		// Updates the revision number
+		const now = Date.now().toString(36);
+		createDebug.namesRev = now + (createDebug.namesRev.startsWith(now) ? '_' + (parseInt(createDebug.namesRev.split('_')[1] || '0', 36) + 1).toString(36) : '');
 
 		let i;
 		const split = (typeof namespaces === 'string' ? namespaces : '').split(/[\s,]+/);
