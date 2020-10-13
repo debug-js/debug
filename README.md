@@ -171,9 +171,15 @@ change the behavior of the debug logging:
 | `DEBUG_DEPTH` | Object inspection depth.                    |
 | `DEBUG_SHOW_HIDDEN` | Shows hidden properties on inspected objects. |
 
-
-__Note:__ The environment variables beginning with `DEBUG_` end up being
+__Note:__ Any environment variables beginning with `DEBUG_` end up being
 converted into an Options object that gets used with `%o`/`%O` formatters.
+
+To set these variables, you can use the following string values:
+- one of "yes", "on", "true", "enabled": `true`
+- one of "no", "off", "false", "disabled": `false`
+- "null": `null`
+- anything else is parsed as a number
+
 See the Node.js documentation for
 [`util.inspect()`](https://nodejs.org/api/util.html#util_util_inspect_object_options)
 for the complete list.
