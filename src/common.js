@@ -60,7 +60,8 @@ function setup(env) {
 	function createDebug(namespace) {
 		let prevTime;
 		let enableOverride = null;
-		let namespacesCache, enabledCache;
+		let namespacesCache;
+		let enabledCache;
 
 		function debug(...args) {
 			// Disabled?
@@ -123,14 +124,14 @@ function setup(env) {
 			configurable: false,
 			get: () => {
 				if (enableOverride !== null) {
-					return enableOverride
+					return enableOverride;
 				}
 				if (namespacesCache !== createDebug.namespaces) {
 					namespacesCache = createDebug.namespaces;
 					enabledCache = createDebug.enabled(namespace);
 				}
-				return enabledCache;
 
+				return enabledCache;
 			},
 			set: v => {
 				enableOverride = v;
