@@ -1,3 +1,4 @@
+const safe = require('safe-regex');
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -179,9 +180,19 @@ function setup(env) {
 			namespaces = split[i].replace(/\*/g, '.*?');
 
 			if (namespaces[0] === '-') {
-				createDebug.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
+				const re = new RegExp('^' + namespaces.substr(1) + '$');
+				if (safe(re)) {
+					createDebug.skips.push(re);
+				} else {
+					throw new Error('skipping unsafe regex: ' + re.toString());
+				}
 			} else {
-				createDebug.names.push(new RegExp('^' + namespaces + '$'));
+				const re = new RegExp('^' + namespaces + '$');
+				if (safe(re)) {
+					createDebug.names.push(re);
+				} else {
+					throw new Error('skipping unsafe regex: ' + re.toString());
+				}
 			}
 		}
 	}

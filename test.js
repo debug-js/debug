@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 
 const assert = require('assert');
+const safe = require('safe-regex');
 const debug = require('./src');
 
 describe('debug', () => {
@@ -77,6 +78,11 @@ describe('debug', () => {
 
 			const logBar = log.extend('bar');
 			assert.deepStrictEqual(log.log, logBar.log);
+		});
+
+		it('throws on unsafe regex', () => {
+			assert.strictEqual(safe('(x+x+)+y'), false);
+			assert.throws(() => debug.enable('(x+x+)+y'));
 		});
 	});
 
