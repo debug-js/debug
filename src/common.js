@@ -4,6 +4,8 @@
  * implementations of `debug()`.
  */
 
+const safeRegex = require('safe-regex');
+
 function setup(env) {
 	createDebug.debug = createDebug;
 	createDebug.default = createDebug;
@@ -179,9 +181,19 @@ function setup(env) {
 			namespaces = split[i].replace(/\*/g, '.*?');
 
 			if (namespaces[0] === '-') {
-				createDebug.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
+				const regex = new RegExp('^' + namespaces.substr(1) + '$');
+				if (safeRegex(regex)) {
+					createDebug.skips.push(regex);
+				} else {
+					createDebug.log(`ignoring unsafe skipped namespace regex: "${regex}"`);
+				}
 			} else {
-				createDebug.names.push(new RegExp('^' + namespaces + '$'));
+				const regex = new RegExp('^' + namespaces + '$');
+				if (safeRegex(regex)) {
+					createDebug.names.push(regex);
+				} else {
+					createDebug.log(`ignoring unsafe enabled namespace regex: "${regex}"`);
+				}
 			}
 		}
 	}

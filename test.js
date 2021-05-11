@@ -137,4 +137,36 @@ describe('debug', () => {
 			assert.deepStrictEqual(messages, ['test2', 'test3']);
 		});
 	});
+
+	describe('ignores unsafe regex', () => {
+		const originalLog = debug.log;
+
+		afterEach(() => {
+			debug.log = originalLog;
+		});
+
+		it('in enabled namespace', () => {
+			const messages = [];
+			debug.log = (...args) => messages.push(args);
+
+			debug.enable('(x+x+)+y');
+
+			assert.deepStrictEqual(debug.names, []);
+			assert.deepStrictEqual(messages, [[
+				'ignoring unsafe enabled namespace regex: "/^(x+x+)+y$/"'
+			]]);
+		});
+
+		it('in skipped namespace', () => {
+			const messages = [];
+			debug.log = (...args) => messages.push(args);
+
+			debug.enable('-(x+x+)+y');
+
+			assert.deepStrictEqual(debug.skips, []);
+			assert.deepStrictEqual(messages, [[
+				'ignoring unsafe skipped namespace regex: "/^(x+x+)+y$/"'
+			]]);
+		});
+	});
 });
