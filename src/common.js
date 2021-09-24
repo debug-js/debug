@@ -79,6 +79,15 @@ function setup(env) {
 			self.curr = curr;
 			prevTime = curr;
 
+			if (Array.isArray(args[0]) && args.length > 1) {
+				let strings = args[0]
+				let resultStr = strings[0];
+				for (let i = 1; i < args.length; i++){
+					resultStr += '%O' + strings[i];
+				}
+				args[0] = resultStr;
+			}
+
 			args[0] = createDebug.coerce(args[0]);
 
 			if (typeof args[0] !== 'string') {
