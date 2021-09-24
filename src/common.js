@@ -80,10 +80,11 @@ function setup(env) {
 			prevTime = curr;
 
 			if (Array.isArray(args[0]) && args.length > 1) {
-				let resultStr = args[0];
-				args.forEach((_arg, index) => {
-					resultStr += '%O' + args[index + 1];
-				});
+				let strings = args[0]
+				let resultStr = strings[0];
+				for (let i = 1; i < args.length; i++){
+					resultStr += '%O' + strings[i];
+				}
 				args[0] = resultStr;
 			}
 
