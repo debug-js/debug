@@ -2,29 +2,23 @@
  * Module dependencies.
  */
 
-const tty = require('tty');
-const util = require('util');
+import tty from 'tty';
+import util from 'util';
+import humanize from 'ms';
 
 /**
  * This is the Node.js implementation of `debug()`.
  */
 
-exports.init = init;
-exports.log = log;
-exports.formatArgs = formatArgs;
-exports.save = save;
-exports.load = load;
-exports.useColors = useColors;
-exports.destroy = util.deprecate(
-	() => {},
-	'Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.'
-);
+export {
+	init, log, formatArgs, save, load, useColors, setupFormatters,
+};
 
 /**
  * Colors.
  */
 
-exports.colors = [6, 2, 3, 4, 5, 1];
+export let colors = [6, 2, 3, 4, 5, 1];
 
 try {
 	// Optional dependency (as in, doesn't need to be installed, NOT like optionalDependencies in package.json)
@@ -32,7 +26,7 @@ try {
 	const supportsColor = require('supports-color');
 
 	if (supportsColor && (supportsColor.stderr || supportsColor).level >= 2) {
-		exports.colors = [
+		colors = [
 			20,
 			21,
 			26,
@@ -108,7 +102,7 @@ try {
 			214,
 			215,
 			220,
-			221
+			221,
 		];
 	}
 } catch (error) {
@@ -121,7 +115,7 @@ try {
  *   $ DEBUG_COLORS=no DEBUG_DEPTH=10 DEBUG_SHOW_HIDDEN=enabled node script.js
  */
 
-exports.inspectOpts = Object.keys(process.env).filter(key => {
+export const inspectOpts = Object.keys(process.env).filter(key => {
 	return /^debug_/i.test(key);
 }).reduce((obj, key) => {
 	// Camel-case
@@ -153,9 +147,9 @@ exports.inspectOpts = Object.keys(process.env).filter(key => {
  */
 
 function useColors() {
-	return 'colors' in exports.inspectOpts ?
-		Boolean(exports.inspectOpts.colors) :
-		tty.isatty(process.stderr.fd);
+	return 'colors' in inspectOpts
+		? Boolean(inspectOpts.colors)
+		: tty.isatty(process.stderr.fd);
 }
 
 /**
@@ -165,7 +159,9 @@ function useColors() {
  */
 
 function formatArgs(args) {
-	const {namespace: name, useColors} = this;
+	const {
+		namespace: name, useColors
+	} = this;
 
 	if (useColors) {
 		const c = this.color;
@@ -173,14 +169,14 @@ function formatArgs(args) {
 		const prefix = `  ${colorCode};1m${name} \u001B[0m`;
 
 		args[0] = prefix + args[0].split('\n').join('\n' + prefix);
-		args.push(colorCode + 'm+' + module.exports.humanize(this.diff) + '\u001B[0m');
+		args.push(colorCode + 'm+' + humanize(this.diff) + '\u001B[0m');
 	} else {
 		args[0] = getDate() + name + ' ' + args[0];
 	}
 }
 
 function getDate() {
-	if (exports.inspectOpts.hideDate) {
+	if (inspectOpts.hideDate) {
 		return '';
 	}
 	return new Date().toISOString() + ' ';
@@ -231,33 +227,29 @@ function load() {
 function init(debug) {
 	debug.inspectOpts = {};
 
-	const keys = Object.keys(exports.inspectOpts);
+	const keys = Object.keys(inspectOpts);
 	for (let i = 0; i < keys.length; i++) {
-		debug.inspectOpts[keys[i]] = exports.inspectOpts[keys[i]];
+		debug.inspectOpts[keys[i]] = inspectOpts[keys[i]];
 	}
 }
 
-module.exports = require('./common')(exports);
+function setupFormatters(formatters) {
+	/**
+	 * Map %o to `util.inspect()`, all on a single line.
+	 */
+	formatters.o = function (v) {
+		this.inspectOpts.colors = this.useColors;
+		return util.inspect(v, this.inspectOpts)
+			.split('\n')
+			.map(str => str.trim())
+			.join(' ');
+	};
 
-const {formatters} = module.exports;
-
-/**
- * Map %o to `util.inspect()`, all on a single line.
- */
-
-formatters.o = function (v) {
-	this.inspectOpts.colors = this.useColors;
-	return util.inspect(v, this.inspectOpts)
-		.split('\n')
-		.map(str => str.trim())
-		.join(' ');
-};
-
-/**
- * Map %O to `util.inspect()`, allowing multiple lines if needed.
- */
-
-formatters.O = function (v) {
-	this.inspectOpts.colors = this.useColors;
-	return util.inspect(v, this.inspectOpts);
-};
+	/**
+	 * Map %O to `util.inspect()`, allowing multiple lines if needed.
+	 */
+	formatters.O = function (v) {
+		this.inspectOpts.colors = this.useColors;
+		return util.inspect(v, this.inspectOpts);
+	};
+}

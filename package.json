@@ -1,6 +1,7 @@
 {
   "name": "debug",
-  "version": "4.3.2",
+  "version": "5.0.0-canary.0",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git://github.com/visionmedia/debug.git"
@@ -27,33 +28,36 @@
     "lint": "xo",
     "test": "npm run test:node && npm run test:browser && npm run lint",
     "test:node": "istanbul cover _mocha -- test.js",
-    "test:browser": "karma start --single-run",
+    "test:browser": "karma start karma.conf.cjs --single-run",
+    "debug:test:browser": "karma start karma.conf.cjs",
     "test:coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
-    "ms": "2.1.2"
+    "ms": "3.0.0-canary.1"
   },
   "devDependencies": {
-    "brfs": "^2.0.1",
-    "browserify": "^16.2.3",
-    "coveralls": "^3.0.2",
+    "@babel/core": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "babelify": "^10.0.0",
+    "browserify": "^17.0.0",
+    "coveralls": "^3.1.1",
     "istanbul": "^0.4.5",
-    "karma": "^3.1.4",
-    "karma-browserify": "^6.0.0",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-mocha": "^1.3.0",
-    "mocha": "^5.2.0",
-    "mocha-lcov-reporter": "^1.2.0",
-    "xo": "^0.23.0"
+    "karma": "^6.3.4",
+    "karma-browserify": "^8.1.0",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-mocha": "^2.0.1",
+    "mocha": "^9.1.2",
+    "mocha-lcov-reporter": "^1.3.0",
+    "xo": "^0.45.0"
   },
   "peerDependenciesMeta": {
     "supports-color": {
       "optional": true
     }
   },
-  "main": "./src/index.js",
+  "exports": "./src/index.js",
   "browser": "./src/browser.js",
   "engines": {
-    "node": ">=6.0"
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
   }
 }
