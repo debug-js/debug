@@ -3,28 +3,18 @@
 /**
  * This is the web browser implementation of `debug()`.
  */
+import humanize from 'ms';
 
-exports.formatArgs = formatArgs;
-exports.save = save;
-exports.load = load;
-exports.useColors = useColors;
-exports.storage = localstorage();
-exports.destroy = (() => {
-	let warned = false;
+export {
+	formatArgs, save, load, useColors, setupFormatters,
+};
 
-	return () => {
-		if (!warned) {
-			warned = true;
-			console.warn('Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.');
-		}
-	};
-})();
+export const storage = localstorage();
 
 /**
  * Colors.
  */
-
-exports.colors = [
+export const colors = [
 	'#0000CC',
 	'#0000FF',
 	'#0033CC',
@@ -100,7 +90,7 @@ exports.colors = [
 	'#FF9900',
 	'#FF9933',
 	'#FFCC00',
-	'#FFCC33'
+	'#FFCC33',
 ];
 
 /**
@@ -142,14 +132,13 @@ function useColors() {
  *
  * @api public
  */
-
 function formatArgs(args) {
 	args[0] = (this.useColors ? '%c' : '') +
 		this.namespace +
 		(this.useColors ? ' %c' : ' ') +
 		args[0] +
 		(this.useColors ? '%c ' : ' ') +
-		'+' + module.exports.humanize(this.diff);
+		'+' + humanize(this.diff);
 
 	if (!this.useColors) {
 		return;
@@ -186,7 +175,7 @@ function formatArgs(args) {
  *
  * @api public
  */
-exports.log = console.debug || console.log || (() => {});
+export const log = console.debug || console.log || (() => { });
 
 /**
  * Save `namespaces`.
@@ -197,9 +186,9 @@ exports.log = console.debug || console.log || (() => {});
 function save(namespaces) {
 	try {
 		if (namespaces) {
-			exports.storage.setItem('debug', namespaces);
+			storage.setItem('debug', namespaces);
 		} else {
-			exports.storage.removeItem('debug');
+			storage.removeItem('debug');
 		}
 	} catch (error) {
 		// Swallow
@@ -216,7 +205,7 @@ function save(namespaces) {
 function load() {
 	let r;
 	try {
-		r = exports.storage.getItem('debug');
+		r = storage.getItem('debug');
 	} catch (error) {
 		// Swallow
 		// XXX (@Qix-) should we be logging these?
@@ -240,7 +229,6 @@ function load() {
  * @return {LocalStorage}
  * @api private
  */
-
 function localstorage() {
 	try {
 		// TVMLKit (Apple TV JS Runtime) does not have a window object, just localStorage in the global context
@@ -252,18 +240,15 @@ function localstorage() {
 	}
 }
 
-module.exports = require('./common')(exports);
-
-const {formatters} = module.exports;
-
-/**
- * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
- */
-
-formatters.j = function (v) {
-	try {
-		return JSON.stringify(v);
-	} catch (error) {
-		return '[UnexpectedJSONParseError]: ' + error.message;
-	}
-};
+function setupFormatters(formatters) {
+	/**
+	 * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
+	 */
+	formatters.j = function (v) {
+		try {
+			return JSON.stringify(v);
+		} catch (error) {
+			return '[UnexpectedJSONParseError]: ' + error.message;
+		}
+	};
+}

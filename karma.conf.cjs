@@ -6,9 +6,9 @@ module.exports = function (config) {
 
 		// List of files / patterns to load in the browser
 		files: [
-			'src/browser.js',
-			'src/common.js',
-			'test.js'
+			{
+				pattern: 'test.js', type: 'module',
+			},
 		],
 
 		// Test results reporter to use
@@ -32,26 +32,28 @@ module.exports = function (config) {
 		customLaunchers: {
 			HeadlessChrome: {
 				base: 'ChromeHeadless',
-				flags: ['--no-sandbox']
-			}
+				flags: ['--no-sandbox'],
+			},
 		},
 
 		preprocessors: {
 			// *Sigh* what a glob, folks!
-			'{{!(node_modules),*.js},!(node_modules)/**/*.js}': ['browserify']
+			'{{!(node_modules),*.js},!(node_modules)/**/*.js}': ['browserify'],
 		},
 
 		browserify: {
 			debug: true,
-			transform: ['brfs']
+			transform: [['babelify', {
+				presets: ['@babel/preset-env'],
+			}]],
 		},
 
 		// Continuous Integration mode
 		// if true, Karma captures browsers, runs the tests and exits
-		singleRun: true,
+		singleRun: false,
 
 		// Concurrency level
 		// how many browser should be started simultaneous
-		concurrency: 1
+		concurrency: 1,
 	});
 };

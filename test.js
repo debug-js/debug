@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 
-const assert = require('assert');
-const debug = require('./src');
+import assert from 'assert';
+import debug from './src/index.js';
 
 describe('debug', () => {
 	it('passes a basic sanity check', () => {
