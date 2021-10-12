@@ -4,17 +4,14 @@
  * This is the web browser implementation of `debug()`.
  */
 import humanize from 'ms';
+import setup from './common.js';
 
-export {
-	formatArgs, save, load, useColors, setupFormatters,
-};
-
-export const storage = localstorage();
+const storage = localstorage();
 
 /**
  * Colors.
  */
-export const colors = [
+const colors = [
 	'#0000CC',
 	'#0000FF',
 	'#0033CC',
@@ -175,7 +172,7 @@ function formatArgs(args) {
  *
  * @api public
  */
-export const log = console.debug || console.log || (() => { });
+const log = console.debug || console.log || (() => { });
 
 /**
  * Save `namespaces`.
@@ -252,3 +249,5 @@ function setupFormatters(formatters) {
 		}
 	};
 }
+
+export default setup({ formatArgs, save, load, useColors, setupFormatters, colors, storage, log });

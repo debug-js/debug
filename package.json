@@ -55,8 +55,10 @@
       "optional": true
     }
   },
-  "exports": "./src/index.js",
-  "browser": "./src/browser.js",
+  "exports": {
+    "browser": "./src/browser.js",
+    "default": "./src/index.js"
+  },
   "engines": {
     "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
   }
