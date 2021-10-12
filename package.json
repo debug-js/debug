@@ -1,7 +1,6 @@
 {
   "name": "debug",
   "version": "5.0.0-canary.0",
-  "type": "module",
   "repository": {
     "type": "git",
     "url": "git://github.com/visionmedia/debug.git"
@@ -55,9 +54,16 @@
       "optional": true
     }
   },
+  "type": "module",
+  "main": "./src/index.js",
   "exports": {
-    "browser": "./src/browser.js",
-    "default": "./src/index.js"
+    ".": {
+      "import": {
+        "browser": "./src/browser.js",
+        "default": "./src/index.js"
+      }
+    },
+    "./package.json": "./package.json"
   },
   "engines": {
     "node": "^12.20.0 || ^14.13.1 || >=16.0.0"

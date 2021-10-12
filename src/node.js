@@ -2,8 +2,8 @@
  * Module dependencies.
  */
 
-import tty from 'node:tty';
-import util from 'node:util';
+import tty from 'tty';
+import util from 'util';
 import humanize from 'ms';
 import setup from './common.js';
 
