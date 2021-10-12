@@ -2,23 +2,20 @@
  * Module dependencies.
  */
 
-import tty from 'tty';
-import util from 'util';
+import tty from 'node:tty';
+import util from 'node:util';
 import humanize from 'ms';
+import setup from './common.js';
 
 /**
  * This is the Node.js implementation of `debug()`.
  */
 
-export {
-	init, log, formatArgs, save, load, useColors, setupFormatters,
-};
-
 /**
  * Colors.
  */
 
-export let colors = [6, 2, 3, 4, 5, 1];
+let colors = [6, 2, 3, 4, 5, 1];
 
 try {
 	// Optional dependency (as in, doesn't need to be installed, NOT like optionalDependencies in package.json)
@@ -115,7 +112,7 @@ try {
  *   $ DEBUG_COLORS=no DEBUG_DEPTH=10 DEBUG_SHOW_HIDDEN=enabled node script.js
  */
 
-export const inspectOpts = Object.keys(process.env).filter(key => {
+const inspectOpts = Object.keys(process.env).filter(key => {
 	return /^debug_/i.test(key);
 }).reduce((obj, key) => {
 	// Camel-case
@@ -253,3 +250,5 @@ function setupFormatters(formatters) {
 		return util.inspect(v, this.inspectOpts);
 	};
 }
+
+export default setup({ init, log, formatArgs, save, load, useColors, setupFormatters, colors, inspectOpts });
