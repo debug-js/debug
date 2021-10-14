@@ -9,8 +9,13 @@ technique. Works in Node.js and web browsers.
 
 ## Installation
 
-```bash
-$ npm install debug
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
+Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
+
+[npm][]:
+
+```sh
+npm install debug
 ```
 
 ## Usage
@@ -20,42 +25,45 @@ $ npm install debug
 Example [_app.js_](./examples/node/app.js):
 
 ```js
-var debug = require('debug')('http')
-  , http = require('http')
-  , name = 'My App';
+import createDebug from 'debug';
+import http from 'http';
+
+const debug = createDebug('http'),
+      name = 'My App';
 
 // fake app
 
 debug('booting %o', name);
 
-http.createServer(function(req, res){
-  debug(req.method + ' ' + req.url);
-  res.end('hello\n');
-}).listen(3000, function(){
-  debug('listening');
+http.createServer(function (req, res) {
+    debug(req.method + ' ' + req.url);
+    res.end('hello\n');
+}).listen(3000, function () {
+    debug('listening');
 });
 
 // fake worker of some kind
 
-require('./worker');
+import './worker.js';
 ```
 
 Example [_worker.js_](./examples/node/worker.js):
 
 ```js
-var a = require('debug')('worker:a')
-  , b = require('debug')('worker:b');
+import createDebug from 'debug';
+
+const a = createDebug('worker:a'), b = createDebug('worker:b');
 
 function work() {
-  a('doing lots of uninteresting work');
-  setTimeout(work, Math.random() * 1000);
+    a('doing lots of uninteresting work');
+    setTimeout(work, Math.random() * 1000);
 }
 
 work();
 
 function workb() {
-  b('doing some work');
-  setTimeout(workb, Math.random() * 2000);
+    b('doing some work');
+    setTimeout(workb, Math.random() * 2000);
 }
 
 workb();
@@ -200,7 +208,7 @@ For example, if you wanted to add support for rendering a Buffer as hex with
 `%h`, you could do something like:
 
 ```js
-const createDebug = require('debug')
+import createDebug from 'debug'
 createDebug.formatters.h = (v) => {
   return v.toString('hex')
 }
@@ -249,13 +257,13 @@ setInterval(function(){
 Example [_stdout.js_](./examples/node/stdout.js):
 
 ```js
-var debug = require('debug');
-var error = debug('app:error');
+import debug from 'debug'
+const error = debug('app:error');
 
 // by default stderr is used
 error('goes to stderr!');
 
-var log = debug('app:log');
+const log = debug('app:log');
 // set this namespace to log via console.log
 log.log = console.log.bind(console); // don't forget to bind to console!
 log('goes to stdout');
@@ -271,7 +279,8 @@ log('still goes to stdout, but via console.info now');
 ## Extend
 You can simply extend debugger 
 ```js
-const log = require('debug')('auth');
+import createDebug from 'debug'
+const log = createDebug('auth');
 
 //creates new debug instance with extended namespace
 const logSign = log.extend('sign');
@@ -287,7 +296,7 @@ logLogin('hello'); //auth:login hello
 You can also enable debug dynamically by calling the `enable()` method :
 
 ```js
-let debug = require('debug');
+import debug from 'debug'
 
 console.log(1, debug.enabled('test'));
 
@@ -313,7 +322,7 @@ Usage :
 Note that calling `enable()` completely overrides previously set DEBUG variable : 
 
 ```
-$ DEBUG=foo node -e 'var dbg = require("debug"); dbg.enable("bar"); console.log(dbg.enabled("foo"))'
+$ DEBUG=foo node -e "import('debug').then(({default: dbg}) => {dbg.enable('bar'); console.log(dbg.enabled('foo'));})"
 => false
 ```
 
@@ -326,7 +335,7 @@ temporarily without knowing what was enabled to begin with.
 For example:
 
 ```js
-let debug = require('debug');
+import debug from 'debug'
 debug.enable('foo:*,-foo:bar');
 let namespaces = debug.disable();
 debug.enable(namespaces);
@@ -341,7 +350,8 @@ After you've created a debug instance, you can determine whether or not it is
 enabled by checking the `enabled` property:
 
 ```javascript
-const debug = require('debug')('http');
+import createDebug from 'debug'
+const debug = createDebug('http');
 
 if (debug.enabled) {
   // do stuff...
