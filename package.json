@@ -59,8 +59,8 @@
   "exports": {
     ".": {
       "import": {
-        "browser": "./src/browser.js",
-        "default": "./src/index.js"
+        "node": "./src/node.js",
+        "default": "./src/browser.js"
       }
     },
     "./package.json": "./package.json"
