@@ -21,7 +21,7 @@ This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908
 * it must be `import`ed instead of `require`d
 
 ```sh
-npm install debug
+npm install debug@npm:@milahu/debug-esm
 ```
 
 ## Usage
