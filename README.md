@@ -378,6 +378,7 @@ worker.stderr.pipe(process.stderr, { end: false });
  - TJ Holowaychuk
  - Nathan Rajlich
  - Andrew Rhyne
+ - Josh Junon
 
 ## Backers
 
@@ -455,6 +456,7 @@ Become a sponsor and get your logo on our README on Github with a link to your s
 (The MIT License)
 
 Copyright (c) 2014-2017 TJ Holowaychuk &lt;tj@vision-media.ca&gt;
+Copyright (c) 2018-2021 Josh Junon
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
