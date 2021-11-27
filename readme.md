@@ -2,8 +2,28 @@
 [hostile fork](https://github.com/visionmedia/debug/issues/786) of [github.com/visionmedia/debug](https://github.com/visionmedia/debug)
 
 <!--
-  https://github.com/visionmedia/debug/issues/786
-  https://archive.md/EPjNv
+
+https://github.com/visionmedia/debug/issues/786
+
+https://archive.md/EPjNv
+https://archive.md/q0PqC
+
+
+
+> Please take your negativity elsewhere.
+
+done
+
+npm install debug@npm:@milahu/debug-esm
+
+good luck with your perfect rewrite : )
+
+
+
+> visionmedia deleted a comment from milahu
+
+cos censorship and stupidity go hand in hand ...
+
 -->
 
 # debug
