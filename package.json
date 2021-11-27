@@ -40,6 +40,6 @@
     "node": ">=12"
   },
   "scripts": {
-    "publish": "npm publish --access public"
+    "publish-to-npm": "npm publish --access public"
   }
 }
