@@ -1,18 +1,24 @@
-# debug
-[![Build Status](https://travis-ci.org/visionmedia/debug.svg?branch=master)](https://travis-ci.org/visionmedia/debug)  [![Coverage Status](https://coveralls.io/repos/github/visionmedia/debug/badge.svg?branch=master)](https://coveralls.io/github/visionmedia/debug?branch=master)  [![Slack](https://visionmedia-community-slackin.now.sh/badge.svg)](https://visionmedia-community-slackin.now.sh/) [![OpenCollective](https://opencollective.com/debug/backers/badge.svg)](#backers)
-[![OpenCollective](https://opencollective.com/debug/sponsors/badge.svg)](#sponsors)
+# debug-esm
+[hostile fork](https://github.com/visionmedia/debug/issues/786) of [github.com/visionmedia/debug](https://github.com/visionmedia/debug)
 
-<img width="647" src="https://user-images.githubusercontent.com/71256/29091486-fa38524c-7c37-11e7-895f-e7ec8e1039b6.png">
+<!--
+  https://github.com/visionmedia/debug/issues/786
+  https://archive.md/EPjNv
+-->
+
+# debug
 
 A tiny JavaScript debugging utility modelled after Node.js core's debugging
-technique. Works in Node.js and web browsers.
+technique.
+
+Works in Node.js and web browsers.
 
 ## Installation
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
-Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c)
 
-[npm](https://www.npmjs.com/package/debug):
+* Node 12+ is needed to use it
+* it must be `import`ed instead of `require`d
 
 ```sh
 npm install debug
