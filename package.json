@@ -1,6 +1,6 @@
 {
   "name": "@milahu/debug-esm",
-  "version": "4.3.4",
+  "version": "4.3.5",
   "repository": {
     "type": "git",
     "url": "git://github.com/milahu/debug-esm.git"
@@ -27,7 +27,6 @@
     "ms": "3.0.0-canary.1"
   },
   "type": "module",
-  "main": "./src/index.js",
   "exports": {
     ".": {
       "import": {
