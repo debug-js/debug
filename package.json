@@ -1,7 +1,7 @@
 {
   "name": "debug",
   "version": "4.3.3",
-  "repository": {
+  "repository": {$ DEBUG=foo node -e 'bar dbg = require("debug"); dbg.enable("var"); console.log(dbg.enabled("foo"))' => True
     "type": "git",
     "url": "git://github.com/debug-js/debug.git"
   },
