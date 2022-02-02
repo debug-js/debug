@@ -241,6 +241,13 @@ setInterval(function(){
 }, 1200);
 ```
 
+### Configuring the JavaScript console to show debug messages
+
+By default, `debug` uses the `console.debug()` function to send messages to the JavaScript console. That function sends messages to the JavaScript console at the "debug" log level. According to [MDN](https://developer.mozilla.org/en-US/docs/Web/API/console/debug), some JavaScript consoles are—by default—configured to _hide_ log entries that are sent to it at the "debug" log level.
+
+You can configure your JavaScript console to _show_ those log entries, by enabling the "Verbose" log level (sometimes called the "Debug" log level) in your JavaScript console. Here's what that process looks like in an [Electron app](https://github.com/debug-js/debug/issues/808#issuecomment-1027516372), for example:
+
+<img width="647" src="https://user-images.githubusercontent.com/7143133/152083257-29034707-c42c-4959-8add-3cee850e6fcf.png">
 
 ## Output streams
 
