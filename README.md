@@ -20,9 +20,9 @@ $ npm install debug
 Example [_app.js_](./examples/node/app.js):
 
 ```js
-const debugFactory = require('debug')
-const debug = debugFactory('http')
-const name = 'My App'
+const debugFactory = require('debug');
+const debug = debugFactory('http');
+const name = 'My App';
 
 // fake app
 
