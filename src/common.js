@@ -146,9 +146,17 @@ function setup(env) {
 		return debug;
 	}
 
+	const debugCache = new Map();
 	function extend(namespace, delimiter) {
-		const newDebug = createDebug(this.namespace + (typeof delimiter === 'undefined' ? ':' : delimiter) + namespace);
+		const newNamespace = this.namespace +
+			(typeof delimiter === 'undefined' ? ':' : delimiter) +
+			namespace;
+		if (debugCache.has(newNamespace)) {
+			return debugCache.get(newNamespace);
+		}
+		const newDebug = createDebug(newNamespace);
 		newDebug.log = this.log;
+		debugCache.set(newNamespace, newDebug);
 		return newDebug;
 	}
 

@@ -75,8 +75,18 @@ describe('debug', () => {
 			const log = debug('foo');
 			log.log = () => {};
 
-			const logBar = log.extend('bar');
-			assert.deepStrictEqual(log.log, logBar.log);
+			const logBaz = log.extend('baz');
+			assert.deepStrictEqual(log.log, logBaz.log);
+		});
+
+		it('should cache namespace extensions', () => {
+			const log = debug('foo');
+			log.log = () => {};
+
+			const logBar1 = log.extend('bar');
+			const logBar2 = log.extend('bar');
+			assert.deepStrictEqual(logBar1, logBar2);
+			assert.deepStrictEqual(logBar1.log, logBar2.log);
 		});
 	});
 
