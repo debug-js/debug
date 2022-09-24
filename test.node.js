@@ -11,6 +11,18 @@ beforeEach(() => {
 });
 
 describe('debug node', () => {
+	it('should log errors with properties', () => {
+		const log = debug('formatting options');
+		log.useColors = false;
+		log.enabled = true;
+		log.log = sinon.fake();
+		const error = Error('hello');
+		error.customProp = 'foo';
+		log(error);
+		// console.log(log.log.args);
+		assert.ok(log.log.calledWith(sinon.match(/customProp: 'foo'/)));
+	});
+
 	describe('formatting options', () => {
 		it('calls util.formatWithOptions', () => {
 			debug.enable('*');
@@ -33,7 +45,10 @@ describe('debug node', () => {
 			const stdErrWriteStub = sinon.stub(process.stderr, 'write');
 			const log = debug('format with inspectOpts');
 			log('hello world2');
-			assert.deepStrictEqual(util.formatWithOptions.getCall(0).args[0], options);
+			assert.deepStrictEqual(
+				util.formatWithOptions.getCall(0).args[0],
+				options
+			);
 			stdErrWriteStub.restore();
 		});
 	});

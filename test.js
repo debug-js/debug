@@ -2,6 +2,7 @@
 
 const assert = require('assert');
 const debug = require('./src');
+const sinon = require('sinon');
 
 describe('debug', () => {
 	it('passes a basic sanity check', () => {
@@ -41,6 +42,32 @@ describe('debug', () => {
 		log('%O', 12345);
 
 		assert.deepStrictEqual(messages.length, 3);
+	});
+
+	it('should log errors with full stack', function() {
+		// fake the current time to be 1970-01-01T00:00:00.000Z
+		sinon.useFakeTimers(new Date(0));
+
+		const log = debug('test');
+		log.useColors = false;
+		log.enabled = true;
+		log.log = sinon.fake();
+
+		const fakeError = new Error('test');
+		fakeError.stack = 'Error: test\n    at test:1:1';
+
+		log(fakeError);
+
+		// +0ms format for the browser,
+		// ISO8601 format for node.js
+		assert.ok(
+			log.log.calledOnceWithExactly(
+				'test Error: test\n    at test:1:1 +0ms'
+			) ||
+				log.log.calledOnceWithExactly(
+					'1970-01-01T00:00:00.000Z test Error: test\n    at test:1:1'
+				)
+		);
 	});
 
 	describe('extend namespace', () => {
@@ -114,15 +141,22 @@ describe('debug', () => {
 			const namespaces = debug.disable();
 			assert.deepStrictEqual(namespaces, 'test,abc*,-abc');
 			debug.enable(namespaces);
-			assert.deepStrictEqual(oldNames.map(String), debug.names.map(String));
-			assert.deepStrictEqual(oldSkips.map(String), debug.skips.map(String));
+			assert.deepStrictEqual(
+				oldNames.map(String),
+				debug.names.map(String)
+			);
+			assert.deepStrictEqual(
+				oldSkips.map(String),
+				debug.skips.map(String)
+			);
 		});
 
 		it('handles re-enabling existing instances', () => {
 			debug.disable('*');
 			const inst = debug('foo');
 			const messages = [];
-			inst.log = msg => messages.push(msg.replace(/^[^@]*@([^@]+)@.*$/, '$1'));
+			inst.log = msg =>
+				messages.push(msg.replace(/^[^@]*@([^@]+)@.*$/, '$1'));
 
 			inst('@test@');
 			assert.deepStrictEqual(messages, []);

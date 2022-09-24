@@ -15,10 +15,9 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
-exports.destroy = util.deprecate(
-	() => {},
-	'Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.'
-);
+exports.coerce = coerce;
+exports.destroy = util.deprecate(() => {},
+'Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.');
 
 /**
  * Colors.
@@ -121,41 +120,43 @@ try {
  *   $ DEBUG_COLORS=no DEBUG_DEPTH=10 DEBUG_SHOW_HIDDEN=enabled node script.js
  */
 
-exports.inspectOpts = Object.keys(process.env).filter(key => {
-	return /^debug_/i.test(key);
-}).reduce((obj, key) => {
-	// Camel-case
-	const prop = key
-		.substring(6)
-		.toLowerCase()
-		.replace(/_([a-z])/g, (_, k) => {
-			return k.toUpperCase();
-		});
+exports.inspectOpts = Object.keys(process.env)
+	.filter(key => {
+		return /^debug_/i.test(key);
+	})
+	.reduce((obj, key) => {
+		// Camel-case
+		const prop = key
+			.substring(6)
+			.toLowerCase()
+			.replace(/_([a-z])/g, (_, k) => {
+				return k.toUpperCase();
+			});
 
-	// Coerce string value into JS value
-	let val = process.env[key];
-	if (/^(yes|on|true|enabled)$/i.test(val)) {
-		val = true;
-	} else if (/^(no|off|false|disabled)$/i.test(val)) {
-		val = false;
-	} else if (val === 'null') {
-		val = null;
-	} else {
-		val = Number(val);
-	}
+		// Coerce string value into JS value
+		let val = process.env[key];
+		if (/^(yes|on|true|enabled)$/i.test(val)) {
+			val = true;
+		} else if (/^(no|off|false|disabled)$/i.test(val)) {
+			val = false;
+		} else if (val === 'null') {
+			val = null;
+		} else {
+			val = Number(val);
+		}
 
-	obj[prop] = val;
-	return obj;
-}, {});
+		obj[prop] = val;
+		return obj;
+	}, {});
 
 /**
  * Is stdout a TTY? Colored output is enabled when `true`.
  */
 
 function useColors() {
-	return 'colors' in exports.inspectOpts ?
-		Boolean(exports.inspectOpts.colors) :
-		tty.isatty(process.stderr.fd);
+	return 'colors' in exports.inspectOpts
+		? Boolean(exports.inspectOpts.colors)
+		: tty.isatty(process.stderr.fd);
 }
 
 /**
@@ -165,7 +166,7 @@ function useColors() {
  */
 
 function formatArgs(args) {
-	const {namespace: name, useColors} = this;
+	const { namespace: name, useColors } = this;
 
 	if (useColors) {
 		const c = this.color;
@@ -173,7 +174,9 @@ function formatArgs(args) {
 		const prefix = `  ${colorCode};1m${name} \u001B[0m`;
 
 		args[0] = prefix + args[0].split('\n').join('\n' + prefix);
-		args.push(colorCode + 'm+' + module.exports.humanize(this.diff) + '\u001B[0m');
+		args.push(
+			colorCode + 'm+' + module.exports.humanize(this.diff) + '\u001B[0m'
+		);
 	} else {
 		args[0] = getDate() + name + ' ' + args[0];
 	}
@@ -191,7 +194,9 @@ function getDate() {
  */
 
 function log(...args) {
-	return process.stderr.write(util.formatWithOptions(exports.inspectOpts, ...args) + '\n');
+	return process.stderr.write(
+		util.formatWithOptions(exports.inspectOpts, ...args) + '\n'
+	);
 }
 
 /**
@@ -237,17 +242,30 @@ function init(debug) {
 	}
 }
 
+/**
+ * Coerce `val`. In Node.JS, no values need to be coerced (errors are already being formatted for us
+ * by util.format, so this function just returns whatever argument it is given (identitiy function).
+ *
+ * @param {Mixed} val
+ * @return {Mixed}
+ * @api private
+ */
+function coerce(val) {
+	return val;
+}
+
 module.exports = require('./common')(exports);
 
-const {formatters} = module.exports;
+const { formatters } = module.exports;
 
 /**
  * Map %o to `util.inspect()`, all on a single line.
  */
 
-formatters.o = function (v) {
+formatters.o = function(v) {
 	this.inspectOpts.colors = this.useColors;
-	return util.inspect(v, this.inspectOpts)
+	return util
+		.inspect(v, this.inspectOpts)
 		.split('\n')
 		.map(str => str.trim())
 		.join(' ');
@@ -257,7 +275,7 @@ formatters.o = function (v) {
  * Map %O to `util.inspect()`, allowing multiple lines if needed.
  */
 
-formatters.O = function (v) {
+formatters.O = function(v) {
 	this.inspectOpts.colors = this.useColors;
 	return util.inspect(v, this.inspectOpts);
 };
