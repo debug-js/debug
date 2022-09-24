@@ -19,7 +19,6 @@ describe('debug node', () => {
 		const error = Error('hello');
 		error.customProp = 'foo';
 		log(error);
-		// console.log(log.log.args);
 		assert.ok(log.log.calledWith(sinon.match(/customProp: 'foo'/)));
 	});
 
