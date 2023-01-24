@@ -171,8 +171,8 @@ function formatArgs(args) {
 	if (useColors) {
 		const c = this.color;
 		const colorCode = '\u001B[3' + (c < 8 ? c : '8;5;' + c);
-		const prefix = `  ${colorCode};1m${name} ${
-			scope ? `[${scope}]` : ''
+		const prefix = `  ${colorCode};1m${name}${
+			scope ? ` [${scope}]` : ''
 		}\u001B[0m`;
 
 		args[0] = prefix + args[0].split('\n').join('\n' + prefix);
@@ -180,7 +180,7 @@ function formatArgs(args) {
 			`${colorCode}m+${module.exports.humanize(this.diff)}\u001B[0m`
 		);
 	} else {
-		args[0] = `${getDate()}${name} ${scope ? `[${scope}]` : ''} ${
+		args[0] = `${getDate()}${name}${scope ? ` [${scope}]` : ''} ${
 			args[0]
 		} ${module.exports.humanize(this.diff)}`;
 	}
