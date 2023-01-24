@@ -180,9 +180,10 @@ function formatArgs(args) {
 			`${colorCode}m+${module.exports.humanize(this.diff)}\u001B[0m`
 		);
 	} else {
-		args[0] = `${getDate()}${name}${scope ? ` [${scope}]` : ''} ${
+		args[0] = `${getDate()}${name}}${scope ? ` [${scope}]` : ''} ${
 			args[0]
-		} ${module.exports.humanize(this.diff)}`;
+		}`;
+		args.push(module.exports.humanize(this.diff));
 	}
 }
 
