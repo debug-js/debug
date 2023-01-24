@@ -118,7 +118,7 @@ function setup(env) {
 		debug.color = createDebug.selectColor(namespace);
 		debug.extend = extend;
 		debug.destroy = createDebug.destroy; // XXX Temporary. Will be removed in the next major release.
-		debug.caller = null;
+		debug.scope = null;
 
 		Object.defineProperty(debug, 'enabled', {
 			enumerable: true,
