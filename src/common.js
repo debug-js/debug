@@ -1,4 +1,3 @@
-
 /**
  * This is the common logic for both the Node.js and web browser
  * implementations of `debug()`.
@@ -14,35 +13,35 @@ function setup(env) {
 	createDebug.humanize = require('ms');
 	createDebug.destroy = destroy;
 
-	Object.keys(env).forEach(key => {
+	Object.keys(env).forEach((key) => {
 		createDebug[key] = env[key];
 	});
 
 	/**
-	* The currently active debug mode names, and names to skip.
-	*/
+	 * The currently active debug mode names, and names to skip.
+	 */
 
 	createDebug.names = [];
 	createDebug.skips = [];
 
 	/**
-	* Map of special "%n" handling functions, for the debug "format" argument.
-	*
-	* Valid key names are a single, lower or upper-case letter, i.e. "n" and "N".
-	*/
+	 * Map of special "%n" handling functions, for the debug "format" argument.
+	 *
+	 * Valid key names are a single, lower or upper-case letter, i.e. "n" and "N".
+	 */
 	createDebug.formatters = {};
 
 	/**
-	* Selects a color for a debug namespace
-	* @param {String} namespace The namespace string for the debug instance to be colored
-	* @return {Number|String} An ANSI color code for the given namespace
-	* @api private
-	*/
+	 * Selects a color for a debug namespace
+	 * @param {String} namespace The namespace string for the debug instance to be colored
+	 * @return {Number|String} An ANSI color code for the given namespace
+	 * @api private
+	 */
 	function selectColor(namespace) {
 		let hash = 0;
 
 		for (let i = 0; i < namespace.length; i++) {
-			hash = ((hash << 5) - hash) + namespace.charCodeAt(i);
+			hash = (hash << 5) - hash + namespace.charCodeAt(i);
 			hash |= 0; // Convert to 32bit integer
 		}
 
@@ -51,12 +50,12 @@ function setup(env) {
 	createDebug.selectColor = selectColor;
 
 	/**
-	* Create a debugger with the given `namespace`.
-	*
-	* @param {String} namespace
-	* @return {Function}
-	* @api public
-	*/
+	 * Create a debugger with the given `namespace`.
+	 *
+	 * @param {String} namespace
+	 * @return {Function}
+	 * @api public
+	 */
 	function createDebug(namespace) {
 		let prevTime;
 		let enableOverride = null;
@@ -134,9 +133,9 @@ function setup(env) {
 
 				return enabledCache;
 			},
-			set: v => {
+			set: (v) => {
 				enableOverride = v;
-			}
+			},
 		});
 
 		// Env-specific initialization logic for debug instances
@@ -148,18 +147,22 @@ function setup(env) {
 	}
 
 	function extend(namespace, delimiter) {
-		const newDebug = createDebug(this.namespace + (typeof delimiter === 'undefined' ? ':' : delimiter) + namespace);
+		const newDebug = createDebug(
+			this.namespace +
+				(typeof delimiter === 'undefined' ? ':' : delimiter) +
+				namespace
+		);
 		newDebug.log = this.log;
 		return newDebug;
 	}
 
 	/**
-	* Enables a debug mode by namespaces. This can include modes
-	* separated by a colon and wildcards.
-	*
-	* @param {String} namespaces
-	* @api public
-	*/
+	 * Enables a debug mode by namespaces. This can include modes
+	 * separated by a colon and wildcards.
+	 *
+	 * @param {String} namespaces
+	 * @api public
+	 */
 	function enable(namespaces) {
 		createDebug.save(namespaces);
 		createDebug.namespaces = namespaces;
@@ -168,7 +171,9 @@ function setup(env) {
 		createDebug.skips = [];
 
 		let i;
-		const split = (typeof namespaces === 'string' ? namespaces : '').split(/[\s,]+/);
+		const split = (typeof namespaces === 'string' ? namespaces : '').split(
+			/[\s,]+/
+		);
 		const len = split.length;
 
 		for (i = 0; i < len; i++) {
@@ -180,7 +185,9 @@ function setup(env) {
 			namespaces = split[i].replace(/\*/g, '.*?');
 
 			if (namespaces[0] === '-') {
-				createDebug.skips.push(new RegExp('^' + namespaces.slice(1) + '$'));
+				createDebug.skips.push(
+					new RegExp('^' + namespaces.slice(1) + '$')
+				);
 			} else {
 				createDebug.names.push(new RegExp('^' + namespaces + '$'));
 			}
@@ -188,27 +195,29 @@ function setup(env) {
 	}
 
 	/**
-	* Disable debug output.
-	*
-	* @return {String} namespaces
-	* @api public
-	*/
+	 * Disable debug output.
+	 *
+	 * @return {String} namespaces
+	 * @api public
+	 */
 	function disable() {
 		const namespaces = [
 			...createDebug.names.map(toNamespace),
-			...createDebug.skips.map(toNamespace).map(namespace => '-' + namespace)
+			...createDebug.skips
+				.map(toNamespace)
+				.map((namespace) => '-' + namespace),
 		].join(',');
 		createDebug.enable('');
 		return namespaces;
 	}
 
 	/**
-	* Returns true if the given mode name is enabled, false otherwise.
-	*
-	* @param {String} name
-	* @return {Boolean}
-	* @api public
-	*/
+	 * Returns true if the given mode name is enabled, false otherwise.
+	 *
+	 * @param {String} name
+	 * @return {Boolean}
+	 * @api public
+	 */
 	function enabled(name) {
 		if (name[name.length - 1] === '*') {
 			return true;
@@ -233,25 +242,26 @@ function setup(env) {
 	}
 
 	/**
-	* Convert regexp to namespace
-	*
-	* @param {RegExp} regxep
-	* @return {String} namespace
-	* @api private
-	*/
+	 * Convert regexp to namespace
+	 *
+	 * @param {RegExp} regxep
+	 * @return {String} namespace
+	 * @api private
+	 */
 	function toNamespace(regexp) {
-		return regexp.toString()
+		return regexp
+			.toString()
 			.substring(2, regexp.toString().length - 2)
 			.replace(/\.\*\?$/, '*');
 	}
 
 	/**
-	* Coerce `val`.
-	*
-	* @param {Mixed} val
-	* @return {Mixed}
-	* @api private
-	*/
+	 * Coerce `val`.
+	 *
+	 * @param {Mixed} val
+	 * @return {Mixed}
+	 * @api private
+	 */
 	function coerce(val) {
 		if (val instanceof Error) {
 			return val.stack || val.message;
@@ -260,11 +270,13 @@ function setup(env) {
 	}
 
 	/**
-	* XXX DO NOT USE. This is a temporary stub function.
-	* XXX It WILL be removed in the next major release.
-	*/
+	 * XXX DO NOT USE. This is a temporary stub function.
+	 * XXX It WILL be removed in the next major release.
+	 */
 	function destroy() {
-		console.warn('Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.');
+		console.warn(
+			'Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.'
+		);
 	}
 
 	createDebug.enable(createDebug.load());
