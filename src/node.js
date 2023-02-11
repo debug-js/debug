@@ -102,8 +102,8 @@ function formatArgs(args) {
 		const c = this.color;
 		const colorCode = '\u001B[3' + (c < 8 ? c : '8;5;' + c);
 		const prefix = `  ${colorCode};1m${name}${
-			scope ? ` [${scope}] ` : ''
-		}\u001B[0m`;
+			scope ? ` [${scope}]` : ''
+		} \u001B[0m`;
 
 		args[0] = prefix + args[0].split('\n').join('\n' + prefix);
 		args.push(
