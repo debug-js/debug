@@ -197,7 +197,7 @@ exports.log = console.debug || console.log || (() => {});
 function save(namespaces) {
 	try {
 		if (namespaces) {
-			exports.storage.setItem('debug', namespaces);
+			exports.storage.setItem('debug', typeof(namespaces) ==='string' ? namespaces : JSON.stringify(namespaces));
 		} else {
 			exports.storage.removeItem('debug');
 		}

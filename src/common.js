@@ -177,12 +177,16 @@ function setup(env) {
 			}
 
 			namespaces = split[i].replace(/\*/g, '.*?');
+			// Resolve namespaces as [object object ]SyntaxError: Invalid regular expression: /^[object:$/: Unterminated character class
+			const str = namespaces[0] === '-' ?  namespaces.slice(1) : namespaces;
+			const names = str.split(',').map(name => name.trim()).join('|').replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+			createDebug.names.push(new RegExp(names));
 
-			if (namespaces[0] === '-') {
-				createDebug.skips.push(new RegExp('^' + namespaces.slice(1) + '$'));
-			} else {
-				createDebug.names.push(new RegExp('^' + namespaces + '$'));
-			}
+			// if (namespaces[0] === '-') {
+			// 	createDebug.skips.push(new RegExp('^' + namespaces.slice(1) + '$'));
+			// } else {
+			// 	createDebug.names.push(new RegExp('^' + namespaces + '$'));
+			// }
 		}
 	}
 
