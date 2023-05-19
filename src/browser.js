@@ -189,8 +189,7 @@ function save(namespaces) {
 		if (namespaces) {
 			exports.storage.setItem('debug', namespaces);
 		} else {
-			exports.storage.removeItem('debug');
-		}
+			exports.storage.setItem('debug', typeof(namespaces) ==='string' ? namespaces : JSON.stringify(namespaces));		}
 	} catch (error) {
 		// Swallow
 		// XXX (@Qix-) should we be logging these?
