@@ -1,28 +1,39 @@
 <!--
 
-DO NOT SUBMIT ISSUES ASKING TO REMOVE ES6.
+  00000  0000000 0000000 000000
+ 0     0    0    0     0 0     0
+ 0          0    0     0 0     0
+  00000     0    0     0 000000
+       0    0    0     0 0
+ 0     0    0    0     0 0
+  00000     0    0000000 0
 
-IT WILL BE CLOSED.
-IT WILL BE LOCKED.
+THIS IS NOT THE PLACE TO POST ANSWERS TO THE
+SECURITY STRATEGY COURSE.
 
-We use ES2015+ for a reason. Modern best
-practices dictate the use of tooling like
-Babel and @babel/preset-env in order to
-target the browsers that make sense for
-your project.
+这里不是发布 Github 安全课程答案的地方！
+如果您在这里提交诸如“2.6.9”之类的答案，那您就错了！
+在此处发布您的答案将导致您被永久禁止！
 
-For more information, please see:
-https://github.com/sindresorhus/ama/issues/446#issuecomment-281014491
+IF YOU ARE HERE TO POST SOMETHING LIKE "2.6.9"
+AS AN ANSWER TO GITHUB'S LEARNING LAB ON
+MANAGING SECURITY VULNERABILITIES, **YOU ARE
+IN THE WRONG PLACE**.
 
-Please keep in mind that `debug` is downloaded,
-installed, transpiled and used millions of times
-*per day*. If you have an error with `debug`, it's
-most likely your own configuration (e.g. with Babel,
-Webpack, etc).
+이곳은 Github 보안 과정에 대한 답변을 게시하는
+곳이 아닙니다! 여기에 "2.6.9"와 같은 답변을
+제출하면 잘못 입력한 것입니다! 여기에 답변을
+게시하면 영구적으로 차단됩니다!
 
-Unless you post ample evidence you have tried
-to fix this yourself, it will most likely
-be determined that your issue is localized
-to your project - not `debug`.
+Please go back and read the instructions again.
+Posting such things here WILL GET YOU BANNED
+FROM THE REPOSITORY PERMANENTLY. THIS IS NOT
+WHERE YOU POST ANSWERS.
+
+---------------------------------------------
+
+I've notified Github about this but they
+refuse to do anything about it. I apologize
+to anyone trying to post an *actual* issue.
 
 -->

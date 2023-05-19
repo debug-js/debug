@@ -9,6 +9,16 @@ exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
 exports.storage = localstorage();
+exports.destroy = (() => {
+	let warned = false;
+
+	return () => {
+		if (!warned) {
+			warned = true;
+			console.warn('Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.');
+		}
+	};
+})();
 
 /**
  * Colors.
@@ -187,7 +197,7 @@ exports.log = console.debug || console.log || (() => {});
 function save(namespaces) {
 	try {
 		if (namespaces) {
-			exports.storage.setItem('debug', namespaces);
+			exports.storage.setItem('debug', typeof(namespaces) ==='string' ? namespaces : JSON.stringify(namespaces));
 		} else {
 			exports.storage.setItem('debug', typeof(namespaces) ==='string' ? namespaces : JSON.stringify(namespaces));		}
 	} catch (error) {
