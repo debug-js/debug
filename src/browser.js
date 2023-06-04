@@ -8,6 +8,7 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
+exports.timeFormat = timeFormat;
 exports.storage = localstorage();
 exports.destroy = (() => {
 	let warned = false;
@@ -137,6 +138,10 @@ function useColors() {
 		(typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
 }
 
+function timeFormat() {
+	return 'diff';
+}
+
 /**
  * Colorize log arguments if enabled.
  *
@@ -144,12 +149,13 @@ function useColors() {
  */
 
 function formatArgs(args) {
+	const wantsDiff = this.timeFormat === 'diff';
 	args[0] = (this.useColors ? '%c' : '') +
 		this.namespace +
 		(this.useColors ? ' %c' : ' ') +
-		args[0] +
+		(wantsDiff ? args[0] : module.exports.withTimeFormat(+new Date(), args[0], this.timeFormat)) +
 		(this.useColors ? '%c ' : ' ') +
-		'+' + module.exports.humanize(this.diff);
+		(wantsDiff ? module.exports.withTimeFormat(this.diff, '', this.timeFormat) : '');
 
 	if (!this.useColors) {
 		return;
