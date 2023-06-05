@@ -10,7 +10,7 @@ technique. Works in Node.js and web browsers.
 ## Installation
 
 ```bash
-$ npm install debug
+npm install debug
 ```
 
 ## Usage
@@ -20,8 +20,8 @@ $ npm install debug
 Example [_app.js_](./examples/node/app.js):
 
 ```js
-const debugFactory = require('debug');
-const debug = debugFactory('http');
+const createDebug = require('debug'); // import createDebug from 'debug'
+const debug = createDebug('http');
 const name = 'My App';
 
 // fake app
@@ -43,18 +43,19 @@ require('./worker');
 Example [_worker.js_](./examples/node/worker.js):
 
 ```js
-var a = require('debug')('worker:a')
-  , b = require('debug')('worker:b');
+const createDebug = require('debug')
+const debugA = createDebug('worker:a')
+const debugB = createDebug('worker:b');
 
 function work() {
-  a('doing lots of uninteresting work');
+  debugA('doing lots of uninteresting work');
   setTimeout(work, Math.random() * 1000);
 }
 
 work();
 
 function workb() {
-  b('doing some work');
+  debugB('doing some work');
   setTimeout(workb, Math.random() * 2000);
 }
 
@@ -70,39 +71,36 @@ Here are some examples:
 <img width="647" alt="screen shot 2017-08-08 at 12 53 38 pm" src="https://user-images.githubusercontent.com/71256/29091700-a62a6888-7c38-11e7-800b-db911291ca2b.png">
 <img width="647" alt="screen shot 2017-08-08 at 12 53 25 pm" src="https://user-images.githubusercontent.com/71256/29091701-a62ea114-7c38-11e7-826a-2692bedca740.png">
 
-#### Windows command prompt notes
+#### Command Line Ussage
+
+The following examples allow all messages from any package that supports debug, but hides messages from packages whose name starts with socket.io.
+
+##### Linux / Mac posix shell
+
+```sh
+DEBUG="*,-socket.io" npm run dev
+```
 
 ##### CMD
 
 On Windows the environment variable is set using the `set` command.
 
 ```cmd
-set DEBUG=*,-not_this
-```
-
-Example:
-
-```cmd
+set DEBUG=*,-socket.io
 set DEBUG=* & node app.js
 ```
 
-##### PowerShell (VS Code default)
+##### PowerShell
 
 PowerShell uses different syntax to set environment variables.
 
 ```cmd
-$env:DEBUG = "*,-not_this"
-```
-
-Example:
-
-```cmd
+$env:DEBUG = "*,-socket.io"
 $env:DEBUG='app';node app.js
 ```
 
-Then, run the program to be debugged as usual.
+Then, run the program to be debugged as usual. npm script example:  
 
-npm script example:
 ```js
   "windowsDebug": "@powershell -Command $env:DEBUG='*';node app.js",
 ```
@@ -216,7 +214,7 @@ debug('this is hex: %h', new Buffer('hello world'))
 
 You can build a browser-ready script using [browserify](https://github.com/substack/node-browserify),
 or just use the [browserify-as-a-service](https://wzrd.in/) [build](https://wzrd.in/standalone/debug@latest),
-if you don't want to build it yourself.
+if you don't want to build it yourself. Importing directly from script element with `type="module"` set will cause an error.
 
 Debug's enable state is currently persisted by `localStorage`.
 Consider the situation shown below where you have `worker:a` and `worker:b`,
@@ -252,13 +250,13 @@ In Chromium-based web browsers (e.g. Brave, Chrome, and Electron), the JavaScrip
 Example [_stdout.js_](./examples/node/stdout.js):
 
 ```js
-var debug = require('debug');
-var error = debug('app:error');
+const Debug = require('debug');
+const error = Debug('app:error');
 
 // by default stderr is used
 error('goes to stderr!');
 
-var log = debug('app:log');
+const log = debug('app:log');
 // set this namespace to log via console.log
 log.log = console.log.bind(console); // don't forget to bind to console!
 log('goes to stdout');
@@ -266,7 +264,7 @@ error('still goes to stderr!');
 
 // set all output to go via console.info
 // overrides all per-namespace log settings
-debug.log = console.info.bind(console);
+Debug.log = console.info.bind(console);
 error('now goes to stdout via console.info');
 log('still goes to stdout, but via console.info now');
 ```
@@ -274,9 +272,10 @@ log('still goes to stdout, but via console.info now');
 ## Extend
 You can simply extend debugger 
 ```js
-const log = require('debug')('auth');
+const createDebug = require('debug');
+const log = createDebug('auth')
 
-//creates new debug instance with extended namespace
+// creates new debug instance with extended namespace
 const logSign = log.extend('sign');
 const logLogin = log.extend('login');
 
@@ -285,20 +284,20 @@ logSign('hello'); //auth:sign hello
 logLogin('hello'); //auth:login hello
 ```
 
-## Set dynamically
+## Dynamically enable and disable all logging
 
 You can also enable debug dynamically by calling the `enable()` method :
 
 ```js
-let debug = require('debug');
+let Debug = require('debug');
 
-console.log(1, debug.enabled('test'));
+console.log(1, Debug.enabled('test'));
 
-debug.enable('test');
-console.log(2, debug.enabled('test'));
+Debug.enable('test');
+console.log(2, Debug.enabled('test'));
 
-debug.disable();
-console.log(3, debug.enabled('test'));
+Debug.disable();
+console.log(3, Debug.enabled('test'));
 
 ```
 
@@ -316,7 +315,7 @@ Usage :
 Note that calling `enable()` completely overrides previously set DEBUG variable : 
 
 ```
-$ DEBUG=foo node -e 'var dbg = require("debug"); dbg.enable("bar"); console.log(dbg.enabled("foo"))'
+$ DEBUG=foo node -e 'let D = require("debug"); D.enable("bar"); console.log(D.enabled("foo"))'
 => false
 ```
 
@@ -329,10 +328,10 @@ temporarily without knowing what was enabled to begin with.
 For example:
 
 ```js
-let debug = require('debug');
-debug.enable('foo:*,-foo:bar');
-let namespaces = debug.disable();
-debug.enable(namespaces);
+let Debug = require('debug');
+Debug.enable('foo:*,-foo:bar');
+let namespaces = Debug.disable();
+Debug.enable(namespaces);
 ```
 
 Note: There is no guarantee that the string will be identical to the initial
@@ -344,9 +343,10 @@ After you've created a debug instance, you can determine whether or not it is
 enabled by checking the `enabled` property:
 
 ```javascript
-const debug = require('debug')('http');
+const Debug = require('debug')
+const debug = Debug('http')
 
-if (debug.enabled) {
+if (Debug.enabled) {
   // do stuff...
 }
 ```
@@ -375,6 +375,11 @@ worker = fork(WORKER_WRAP_PATH, [workerPath], {
 worker.stderr.pipe(process.stderr, { end: false });
 ```
 
+## Known limitations and gotchas
+
+- Does not work well in strict ESM environments like Deno and UNPKG's module mode
+- You cannot destructure the debug `const { disable } = require('debug')` will not work
+- Environment variables are not re-read after startup, use our functions for runtime reconfiguration instead
 
 ## Authors
 
