@@ -20,45 +20,48 @@ $ npm install debug
 Example [_app.js_](./examples/node/app.js):
 
 ```js
-var debug = require('debug')('http')
-  , http = require('http')
-  , name = 'My App';
+const http = require('http');
+const debug = require('../../src')('http'); // ../../src can be replaced with debug if run outside of this repository
+const {worka, workb} = require('./worker');
 
-// fake app
+const name = 'My App';
 
+// Fake app
 debug('booting %o', name);
 
-http.createServer(function(req, res){
-  debug(req.method + ' ' + req.url);
-  res.end('hello\n');
-}).listen(3000, function(){
-  debug('listening');
+http.createServer((req, res) => {
+	debug(req.method + ' ' + req.url);
+	res.end('hello\n');
+}).listen(3000, () => {
+	debug('listening');
 });
 
-// fake worker of some kind
+// Fake worker of some kind
+worka();
+workb();
 
-require('./worker');
 ```
 
 Example [_worker.js_](./examples/node/worker.js):
 
 ```js
-var a = require('debug')('worker:a')
-  , b = require('debug')('worker:b');
+const debug = require('../../src'); // ../../src can be replaced with debug if run outside of this repository
 
-function work() {
-  a('doing lots of uninteresting work');
-  setTimeout(work, Math.random() * 1000);
+const a = debug('worker:a');
+const b = debug('worker:b');
+
+function worka() {
+	a('doing lots of uninteresting work');
+	setTimeout(worka, Math.random() * 1000);
 }
-
-work();
 
 function workb() {
-  b('doing some work');
-  setTimeout(workb, Math.random() * 2000);
+	b('doing some work');
+	setTimeout(workb, Math.random() * 2000);
 }
 
-workb();
+module.exports = {worka, workb};
+
 ```
 
 The `DEBUG` environment variable is then used to enable these based on space or
@@ -252,23 +255,27 @@ In Chromium-based web browsers (e.g. Brave, Chrome, and Electron), the JavaScrip
 Example [_stdout.js_](./examples/node/stdout.js):
 
 ```js
-var debug = require('debug');
-var error = debug('app:error');
+const debug = require('../../src'); // ../../src can be replaced with debug if run outside of this repository
 
-// by default stderr is used
+const error = debug('app:error');
+
+// By default stderr is used
 error('goes to stderr!');
 
-var log = debug('app:log');
-// set this namespace to log via console.log
-log.log = console.log.bind(console); // don't forget to bind to console!
+const log = debug('app:log');
+
+// Set this namespace to log via console.log
+log.log = console.log.bind(console); // Don't forget to bind to console!
+
 log('goes to stdout');
 error('still goes to stderr!');
 
-// set all output to go via console.info
-// overrides all per-namespace log settings
+// Set all output to go via console.info
+// Overrides all per-namespace log settings
 debug.log = console.info.bind(console);
 error('now goes to stdout via console.info');
 log('still goes to stdout, but via console.info now');
+
 ```
 
 ## Extend
