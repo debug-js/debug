@@ -110,7 +110,8 @@ function setup(env) {
 			// Apply env-specific formatting (colors, etc.)
 			createDebug.formatArgs.call(self, args);
 
-			if (self.level && (self.level === 'ERROR' || self.level === 'WARN')) {
+			// By default: logging to stderr for backwards compatibility.
+			if (!self.level || (self.level === 'ERROR' || self.level === 'WARN')) {
 				const logFn = self.logError || createDebug.logError;
 				logFn.apply(self, args);
 			} else {
