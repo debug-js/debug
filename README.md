@@ -375,6 +375,19 @@ worker = fork(WORKER_WRAP_PATH, [workerPath], {
 worker.stderr.pipe(process.stderr, { end: false });
 ```
 
+## Error / Info
+
+By default, debug is logging to stderr on node.js. But you can configure it to log to stdout instead:
+
+```js
+var info = require('debug')('http', 'INFO');
+var error = require('debug')('http', 'ERROR');
+var debug = require('debug')('http');
+
+error('goes to stderr!');
+info('goes to stdout.');
+debug('goes to stderr.');
+```
 
 ## Authors
 
