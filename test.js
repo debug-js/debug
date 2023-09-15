@@ -35,6 +35,7 @@ describe('debug', () => {
 
 		const messages = [];
 		log.log = (...args) => messages.push(args);
+		log.logError = log.log;
 
 		log('using custom log function');
 		log('using custom log function again');
@@ -123,6 +124,7 @@ describe('debug', () => {
 			const inst = debug('foo');
 			const messages = [];
 			inst.log = msg => messages.push(msg.replace(/^[^@]*@([^@]+)@.*$/, '$1'));
+			inst.logError = inst.log;
 
 			inst('@test@');
 			assert.deepStrictEqual(messages, []);
