@@ -11,6 +11,7 @@ const util = require('util');
 
 exports.init = init;
 exports.log = log;
+exports.logError = logError;
 exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
@@ -187,10 +188,16 @@ function getDate() {
 }
 
 /**
+ * Invokes `util.format()` with the specified arguments and writes to stdout
+ */
+function log(...args) {
+	return process.stdout.write(util.format(...args) + '\n');
+}
+
+/**
  * Invokes `util.format()` with the specified arguments and writes to stderr.
  */
-
-function log(...args) {
+function logError(...args) {
 	return process.stderr.write(util.format(...args) + '\n');
 }
 

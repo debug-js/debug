@@ -54,10 +54,11 @@ function setup(env) {
 	* Create a debugger with the given `namespace`.
 	*
 	* @param {String} namespace
+	* @param {String} level The level of logging
 	* @return {Function}
 	* @api public
 	*/
-	function createDebug(namespace) {
+	function createDebug(namespace, level) {
 		let prevTime;
 		let enableOverride = null;
 		let namespacesCache;
@@ -109,11 +110,17 @@ function setup(env) {
 			// Apply env-specific formatting (colors, etc.)
 			createDebug.formatArgs.call(self, args);
 
-			const logFn = self.log || createDebug.log;
-			logFn.apply(self, args);
+			if (self.level && (self.level === 'ERROR' || self.level === 'WARN')) {
+				const logFn = self.logError || createDebug.logError;
+				logFn.apply(self, args);
+			} else {
+				const logFn = self.log || createDebug.log;
+				logFn.apply(self, args);
+			}
 		}
 
 		debug.namespace = namespace;
+		debug.level = level;
 		debug.useColors = createDebug.useColors();
 		debug.color = createDebug.selectColor(namespace);
 		debug.extend = extend;
@@ -149,6 +156,7 @@ function setup(env) {
 	function extend(namespace, delimiter) {
 		const newDebug = createDebug(this.namespace + (typeof delimiter === 'undefined' ? ':' : delimiter) + namespace);
 		newDebug.log = this.log;
+		newDebug.logError = this.logError;
 		return newDebug;
 	}
 

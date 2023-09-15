@@ -188,6 +188,8 @@ function formatArgs(args) {
  */
 exports.log = console.debug || console.log || (() => {});
 
+exports.logError = console.debug || console.log || (() => {});
+
 /**
  * Save `namespaces`.
  *
