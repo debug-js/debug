@@ -27,11 +27,13 @@ cos censorship and stupidity go hand in hand ...
 -->
 
 # debug
+[![Build Status](https://travis-ci.org/debug-js/debug.svg?branch=master)](https://travis-ci.org/debug-js/debug)  [![Coverage Status](https://coveralls.io/repos/github/debug-js/debug/badge.svg?branch=master)](https://coveralls.io/github/debug-js/debug?branch=master)  [![Slack](https://visionmedia-community-slackin.now.sh/badge.svg)](https://visionmedia-community-slackin.now.sh/) [![OpenCollective](https://opencollective.com/debug/backers/badge.svg)](#backers)
+[![OpenCollective](https://opencollective.com/debug/sponsors/badge.svg)](#sponsors)
+
+<img width="647" src="https://user-images.githubusercontent.com/71256/29091486-fa38524c-7c37-11e7-895f-e7ec8e1039b6.png">
 
 A tiny JavaScript debugging utility modelled after Node.js core's debugging
-technique.
-
-Works in Node.js and web browsers.
+technique. Works in Node.js and web browsers.
 
 ## Installation
 
@@ -41,7 +43,7 @@ This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908
 * it must be `import`ed instead of `require`d
 
 ```sh
-npm install debug@npm:@milahu/debug-esm
+npm install debug@npm:@aakoch/debug-esm
 ```
 
 ## Usage
@@ -61,11 +63,11 @@ const debug = createDebug('http'),
 
 debug('booting %o', name);
 
-http.createServer(function (req, res) {
-    debug(req.method + ' ' + req.url);
-    res.end('hello\n');
-}).listen(3000, function () {
-    debug('listening');
+http.createServer(function(req, res){
+  debug(req.method + ' ' + req.url);
+  res.end('hello\n');
+}).listen(3000, function(){
+  debug('listening');
 });
 
 // fake worker of some kind
@@ -81,15 +83,15 @@ import createDebug from 'debug';
 const a = createDebug('worker:a'), b = createDebug('worker:b');
 
 function work() {
-    a('doing lots of uninteresting work');
-    setTimeout(work, Math.random() * 1000);
+  a('doing lots of uninteresting work');
+  setTimeout(work, Math.random() * 1000);
 }
 
 work();
 
 function workb() {
-    b('doing some work');
-    setTimeout(workb, Math.random() * 2000);
+  b('doing some work');
+  setTimeout(workb, Math.random() * 2000);
 }
 
 workb();
@@ -275,6 +277,9 @@ setInterval(function(){
 }, 1200);
 ```
 
+In Chromium-based web browsers (e.g. Brave, Chrome, and Electron), the JavaScript console will—by default—only show messages logged by `debug` if the "Verbose" log level is _enabled_.
+
+<img width="647" src="https://user-images.githubusercontent.com/7143133/152083257-29034707-c42c-4959-8add-3cee850e6fcf.png">
 
 ## Output streams
 
@@ -414,6 +419,7 @@ worker.stderr.pipe(process.stderr, { end: false });
  - TJ Holowaychuk
  - Nathan Rajlich
  - Andrew Rhyne
+ - Josh Junon
 
 ## Backers
 
@@ -491,6 +497,7 @@ Become a sponsor and get your logo on our README on Github with a link to your s
 (The MIT License)
 
 Copyright (c) 2014-2017 TJ Holowaychuk &lt;tj@vision-media.ca&gt;
+Copyright (c) 2018-2021 Josh Junon
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
