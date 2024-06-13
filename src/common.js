@@ -14,9 +14,9 @@ export default function setup(env) {
 	createDebug.humanize = humanize;
 	createDebug.destroy = destroy;
 
-	Object.keys(env).forEach(key => {
+	for (const key of Object.keys(env)) {
 		createDebug[key] = env[key];
-	});
+	}
 
 	/**
 	* The currently active debug mode names, and names to skip.
@@ -42,12 +42,13 @@ export default function setup(env) {
 		let hash = 0;
 
 		for (let i = 0; i < namespace.length; i++) {
-			hash = ((hash << 5) - hash) + namespace.charCodeAt(i);
-			hash |= 0; // Convert to 32bit integer
+			hash = ((hash * 32) - hash) + namespace.charCodeAt(i);
+			hash = Math.trunc(hash); // Convert to 32bit integer
 		}
 
 		return createDebug.colors[Math.abs(hash) % createDebug.colors.length];
 	}
+
 	createDebug.selectColor = selectColor;
 
 	/**
@@ -58,7 +59,7 @@ export default function setup(env) {
 	* @api public
 	*/
 	function createDebug(namespace) {
-		let prevTime;
+		let previousTime;
 		let enableOverride = null;
 		let namespacesCache;
 		let enabledCache;
@@ -72,12 +73,12 @@ export default function setup(env) {
 			const self = debug;
 
 			// Set `diff` timestamp
-			const curr = Number(new Date());
-			const ms = curr - (prevTime || curr);
+			const current = Date.now();
+			const ms = current - (previousTime || current);
 			self.diff = ms;
-			self.prev = prevTime;
-			self.curr = curr;
-			prevTime = curr;
+			self.prev = previousTime;
+			self.curr = current;
+			previousTime = current;
 
 			args[0] = createDebug.coerce(args[0]);
 
@@ -88,21 +89,23 @@ export default function setup(env) {
 
 			// Apply any `formatters` transformations
 			let index = 0;
-			args[0] = args[0].replace(/%([a-zA-Z%])/g, (match, format) => {
+			args[0] = args[0].replaceAll(/%([a-zA-Z%])/g, (match, format) => {
 				// If we encounter an escaped % then don't increase the array index
 				if (match === '%%') {
 					return '%';
 				}
+
 				index++;
 				const formatter = createDebug.formatters[format];
 				if (typeof formatter === 'function') {
-					const val = args[index];
-					match = formatter.call(self, val);
+					const value = args[index];
+					match = formatter.call(self, value);
 
 					// Now we need to remove `args[index]` since it's inlined in the `format`
 					args.splice(index, 1);
 					index--;
 				}
+
 				return match;
 			});
 
@@ -122,7 +125,7 @@ export default function setup(env) {
 		Object.defineProperty(debug, 'enabled', {
 			enumerable: true,
 			configurable: false,
-			get: () => {
+			get() {
 				if (enableOverride !== null) {
 					return enableOverride;
 				}
@@ -133,9 +136,9 @@ export default function setup(env) {
 
 				return enabledCache;
 			},
-			set: v => {
+			set(v) {
 				enableOverride = v;
-			}
+			},
 		});
 
 		// Env-specific initialization logic for debug instances
@@ -147,7 +150,7 @@ export default function setup(env) {
 	}
 
 	function extend(namespace, delimiter) {
-		const newDebug = createDebug(this.namespace + (typeof delimiter === 'undefined' ? ':' : delimiter) + namespace);
+		const newDebug = createDebug(this.namespace + (delimiter === undefined ? ':' : delimiter) + namespace);
 		newDebug.log = this.log;
 		return newDebug;
 	}
@@ -168,9 +171,9 @@ export default function setup(env) {
 
 		let i;
 		const split = (typeof namespaces === 'string' ? namespaces : '').split(/[\s,]+/);
-		const len = split.length;
+		const {length} = split;
 
-		for (i = 0; i < len; i++) {
+		for (i = 0; i < length; i++) {
 			if (!split[i]) {
 				// ignore empty strings
 				continue;
@@ -195,7 +198,7 @@ export default function setup(env) {
 	function disable() {
 		const namespaces = [
 			...createDebug.names.map(toNamespace),
-			...createDebug.skips.map(toNamespace).map(namespace => '-' + namespace)
+			...createDebug.skips.map(toNamespace).map(namespace => '-' + namespace),
 		].join(',');
 		createDebug.enable('');
 		return namespaces;
@@ -209,20 +212,20 @@ export default function setup(env) {
 	* @api public
 	*/
 	function enabled(name) {
-		if (name[name.length - 1] === '*') {
+		if (name.endsWith('*')) {
 			return true;
 		}
 
 		let i;
-		let len;
+		let length;
 
-		for (i = 0, len = createDebug.skips.length; i < len; i++) {
+		for (i = 0, length = createDebug.skips.length; i < length; i++) {
 			if (createDebug.skips[i].test(name)) {
 				return false;
 			}
 		}
 
-		for (i = 0, len = createDebug.names.length; i < len; i++) {
+		for (i = 0, length = createDebug.names.length; i < length; i++) {
 			if (createDebug.names[i].test(name)) {
 				return true;
 			}
@@ -240,7 +243,7 @@ export default function setup(env) {
 	*/
 	function toNamespace(regexp) {
 		return regexp.toString()
-			.substring(2, regexp.toString().length - 2)
+			.slice(2, regexp.toString().length - 2)
 			.replace(/\.\*\?$/, '*');
 	}
 
@@ -255,6 +258,7 @@ export default function setup(env) {
 		if (val instanceof Error) {
 			return val.stack || val.message;
 		}
+
 		return val;
 	}
 

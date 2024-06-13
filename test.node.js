@@ -1,9 +1,10 @@
 /* eslint-env mocha */
 
-const assert = require('assert');
-const util = require('util');
-const sinon = require('sinon');
-const debug = require('./src/node');
+import assert from 'node:assert';
+import util from 'node:util';
+import * as process from "node:process";
+import sinon from 'sinon';
+import debug from './src/node.js';
 
 const formatWithOptionsSpy = sinon.spy(util, 'formatWithOptions');
 beforeEach(() => {
@@ -27,14 +28,14 @@ describe('debug node', () => {
 				hideDate: true,
 				colors: true,
 				depth: 10,
-				showHidden: true
+				showHidden: true,
 			};
 			Object.assign(debug.inspectOpts, options);
-			const stdErrWriteStub = sinon.stub(process.stderr, 'write');
+			const stdErrorWriteStub = sinon.stub(process.stderr, 'write');
 			const log = debug('format with inspectOpts');
 			log('hello world2');
 			assert.deepStrictEqual(util.formatWithOptions.getCall(0).args[0], options);
-			stdErrWriteStub.restore();
+			stdErrorWriteStub.restore();
 		});
 	});
 });

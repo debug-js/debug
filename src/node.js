@@ -2,9 +2,10 @@
  * Module dependencies.
  */
 
-import tty from 'tty';
-import util from 'util';
+import tty from 'node:tty';
+import util from 'node:util';
 import humanize from 'ms';
+import supportsColor from 'supports-color';
 import setup from './common.js';
 
 /**
@@ -20,7 +21,6 @@ let colors = [6, 2, 3, 4, 5, 1];
 try {
 	// Optional dependency (as in, doesn't need to be installed, NOT like optionalDependencies in package.json)
 	// eslint-disable-next-line import/no-extraneous-dependencies
-	const supportsColor = require('supports-color');
 
 	if (supportsColor && (supportsColor.stderr || supportsColor).level >= 2) {
 		colors = [
@@ -184,7 +184,7 @@ function getDate() {
  */
 
 function log(...args) {
-	return process.stderr.write(util.formatWithOptions(exports.inspectOpts, ...args) + '\n');
+	return process.stderr.write(util.formatWithOptions(inspectOpts, ...args) + '\n');
 }
 
 /**
