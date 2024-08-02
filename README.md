@@ -137,7 +137,7 @@ When actively developing an application it can be useful to see when the time sp
 
 <img width="647" src="https://user-images.githubusercontent.com/71256/29091486-fa38524c-7c37-11e7-895f-e7ec8e1039b6.png">
 
-When stdout is not a TTY, `Date#toISOString()` is used, making it more useful for logging the debug information as shown below:
+When stdout is not a TTY, `Date#toISOString()` is used by default (when `DEBUG_TIME_FORMAT` is `iso`, see [Environment variables](#environment-variables)), making it more useful for logging the debug information as shown below:
 
 <img width="647" src="https://user-images.githubusercontent.com/71256/29091956-6bd78372-7c39-11e7-8c55-c948396d6edd.png">
 
@@ -166,7 +166,8 @@ change the behavior of the debug logging:
 | Name      | Purpose                                         |
 |-----------|-------------------------------------------------|
 | `DEBUG`   | Enables/disables specific debugging namespaces. |
-| `DEBUG_HIDE_DATE` | Hide date from debug output (non-TTY).  |
+| `DEBUG_HIDE_DATE` | *(deprecated) - use DEBUG_TIME_FORMAT=none instead* Hide date from debug output (non-TTY).  |
+| `DEBUG_TIME_FORMAT` | One of `diff` (TTY & browser default),`iso` (non-TTY default),`none`,`localized` |
 | `DEBUG_COLORS`| Whether or not to use colors in the debug output. |
 | `DEBUG_DEPTH` | Object inspection depth.                    |
 | `DEBUG_SHOW_HIDDEN` | Shows hidden properties on inspected objects. |
@@ -177,6 +178,10 @@ converted into an Options object that gets used with `%o`/`%O` formatters.
 See the Node.js documentation for
 [`util.inspect()`](https://nodejs.org/api/util.html#util_util_inspect_object_options)
 for the complete list.
+
+__Note:__ In Node, if `DEBUG_TIME_FORMAT` is set to `localized`, you can control the timezone
+by setting `process.env.TZ` to a valid [IANA timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones),
+for example: `Europe/London`
 
 ## Formatters
 
