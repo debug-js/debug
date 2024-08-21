@@ -15,8 +15,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm ci
-      - run: npm test
+      - run: npm install
+      - run: npm test:browser
 
   publish-gpr:
     needs: build
