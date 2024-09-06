@@ -151,6 +151,17 @@ function setup(env) {
 		newDebug.log = this.log;
 		return newDebug;
 	}
+	/**
+	 * Escapes special characters in a string for use in a regular expression.
+	 * @param {string} str - The string to escape.
+	 * @returns {string} The escaped string.
+	 */
+	function escapeRegexp(str) {
+		if (typeof str !== 'string') {
+			return str;
+		}
+		return str.replace(/[+?^${}()|[\]\\]/g, '\\$&');
+	}
 
 	/**
 	* Enables a debug mode by namespaces. This can include modes
@@ -160,6 +171,7 @@ function setup(env) {
 	* @api public
 	*/
 	function enable(namespaces) {
+		namespaces = escapeRegexp(namespaces);
 		createDebug.save(namespaces);
 		createDebug.namespaces = namespaces;
 
