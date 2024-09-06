@@ -191,7 +191,11 @@ function getDate() {
  */
 
 function log(...args) {
-	return process.stderr.write(util.formatWithOptions(exports.inspectOpts, ...args) + '\n');
+	if (exports.inspectOpts.useStdout) {
+		return process.stdout.write(util.formatWithOptions(exports.inspectOpts, ...args) + '\n');
+	} else {
+		return process.stderr.write(util.formatWithOptions(exports.inspectOpts, ...args) + '\n');
+	}
 }
 
 /**
