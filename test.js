@@ -2,6 +2,7 @@
 
 const assert = require('assert');
 const debug = require('./src');
+const isBrowser = !!window;
 
 describe('debug', () => {
 	it('passes a basic sanity check', () => {
@@ -41,6 +42,87 @@ describe('debug', () => {
 		log('%O', 12345);
 
 		assert.deepStrictEqual(messages.length, 3);
+	});
+
+	it('exposes public members per instance', () => {
+		const log = debug('foo');
+		assert.deepStrictEqual(Object.keys(log), [
+			'namespace',
+			'useColors',
+			'timeFormat',
+			'color',
+			'extend',
+			'destroy',
+			'enabled'
+		].concat(isBrowser ? [] : ['inspectOpts']))
+	});
+
+	describe('timeFormat', () => {
+		const regex = isBrowser ? {
+			def: /%cfoo %chello%c \+0ms/,
+			iso: /%cfoo %c\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z hello%c \+0ms/,
+			localized: /%cfoo %c\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3} \+\d{2}:\d{2}  hello%c /,
+			diff: /%cfoo %chello%c \+0ms,color: #99CC00,color: inherit,color: #99CC00/,
+			none: /%cfoo %chello%c /
+		} : {
+			def: /\x1B\[36;1mfoo \x1B\[0mhello\x1B\[36m \+0ms\x1B\[0m/,
+			iso: /\x1B\[36;1mfoo \x1B\[0m\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z hello/,
+			localized: /\x1B\[36;1mfoo \x1B\[0m\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3} \+\d{2}:\d{2}  hello/,
+			diff: /\x1B\[36;1mfoo \x1B\[0mhello\x1B\[36m \+0ms\x1B\[0m/,
+			none: /\x1B\[36;1mfoo \x1B\[0mhello/
+		}
+		
+		it('defaults to \'iso\' when non-TTY in Node, \'diff\' in browser', () => {
+			const log = debug('foo');
+			log.enabled = true;
+			let result = '';
+
+			log.log = str => result += str;
+			log('hello');
+			const match = regex.def.test(result);
+			console.log(result)
+			assert.strictEqual(match, true);
+		});
+
+		it('accepts value of \'localized\'', () => {
+			const log = debug('foo');
+			log.enabled = true;
+			log.timeFormat = 'localized';
+			let result = '';
+
+			log.log = str => result += str;
+			log('hello');
+			console.log(result)
+			const match = regex.localized.test(result);
+			assert.strictEqual(match, true);
+		});
+
+		it('accepts value of \'diff\'', () => {
+			const log = debug('foo');
+			log.enabled = true;
+			log.timeFormat = 'diff';
+			let result;
+
+			log.log = (...args) => {
+		    result = args.join(',');
+			}
+			log('hello');
+			const match = regex.diff.test(result);
+			assert.strictEqual(match, true);
+		});
+
+		it('accepts value of \'none\'', () => {
+			const log = debug('foo');
+			log.enabled = true;
+			log.timeFormat = 'none';
+			let result = '';
+
+			log.log = str => result += str;
+			log('hello');
+			console.log(result)
+			const match = regex.none.test(result);
+			assert.strictEqual(match, true);
+		});
 	});
 
 	describe('extend namespace', () => {
