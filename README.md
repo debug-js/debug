@@ -356,7 +356,7 @@ enabled or disabled.
 
 ## Usage in child processes
 
-Due to the way `debug` detects if the output is a TTY or not, colors are not shown in child processes when `stderr` is piped. A solution is to pass the `DEBUG_COLORS=1` environment variable to the child process when parent process is a TTY.  
+Due to the way `debug` detects if the output is a TTY or not, colors are not shown in child processes when `stderr` is piped. A solution is to pass the `DEBUG_COLORS=1` environment variable to the child process when parent process output is a TTY.  
 For example:
 
 ```javascript
