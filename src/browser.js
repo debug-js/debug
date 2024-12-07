@@ -225,9 +225,12 @@ function load() {
 		// XXX (@Qix-) should we be logging these?
 	}
 
-	// If debug isn't set in LS, and we're in Electron, try to load $DEBUG
-	if (!r && typeof process !== 'undefined' && 'env' in process) {
-		r = process.env.DEBUG;
+	if (!r) {
+		try {
+			r = process.env.DEBUG;
+		} catch (error) {
+			// Swallow
+		}
 	}
 
 	return r;
