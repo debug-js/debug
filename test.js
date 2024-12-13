@@ -53,6 +53,13 @@ describe('debug', () => {
 			assert.deepStrictEqual(logBar.namespace, 'foo:bar');
 		});
 
+		it('handle escaped characters', () => {
+			debug.enable('\\[*');
+			const inst = debug('[foo');
+
+			assert.deepStrictEqual(inst.enabled, true);
+		});
+
 		it('should extend namespace with custom delimiter', () => {
 			const log = debug('foo');
 			log.enabled = true;

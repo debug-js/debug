@@ -195,13 +195,15 @@ function setup(env) {
 		let starIndex = -1;
 		let matchIndex = 0;
 
+		const skippedChars = ['*', '\\']
+
 		while (searchIndex < search.length) {
-			if (templateIndex < template.length && (template[templateIndex] === search[searchIndex] || template[templateIndex] === '*')) {
-				// Match character or proceed with wildcard
-				if (template[templateIndex] === '*') {
+			if (templateIndex < template.length && (template[templateIndex] === search[searchIndex] || skippedChars.includes(template[templateIndex]))) {
+				// Match character or proceed with wildcard or backslash
+				if (skippedChars.includes(template[templateIndex])) {
 					starIndex = templateIndex;
 					matchIndex = searchIndex;
-					templateIndex++; // Skip the '*'
+					templateIndex++; // Skip the '*' or '\'
 				} else {
 					searchIndex++;
 					templateIndex++;
