@@ -272,7 +272,7 @@ log('still goes to stdout, but via console.info now');
 ```
 
 ## Extend
-You can simply extend debugger 
+You can simply extend debugger:
 ```js
 const log = require('debug')('auth');
 
