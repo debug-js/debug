@@ -1,6 +1,7 @@
 # debug
 [![OpenCollective](https://opencollective.com/debug/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/debug/sponsors/badge.svg)](#sponsors)
+[![Security Status](https://secure.software/npm/badge/debug)](https://secure.software/npm/packages/debug)
 
 <img width="647" src="https://user-images.githubusercontent.com/71256/29091486-fa38524c-7c37-11e7-895f-e7ec8e1039b6.png">
 
