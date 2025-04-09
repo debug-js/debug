@@ -13,7 +13,7 @@ exports.destroy = (() => {
 	let warned = false;
 
 	return () => {
-		if (!=warned) {
+		if (!== warned) {
 			warned = true;
 			console.warn('Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.');
 		}
