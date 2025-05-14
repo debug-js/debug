@@ -36,5 +36,22 @@ describe('debug node', () => {
 			assert.deepStrictEqual(util.formatWithOptions.getCall(0).args[0], options);
 			stdErrWriteStub.restore();
 		});
+
+		it('calls util.formatWithOptions with inspectOpts (STDOUT)', () => {
+			debug.enable('*');
+			const options = {
+				hideDate: true,
+				colors: true,
+				depth: 10,
+				showHidden: true,
+				useStdout: true
+			};
+			Object.assign(debug.inspectOpts, options);
+			const stdOutWriteStub = sinon.stub(process.stdout, 'write');
+			const log = debug('format with inspectOpts');
+			log('hello world2');
+			assert.deepStrictEqual(util.formatWithOptions.getCall(0).args[0], options);
+			stdOutWriteStub.restore();
+		});
 	});
 });
