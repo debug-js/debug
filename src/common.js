@@ -11,7 +11,9 @@ function setup(env) {
 	createDebug.disable = disable;
 	createDebug.enable = enable;
 	createDebug.enabled = enabled;
+	// no longer used, but kept accessible on createDebug for backwards-compatibility with debug <= 4.3.4
 	createDebug.humanize = require('ms');
+	createDebug.withTimeFormat = withTimeFormat;
 	createDebug.destroy = destroy;
 
 	Object.keys(env).forEach(key => {
@@ -115,6 +117,7 @@ function setup(env) {
 
 		debug.namespace = namespace;
 		debug.useColors = createDebug.useColors();
+		debug.timeFormat = createDebug.timeFormat();
 		debug.color = createDebug.selectColor(namespace);
 		debug.extend = extend;
 		debug.destroy = createDebug.destroy; // XXX Temporary. Will be removed in the next major release.
@@ -275,6 +278,41 @@ function setup(env) {
 		}
 		return val;
 	}
+
+function getLocalizedDate(dt) {
+	const offset = dt.getTimezoneOffset();
+	const offsetSign = offset <= 0 ? '+' : '-';
+
+	// some timezones have sub-hour offsets
+	let offsetMins = offset % 60
+	let offsetHours = (offset - offsetMins) / 60;
+	dt.setHours(dt.getHours() - offsetHours);
+	dt.setMinutes(dt.getMinutes() - offsetMins);
+	
+	const absMins = Math.abs(offsetMins);
+	const absHours = Math.abs(offsetHours);
+	offsetHours = offsetHours === 0 ? '00' : (absHours > 9 ? '' : '0') + absHours;
+	offsetMins = offsetMins === 0 ? '00' : (absMins > 9 ? '' : '0') + absMins;
+	// remove the 'Z' because it stands for UTC, returns in format like YYYY-MM-DD'T'HH:mm:ss.SSS +HH:mm
+	return dt.toISOString().slice(0, -1) + ' ' + offsetSign + offsetHours + ':' + offsetMins + ' ';
+}
+
+function withTimeFormat(date, str, format) {
+	switch (format) {
+		case 'iso':
+			return new Date(date).toISOString() + ' ' + str; 
+			break;
+		case 'localized':
+			return getLocalizedDate(new Date(date)) + ' ' + str;
+			break;
+		case 'none':
+			return str;
+			break;
+		case 'diff':
+		default:
+			return str + '+' + createDebug.humanize(date);
+	}
+}
 
 	/**
 	* XXX DO NOT USE. This is a temporary stub function.
