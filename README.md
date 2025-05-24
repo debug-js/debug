@@ -249,8 +249,6 @@ In Chromium-based web browsers (e.g. Brave, Chrome, and Electron), the JavaScrip
 
   By default `debug` will log to stderr, however this can be configured per-namespace by overriding the `log` method:
 
-Example [_stdout.js_](./examples/node/stdout.js):
-
 ```js
 var debug = require('debug');
 var error = debug('app:error');
@@ -258,18 +256,23 @@ var error = debug('app:error');
 // by default stderr is used
 error('goes to stderr!');
 
-var log = debug('app:log');
-// set this namespace to log via console.log
-log.log = console.log.bind(console); // don't forget to bind to console!
-log('goes to stdout');
+var log1 = debug('app:log1');
+var log2 = debug('app:log2');
+
+// set this namespace to log1 via console.log
+log1.log = console.log.bind(console); // don't forget to bind to console!
+log1('goes to stdout');
 error('still goes to stderr!');
 
-// set all output to go via console.info
-// overrides all per-namespace log settings
+// set default output to go via console.info
+// overrides all unconfigured per-namespace log settings
 debug.log = console.info.bind(console);
 error('now goes to stdout via console.info');
-log('still goes to stdout, but via console.info now');
+log1('still goes to stdout');
+log2('still goes to stdout, but via console.info now');
 ```
+
+Note: overriding the `debug` instance log will not apply to a namespace that already has a defined output stream.
 
 ## Extend
 You can simply extend debugger 
