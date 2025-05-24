@@ -132,6 +132,11 @@ exports.inspectOpts = Object.keys(process.env).filter(key => {
 			return k.toUpperCase();
 		});
 
+	if (prop === 'colorsNode') {
+		obj.colors = true;
+		return obj;
+	}
+
 	// Coerce string value into JS value
 	let val = process.env[key];
 	if (/^(yes|on|true|enabled)$/i.test(val)) {
