@@ -286,12 +286,8 @@ function setup(env) {
 
 	const s = 1000;
 	const m = s * 60;
-	const h = m * 60;
 
 	function humanize(diff) {
-		if (diff >= h) {
-			return Math.round(diff / h) + 'h';
-		}
 		if (diff >= m) {
 			return Math.round(diff / m) + 'm';
 		}
