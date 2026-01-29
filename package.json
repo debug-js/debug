@@ -3,7 +3,7 @@
   "version": "4.4.3",
   "repository": {
     "type": "git",
-    "url": "git://github.com/debug-js/debug.git"
+    "url": "https://github.com/debug-js/debug.git"
   },
   "description": "Lightweight debugging utility for Node.js and the browser",
   "keywords": [
