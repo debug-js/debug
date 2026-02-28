@@ -356,23 +356,27 @@ enabled or disabled.
 
 ## Usage in child processes
 
-Due to the way `debug` detects if the output is a TTY or not, colors are not shown in child processes when `stderr` is piped. A solution is to pass the `DEBUG_COLORS=1` environment variable to the child process.  
+Due to the way `debug` detects if the output is a TTY or not, colors are not shown in child processes when `stderr` is piped. A solution is to pass the `DEBUG_COLORS=1` environment variable to the child process when parent process output is a TTY.  
 For example:
 
 ```javascript
-worker = fork(WORKER_WRAP_PATH, [workerPath], {
+import process from 'node:process';
+import { fork } from 'node:child_process';
+
+const child = fork(modulePath, args, {
   stdio: [
-    /* stdin: */ 0,
-    /* stdout: */ 'pipe',
-    /* stderr: */ 'pipe',
-    'ipc',
+    /* stdin: inherit from parent */ 0,
+    /* stdout: use a pipe */ 'pipe',
+    /* stderr: use a pipe */ 'pipe',
+    /* specific to "fork", otherwise error will be thrown */ 'ipc',
   ],
-  env: Object.assign({}, process.env, {
-    DEBUG_COLORS: 1 // without this settings, colors won't be shown
-  }),
+  env: Object.assign({
+    DEBUG_COLORS: process.stdout.isTTY // if parent stdout is TTY show color in child process, without this settings, colors won't be shown in child process
+  }, process.env), // you may still pass in DEBUG_COLORS env when starting the parent process to override this behavior(apply to both parent and child)
 });
 
-worker.stderr.pipe(process.stderr, { end: false });
+child.stderr.pipe(process.stderr, { end: false });
+child.stdout.pipe(process.stdout, { end: false });
 ```
 
 
