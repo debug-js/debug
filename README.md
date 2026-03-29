@@ -17,7 +17,7 @@ $ npm install debug
 
 `debug` exposes a function; simply pass this function the name of your module, and it will return a decorated version of `console.error` for you to pass debug statements to. This will allow you to toggle the debug output for different parts of your module as well as the module as a whole.
 
-Example [_app.js_](./examples/node/app.js):
+Example _app.js_:
 
 ```js
 var debug = require('debug')('http')
@@ -40,7 +40,7 @@ http.createServer(function(req, res){
 require('./worker');
 ```
 
-Example [_worker.js_](./examples/node/worker.js):
+Example _worker.js_:
 
 ```js
 var a = require('debug')('worker:a')
@@ -249,7 +249,7 @@ In Chromium-based web browsers (e.g. Brave, Chrome, and Electron), the JavaScrip
 
   By default `debug` will log to stderr, however this can be configured per-namespace by overriding the `log` method:
 
-Example [_stdout.js_](./examples/node/stdout.js):
+Example _stdout.js_:
 
 ```js
 var debug = require('debug');
