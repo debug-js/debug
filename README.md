@@ -64,6 +64,37 @@ workb();
 The `DEBUG` environment variable is then used to enable these based on space or
 comma-delimited names.
 
+### ESM (ECMAScript Modules)
+
+When using ESM with `import` syntax, you can import `debug` as follows:
+
+```js
+import debug from 'debug';
+
+const log = debug('app:log');
+
+log('booting %o', 'My App');
+```
+
+If you want to use a different variable name for the factory function:
+
+```js
+import debug from 'debug';
+
+const createDebug = debug;
+const log = createDebug('app:log');
+```
+
+For TypeScript users, the same import syntax works:
+
+```ts
+import debug from 'debug';
+
+const log = debug('http');
+
+log('request received');
+```
+
 Here are some examples:
 
 <img width="647" alt="screen shot 2017-08-08 at 12 53 04 pm" src="https://user-images.githubusercontent.com/71256/29091703-a6302cdc-7c38-11e7-8304-7c0b3bc600cd.png">
