@@ -168,6 +168,7 @@ change the behavior of the debug logging:
 | `DEBUG`   | Enables/disables specific debugging namespaces. |
 | `DEBUG_HIDE_DATE` | Hide date from debug output (non-TTY).  |
 | `DEBUG_COLORS`| Whether or not to use colors in the debug output. |
+| `DEBUG_COLORS_NODE` | Assume runtime is Node, even if it looks like a browser (e.g. Electron). |
 | `DEBUG_DEPTH` | Object inspection depth.                    |
 | `DEBUG_SHOW_HIDDEN` | Shows hidden properties on inspected objects. |
 
