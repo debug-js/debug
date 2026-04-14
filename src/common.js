@@ -98,6 +98,7 @@ function setup(env) {
 				if (typeof formatter === 'function') {
 					const val = args[index];
 					match = formatter.call(self, val);
+					match = match.replace(/%/g, () => '%%');
 
 					// Now we need to remove `args[index]` since it's inlined in the `format`
 					args.splice(index, 1);
