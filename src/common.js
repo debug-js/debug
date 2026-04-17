@@ -72,7 +72,7 @@ function setup(env) {
 			const self = debug;
 
 			// Set `diff` timestamp
-			const curr = Number(new Date());
+			const curr = Date.now();
 			const ms = curr - (prevTime || curr);
 			self.diff = ms;
 			self.prev = prevTime;
