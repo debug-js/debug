@@ -80,6 +80,80 @@ describe('debug', () => {
 		});
 	});
 
+	describe('percent signs in formatted output (#766, #687)', () => {
+		it('should not re-interpret % in object keys/values with %o', () => {
+			const log = debug('test');
+			log.enabled = true;
+
+			const messages = [];
+			log.log = (...args) => messages.push(args);
+
+			log('%o', {'%j': '%j'});
+
+			assert.strictEqual(messages.length, 1);
+			const output = messages[0].join(' ');
+			assert.ok(output.includes('%j'), 'should contain literal %j in output');
+		});
+
+		it('should preserve percent in values with %o', () => {
+			const log = debug('test');
+			log.enabled = true;
+
+			const messages = [];
+			log.log = (...args) => messages.push(args);
+
+			log('%o', {key: '100%'});
+
+			assert.strictEqual(messages.length, 1);
+			const output = messages[0].join(' ');
+			assert.ok(output.includes('100%'), 'should contain literal 100% in output');
+		});
+
+		it('should handle mixed specifiers with % in objects', () => {
+			const log = debug('test');
+			log.enabled = true;
+
+			const messages = [];
+			log.log = (...args) => messages.push(args);
+
+			log('%s %o', 'hello', {'%d': 1});
+
+			assert.strictEqual(messages.length, 1);
+			const output = messages[0].join(' ');
+			assert.ok(output.includes('hello'), 'should contain hello');
+			assert.ok(output.includes('%d'), 'should contain literal %d in object');
+		});
+
+		it('should still format normal objects with %o', () => {
+			const log = debug('test');
+			log.enabled = true;
+
+			const messages = [];
+			log.log = (...args) => messages.push(args);
+
+			log('%o', {a: 1, b: 'test'});
+
+			assert.strictEqual(messages.length, 1);
+			const output = messages[0].join(' ');
+			assert.ok(output.includes('a'), 'should contain key a');
+			assert.ok(output.includes('test'), 'should contain value test');
+		});
+
+		it('should not let %j in data consume extra arguments (#687)', () => {
+			const log = debug('test');
+			log.enabled = true;
+
+			const messages = [];
+			log.log = (...args) => messages.push(args);
+
+			log('%o', ['%j']);
+
+			assert.strictEqual(messages.length, 1);
+			const output = messages[0].join(' ');
+			assert.ok(output.includes('%j'), 'should contain literal %j in array output');
+		});
+	});
+
 	describe('rebuild namespaces string (disable)', () => {
 		it('handle names, skips, and wildcards', () => {
 			debug.enable('test,abc*,-abc');
