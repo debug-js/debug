@@ -29,6 +29,16 @@ describe('debug', () => {
 		assert.deepStrictEqual(debug('test:67890').enabled, false);
 	});
 
+	it('enables multiple space-separated namespaces', () => {
+		debug.disable('*');
+
+		debug.enable('APP_X APP_Y APP_Z');
+		assert.deepStrictEqual(debug('APP_X').enabled, true);
+		assert.deepStrictEqual(debug('APP_Y').enabled, true);
+		assert.deepStrictEqual(debug('APP_Z').enabled, true);
+		assert.deepStrictEqual(debug('APP_W').enabled, false);
+	});
+
 	it('uses custom log function', () => {
 		const log = debug('test');
 		log.enabled = true;
