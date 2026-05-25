@@ -136,5 +136,13 @@ describe('debug', () => {
 			inst('@test4@');
 			assert.deepStrictEqual(messages, ['test2', 'test3']);
 		});
+
+		it('does not hang on regex metacharacters in DEBUG', () => {
+			debug.enable('(a+)+$');
+			const start = Date.now();
+			assert.strictEqual(debug.enabled('a'.repeat(30) + 'b'), false);
+			assert(Date.now() - start < 100);
+			debug.disable('*');
+		});
 	});
 });
