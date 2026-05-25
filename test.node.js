@@ -36,5 +36,19 @@ describe('debug node', () => {
 			assert.deepStrictEqual(util.formatWithOptions.getCall(0).args[0], options);
 			stdErrWriteStub.restore();
 		});
+
+		it('honors hideDate on debug instance inspectOpts', () => {
+			debug.enable('*');
+			const stdErrWriteStub = sinon.stub(process.stderr, 'write');
+			const log = debug('hide date instance');
+			log.useColors = false;
+			log.inspectOpts.hideDate = true;
+			log('hello world3');
+			assert.strictEqual(
+				stdErrWriteStub.getCall(0).args[0],
+				'hide date instance hello world3\n'
+			);
+			stdErrWriteStub.restore();
+		});
 	});
 });

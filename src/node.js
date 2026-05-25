@@ -165,7 +165,7 @@ function useColors() {
  */
 
 function formatArgs(args) {
-	const {namespace: name, useColors} = this;
+	const {namespace: name, useColors, inspectOpts} = this;
 
 	if (useColors) {
 		const c = this.color;
@@ -175,12 +175,12 @@ function formatArgs(args) {
 		args[0] = prefix + args[0].split('\n').join('\n' + prefix);
 		args.push(colorCode + 'm+' + module.exports.humanize(this.diff) + '\u001B[0m');
 	} else {
-		args[0] = getDate() + name + ' ' + args[0];
+		args[0] = getDate(inspectOpts) + name + ' ' + args[0];
 	}
 }
 
-function getDate() {
-	if (exports.inspectOpts.hideDate) {
+function getDate(inspectOpts) {
+	if (inspectOpts && inspectOpts.hideDate) {
 		return '';
 	}
 	return new Date().toISOString() + ' ';
