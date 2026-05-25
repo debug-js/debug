@@ -50,6 +50,34 @@ function setup(env) {
 	}
 	createDebug.selectColor = selectColor;
 
+	function isPrintfOptions(value) {
+		return (
+			value !== null &&
+			typeof value === 'object' &&
+			!Array.isArray(value) &&
+			Object.prototype.hasOwnProperty.call(value, 'printfFormatting')
+		);
+	}
+
+	function resolvePrintfFormatting(args, defaultValue) {
+		const last = args[args.length - 1];
+
+		if (!isPrintfOptions(last)) {
+			return defaultValue !== false;
+		}
+
+		args.pop();
+		return last.printfFormatting !== false;
+	}
+
+	function escapePrintfFormatting(args) {
+		for (let i = 0; i < args.length; i++) {
+			if (typeof args[i] === 'string') {
+				args[i] = args[i].replace(/%/g, '%%');
+			}
+		}
+	}
+
 	/**
 	* Create a debugger with the given `namespace`.
 	*
@@ -70,6 +98,8 @@ function setup(env) {
 			}
 
 			const self = debug;
+			const savedPrintfFormatting = self.printfFormatting;
+			self.printfFormatting = resolvePrintfFormatting(args, savedPrintfFormatting);
 
 			// Set `diff` timestamp
 			const curr = Number(new Date());
@@ -106,11 +136,19 @@ function setup(env) {
 				return match;
 			});
 
+			if (self.printfFormatting === false) {
+				escapePrintfFormatting(args);
+			}
+
 			// Apply env-specific formatting (colors, etc.)
 			createDebug.formatArgs.call(self, args);
 
 			const logFn = self.log || createDebug.log;
-			logFn.apply(self, args);
+			try {
+				logFn.apply(self, args);
+			} finally {
+				self.printfFormatting = savedPrintfFormatting;
+			}
 		}
 
 		debug.namespace = namespace;

@@ -43,6 +43,37 @@ describe('debug', () => {
 		assert.deepStrictEqual(messages.length, 3);
 	});
 
+	describe('printf formatting', () => {
+		it('should disable printf formatting with per-call options', () => {
+			const log = debug('sql');
+			log.enabled = true;
+
+			const messages = [];
+			log.log = (...args) => messages.push(args);
+
+			log('LIKE %fauzi%', {extra: true}, {printfFormatting: false});
+
+			assert.strictEqual(messages.length, 1);
+			assert.match(messages[0][0], /LIKE %%fauzi%%/);
+			assert.deepStrictEqual(messages[0][1], {extra: true});
+		});
+
+		it('should disable printf formatting on the debug instance', () => {
+			const log = debug('sql');
+			log.enabled = true;
+			log.printfFormatting = false;
+
+			const messages = [];
+			log.log = (...args) => messages.push(args);
+
+			log('LIKE %fauzi%', {extra: true});
+
+			assert.strictEqual(messages.length, 1);
+			assert.match(messages[0][0], /LIKE %%fauzi%%/);
+			assert.deepStrictEqual(messages[0][1], {extra: true});
+		});
+	});
+
 	describe('extend namespace', () => {
 		it('should extend namespace', () => {
 			const log = debug('foo');

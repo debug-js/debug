@@ -36,5 +36,16 @@ describe('debug node', () => {
 			assert.deepStrictEqual(util.formatWithOptions.getCall(0).args[0], options);
 			stdErrWriteStub.restore();
 		});
+
+		it('does not interpret printf specifiers when disabled', () => {
+			debug.enable('*');
+			const stdErrWriteStub = sinon.stub(process.stderr, 'write');
+			const log = debug('sql');
+			log('LIKE %fauzi%', {extra: true}, {printfFormatting: false});
+			const output = stdErrWriteStub.getCall(0).args[0];
+			assert.match(output, /LIKE %fauzi%/);
+			assert.doesNotMatch(output, /NaN/);
+			stdErrWriteStub.restore();
+		});
 	});
 });
