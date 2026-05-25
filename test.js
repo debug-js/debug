@@ -136,5 +136,16 @@ describe('debug', () => {
 			inst('@test4@');
 			assert.deepStrictEqual(messages, ['test2', 'test3']);
 		});
+
+		it('roundtrips wildcard namespaces from disable() to enable()', () => {
+			debug.enable('*:error:*');
+			assert.deepStrictEqual(debug('test:error:foo').enabled, true);
+			assert.deepStrictEqual(debug('other:warn:bar').enabled, false);
+
+			const namespaces = debug.disable();
+			assert.deepStrictEqual(namespaces, '*:error:*');
+			assert.doesNotThrow(() => debug.enable(namespaces));
+			assert.deepStrictEqual(debug('test:error:foo').enabled, true);
+		});
 	});
 });
