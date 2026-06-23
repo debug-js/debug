@@ -161,7 +161,7 @@ function setup(env) {
 	*/
 	function enable(namespaces) {
 		createDebug.save(namespaces);
-		createDebug.namespaces = namespaces;
+		createDebug.namespaces = typeof namespaces === 'string' ? namespaces : '';
 
 		createDebug.names = [];
 		createDebug.skips = [];

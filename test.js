@@ -137,4 +137,33 @@ describe('debug', () => {
 			assert.deepStrictEqual(messages, ['test2', 'test3']);
 		});
 	});
+
+	describe('enabled before any explicit enable() call', () => {
+		it('returns false (not undefined) when DEBUG env var is absent', () => {
+			// Regression: when enable() is called with undefined (e.g. DEBUG is
+			// not set), createDebug.namespaces is set to undefined.  The per-instance
+			// cache initialises namespacesCache to undefined too, so the cache
+			// comparison `namespacesCache !== createDebug.namespaces` evaluates to
+			// false and enabled() is never invoked, leaving enabledCache as
+			// undefined rather than false.
+			const savedDebug = process.env.DEBUG;
+			delete process.env.DEBUG;
+			// Re-create a fresh debug factory with no DEBUG env var
+			Object.keys(require.cache).forEach(k => {
+				if (k.includes('debug/src')) {
+					delete require.cache[k];
+				}
+			});
+			const freshDebug = require('./src');
+			const log = freshDebug('test:namespace');
+			assert.strictEqual(typeof log.enabled, 'boolean',
+				'enabled should be a boolean, not ' + typeof log.enabled);
+			assert.strictEqual(log.enabled, false,
+				'enabled should be false when no namespaces are active');
+			// Restore
+			if (savedDebug !== undefined) {
+				process.env.DEBUG = savedDebug;
+			}
+		});
+	});
 });
