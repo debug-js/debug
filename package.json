@@ -60,5 +60,9 @@
     "rules": {
       "import/extensions": "off"
     }
+  },
+  "homepage": "https://github.com/visionmedia/debug",
+  "bugs": {
+    "url": "https://github.com/visionmedia/debug/issues"
   }
 }
