@@ -171,6 +171,10 @@ change the behavior of the debug logging:
 | `DEBUG_DEPTH` | Object inspection depth.                    |
 | `DEBUG_SHOW_HIDDEN` | Shows hidden properties on inspected objects. |
 
+If `DEBUG` is set to an empty value, `debug` treats it the same as disabling all
+namespaces and removes `process.env.DEBUG` when it saves that disabled state.
+Use a non-empty disabled value such as `DEBUG=,` when other code must still be
+able to observe that the environment variable was set.
 
 __Note:__ The environment variables beginning with `DEBUG_` end up being
 converted into an Options object that gets used with `%o`/`%O` formatters.
