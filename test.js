@@ -118,6 +118,16 @@ describe('debug', () => {
 			assert.deepStrictEqual(oldSkips.map(String), debug.skips.map(String));
 		});
 
+		it('round trips wildcard namespaces through enable', () => {
+			debug.enable('*:error:*,-*:error:ignore');
+			const namespaces = debug.disable();
+
+			assert.deepStrictEqual(namespaces, '*:error:*,-*:error:ignore');
+			assert.doesNotThrow(() => debug.enable(namespaces));
+			assert.deepStrictEqual(debug.enabled('api:error:db'), true);
+			assert.deepStrictEqual(debug.enabled('api:error:ignore'), false);
+		});
+
 		it('handles re-enabling existing instances', () => {
 			debug.disable('*');
 			const inst = debug('foo');
