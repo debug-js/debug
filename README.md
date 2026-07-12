@@ -247,7 +247,9 @@ In Chromium-based web browsers (e.g. Brave, Chrome, and Electron), the JavaScrip
 
 ## Output streams
 
-  By default `debug` will log to stderr, however this can be configured per-namespace by overriding the `log` method:
+By default `debug` will log to stderr. This can be configured globally by
+overriding `debug.log`, or per namespace by overriding the namespace's `log`
+method. A per-namespace `log` method takes precedence over `debug.log`.
 
 Example _stdout.js_:
 
@@ -264,11 +266,11 @@ log.log = console.log.bind(console); // don't forget to bind to console!
 log('goes to stdout');
 error('still goes to stderr!');
 
-// set all output to go via console.info
-// overrides all per-namespace log settings
+// set the default output to console.info
+// namespaces with their own log method keep using it
 debug.log = console.info.bind(console);
 error('now goes to stdout via console.info');
-log('still goes to stdout, but via console.info now');
+log('still goes to stdout via console.log');
 ```
 
 ## Extend
