@@ -46,6 +46,9 @@
     "sinon": "^14.0.0",
     "xo": "^0.23.0"
   },
+  "peerDependencies": {
+    "supports-color": "^8.0.0"
+  },
   "peerDependenciesMeta": {
     "supports-color": {
       "optional": true
