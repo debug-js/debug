@@ -148,6 +148,12 @@ exports.inspectOpts = Object.keys(process.env).filter(key => {
 	return obj;
 }, {});
 
+// `DEBUG_HIDE_DATE` is commonly set as a flag without a value.
+if (Object.prototype.hasOwnProperty.call(process.env, 'DEBUG_HIDE_DATE') &&
+	process.env.DEBUG_HIDE_DATE === '') {
+	exports.inspectOpts.hideDate = true;
+}
+
 /**
  * Is stdout a TTY? Colored output is enabled when `true`.
  */
