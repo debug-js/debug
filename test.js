@@ -43,6 +43,19 @@ describe('debug', () => {
 		assert.deepStrictEqual(messages.length, 3);
 	});
 
+	it('escapes percent signs returned by custom formatters', () => {
+		const log = debug('test');
+		log.enabled = true;
+		debug.formatters.x = () => '%j';
+
+		const messages = [];
+		log.log = (...args) => messages.push(args);
+		log('%x', null, 1);
+
+		assert(messages[0][0].includes('%%j'));
+		delete debug.formatters.x;
+	});
+
 	describe('extend namespace', () => {
 		it('should extend namespace', () => {
 			const log = debug('foo');
