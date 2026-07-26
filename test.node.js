@@ -36,5 +36,22 @@ describe('debug node', () => {
 			assert.deepStrictEqual(util.formatWithOptions.getCall(0).args[0], options);
 			stdErrWriteStub.restore();
 		});
+
+		it('does not interpret percent signs in formatter output', () => {
+			debug.enable('*');
+			const options = {
+				hideDate: true,
+				colors: false
+			};
+			Object.assign(debug.inspectOpts, options);
+			const stdErrWriteStub = sinon.stub(process.stderr, 'write');
+			const log = debug('percent');
+			log('%o', {'%j': '%j %j %%'}, 1, 2, 3);
+			assert.strictEqual(
+				stdErrWriteStub.firstCall.firstArg,
+				'percent { \'%j\': \'%j %j %%\' } 1 2 3\n'
+			);
+			stdErrWriteStub.restore();
+		});
 	});
 });
