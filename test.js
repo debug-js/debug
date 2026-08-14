@@ -118,6 +118,25 @@ describe('debug', () => {
 			assert.deepStrictEqual(oldSkips.map(String), debug.skips.map(String));
 		});
 
+		it('round-trips wildcard namespaces including skips', () => {
+			debug.enable('*:error:*,-*:error:ignore');
+			const namespaces = debug.disable();
+			assert.deepStrictEqual(namespaces, '*:error:*,-*:error:ignore');
+			assert.doesNotThrow(() => debug.enable(namespaces));
+			assert.deepStrictEqual(debug.enabled('api:error:db'), true);
+			assert.deepStrictEqual(debug.enabled('api:error:ignore'), false);
+			assert.deepStrictEqual(debug.enabled('api:warn:db'), false);
+		});
+
+		it('accepts historic disable() wildcard encoding', () => {
+			debug.enable('.*?:error:*,-.*?:verbose');
+			const namespaces = debug.disable();
+			assert.deepStrictEqual(namespaces, '*:error:*,-*:verbose');
+			assert.doesNotThrow(() => debug.enable(namespaces));
+			assert.deepStrictEqual(debug.enabled('api:error:db'), true);
+			assert.deepStrictEqual(debug.enabled('api:verbose'), false);
+		});
+
 		it('handles re-enabling existing instances', () => {
 			debug.disable('*');
 			const inst = debug('foo');
