@@ -4,6 +4,10 @@ const assert = require('assert');
 const debug = require('./src');
 
 describe('debug', () => {
+	beforeEach(() => {
+		debug.disable();
+	});
+
 	it('passes a basic sanity check', () => {
 		const log = debug('test');
 		log.enabled = true;
@@ -27,6 +31,68 @@ describe('debug', () => {
 		debug.enable('test:12345');
 		assert.deepStrictEqual(debug('test:12345').enabled, true);
 		assert.deepStrictEqual(debug('test:67890').enabled, false);
+	});
+
+	describe('enable() does not flush existing namespaces (#425)', () => {
+		it('merges subsequent enable() calls with previously enabled namespaces', () => {
+			debug.enable('foo');
+			debug.enable('bar');
+
+			assert.deepStrictEqual(debug.enabled('foo'), true);
+			assert.deepStrictEqual(debug.enabled('bar'), true);
+		});
+
+		it('preserves namespaces from a prior enable() like DEBUG=foo then enable("bar")', () => {
+			debug.enable('foo');
+			debug.enable('bar');
+
+			assert.deepStrictEqual(debug.enabled('foo'), true);
+			assert.deepStrictEqual(debug.enabled('bar'), true);
+			assert.deepStrictEqual(debug.disable(), 'foo,bar');
+		});
+
+		it('does not drop earlier namespaces when a later module enables its own', () => {
+			debug.enable('my-module');
+			debug.enable('my-dep-module');
+
+			assert.deepStrictEqual(debug.enabled('my-module'), true);
+			assert.deepStrictEqual(debug.enabled('my-dep-module'), true);
+		});
+
+		it('can still replace the set via disable() then enable()', () => {
+			debug.enable('foo');
+			debug.disable();
+			debug.enable('bar');
+
+			assert.deepStrictEqual(debug.enabled('foo'), false);
+			assert.deepStrictEqual(debug.enabled('bar'), true);
+		});
+
+		it('adds skip patterns without dropping other namespaces', () => {
+			debug.enable('foo');
+			debug.enable('-foo');
+			debug.enable('bar');
+
+			assert.deepStrictEqual(debug.enabled('foo'), false);
+			assert.deepStrictEqual(debug.enabled('bar'), true);
+		});
+
+		it('re-enabling a skipped namespace removes the skip', () => {
+			debug.enable('foo');
+			debug.enable('-foo');
+			assert.deepStrictEqual(debug.enabled('foo'), false);
+
+			debug.enable('foo');
+			assert.deepStrictEqual(debug.enabled('foo'), true);
+		});
+
+		it('does not duplicate namespaces when enable() is repeated', () => {
+			debug.enable('foo');
+			debug.enable('foo');
+			debug.enable('bar,foo');
+
+			assert.deepStrictEqual(debug.disable(), 'foo,bar');
+		});
 	});
 
 	it('uses custom log function', () => {
