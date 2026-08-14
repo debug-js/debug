@@ -174,11 +174,19 @@ function setup(env) {
 
 		for (const ns of split) {
 			if (ns[0] === '-') {
-				createDebug.skips.push(ns.slice(1));
+				createDebug.skips.push(toNamespace(ns.slice(1)));
 			} else {
-				createDebug.names.push(ns);
+				createDebug.names.push(toNamespace(ns));
 			}
 		}
+	}
+
+	// Invert historic '*' → '.*?' encoding so disable()/enable() can round-trip.
+	function toNamespace(namespace) {
+		const value = namespace instanceof RegExp ?
+			namespace.source.replace(/^\^/, '').replace(/\$$/, '') :
+			String(namespace);
+		return value.replace(/\.\*\?/g, '*');
 	}
 
 	/**
@@ -232,8 +240,8 @@ function setup(env) {
 	*/
 	function disable() {
 		const namespaces = [
-			...createDebug.names,
-			...createDebug.skips.map(namespace => '-' + namespace)
+			...createDebug.names.map(toNamespace),
+			...createDebug.skips.map(namespace => '-' + toNamespace(namespace))
 		].join(',');
 		createDebug.enable('');
 		return namespaces;
