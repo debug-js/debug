@@ -313,11 +313,19 @@ Usage :
 `enable(namespaces)`  
 `namespaces` can include modes separated by a colon and wildcards.
    
-Note that calling `enable()` completely overrides previously set DEBUG variable : 
+Calling `enable()` merges with previously set namespaces (including `DEBUG`)
+instead of replacing them:
 
 ```
-$ DEBUG=foo node -e 'var dbg = require("debug"); dbg.enable("bar"); console.log(dbg.enabled("foo"))'
-=> false
+$ DEBUG=foo node -e 'var dbg = require("debug"); dbg.enable("bar"); console.log(dbg.enabled("foo"), dbg.enabled("bar"))'
+=> true true
+```
+
+To replace the set entirely, disable first:
+
+```js
+debug.disable();
+debug.enable('bar');
 ```
 
 `disable()`
