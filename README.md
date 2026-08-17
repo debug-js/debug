@@ -214,8 +214,8 @@ debug('this is hex: %h', new Buffer('hello world'))
 
 ## Browser Support
 
-You can build a browser-ready script using [browserify](https://github.com/substack/node-browserify),
-or just use the [browserify-as-a-service](https://wzrd.in/) [build](https://wzrd.in/standalone/debug@latest),
+You can build a browser-ready script using [browserify](https://github.com/browserify/browserify),
+or just use the [jsDelivr](https://www.jsdelivr.com/package/npm/debug) [build](https://cdn.jsdelivr.net/npm/debug@latest/src/browser.js),
 if you don't want to build it yourself.
 
 Debug's enable state is currently persisted by `localStorage`.
