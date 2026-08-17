@@ -207,8 +207,8 @@ createDebug.formatters.h = (v) => {
 
 // …elsewhere
 const debug = createDebug('foo')
-debug('this is hex: %h', new Buffer('hello world'))
-//   foo this is hex: 68656c6c6f20776f726c6421 +0ms
+debug('this is hex: %h', Buffer.from('hello world'))
+//   foo this is hex: 68656c6c6f20776f726c64 +0ms
 ```
 
 
