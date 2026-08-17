@@ -188,7 +188,8 @@ Below are the officially supported formatters:
 | `%O`      | Pretty-print an Object on multiple lines. |
 | `%o`      | Pretty-print an Object all on a single line. |
 | `%s`      | String. |
-| `%d`      | Number (both integer and float). |
+| `%d`      | Integer (printf `%d`; floats are truncated toward zero). |
+| `%f`      | Floating-point number. |
 | `%j`      | JSON. Replaced with the string '[Circular]' if the argument contains circular references. |
 | `%%`      | Single percent sign ('%'). This does not consume an argument. |
 
