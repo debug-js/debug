@@ -160,12 +160,22 @@ function setup(env) {
 	* @api public
 	*/
 	function enable(namespaces) {
+		// Normalize: empty/null/undefined means "disable all" (full replace with empty).
+		// Non-empty string means "merge" with existing namespaces.
+		// See: https://github.com/debug-js/debug/issues/425
+		const isReset = !namespaces || (typeof namespaces === 'string' && namespaces.trim() === '');
+
 		createDebug.save(namespaces);
 		createDebug.namespaces = namespaces;
 
-		createDebug.names = [];
-		createDebug.skips = [];
+		if (isReset) {
+			createDebug.names = [];
+			createDebug.skips = [];
+			return;
+		}
 
+		// Merge: preserve previously enabled namespaces when enable() is called
+		// again (e.g., `debug.enable('bar')` after `DEBUG=foo` won't clear 'foo').
 		const split = (typeof namespaces === 'string' ? namespaces : '')
 			.trim()
 			.replace(/\s+/g, ',')
@@ -174,8 +184,10 @@ function setup(env) {
 
 		for (const ns of split) {
 			if (ns[0] === '-') {
-				createDebug.skips.push(ns.slice(1));
-			} else {
+				if (!createDebug.skips.includes(ns.slice(1))) {
+					createDebug.skips.push(ns.slice(1));
+				}
+			} else if (!createDebug.names.includes(ns)) {
 				createDebug.names.push(ns);
 			}
 		}

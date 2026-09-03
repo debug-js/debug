@@ -27,6 +27,12 @@ describe('debug', () => {
 		debug.enable('test:12345');
 		assert.deepStrictEqual(debug('test:12345').enabled, true);
 		assert.deepStrictEqual(debug('test:67890').enabled, false);
+
+		// Enable() should merge, not replace (issue #425)
+		debug.enable('test:67890');
+		assert.deepStrictEqual(debug('test:12345').enabled, true);
+		assert.deepStrictEqual(debug('test:67890').enabled, true);
+		debug.disable();
 	});
 
 	it('uses custom log function', () => {
@@ -82,12 +88,14 @@ describe('debug', () => {
 
 	describe('rebuild namespaces string (disable)', () => {
 		it('handle names, skips, and wildcards', () => {
+			debug.disable();
 			debug.enable('test,abc*,-abc');
 			const namespaces = debug.disable();
 			assert.deepStrictEqual(namespaces, 'test,abc*,-abc');
 		});
 
 		it('handles empty', () => {
+			debug.disable();
 			debug.enable('');
 			const namespaces = debug.disable();
 			assert.deepStrictEqual(namespaces, '');
@@ -96,18 +104,21 @@ describe('debug', () => {
 		});
 
 		it('handles all', () => {
+			debug.disable();
 			debug.enable('*');
 			const namespaces = debug.disable();
 			assert.deepStrictEqual(namespaces, '*');
 		});
 
 		it('handles skip all', () => {
+			debug.disable();
 			debug.enable('-*');
 			const namespaces = debug.disable();
 			assert.deepStrictEqual(namespaces, '-*');
 		});
 
 		it('names+skips same with new string', () => {
+			debug.disable();
 			debug.enable('test,abc*,-abc');
 			const oldNames = [...debug.names];
 			const oldSkips = [...debug.skips];
@@ -119,6 +130,7 @@ describe('debug', () => {
 		});
 
 		it('handles re-enabling existing instances', () => {
+			debug.disable();
 			debug.disable('*');
 			const inst = debug('foo');
 			const messages = [];
