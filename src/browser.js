@@ -199,6 +199,10 @@ exports.log = console.debug || console.log || (() => {});
  */
 function save(namespaces) {
 	try {
+		if (!exports.storage) {
+			return;
+		}
+
 		if (namespaces) {
 			exports.storage.setItem('debug', namespaces);
 		} else {
@@ -219,7 +223,9 @@ function save(namespaces) {
 function load() {
 	let r;
 	try {
-		r = exports.storage.getItem('debug') || exports.storage.getItem('DEBUG') ;
+		if (exports.storage) {
+			r = exports.storage.getItem('debug') || exports.storage.getItem('DEBUG');
+		}
 	} catch (error) {
 		// Swallow
 		// XXX (@Qix-) should we be logging these?
@@ -248,7 +254,9 @@ function localstorage() {
 	try {
 		// TVMLKit (Apple TV JS Runtime) does not have a window object, just localStorage in the global context
 		// The Browser also has localStorage in the global context.
-		return localStorage;
+		if (typeof localStorage !== 'undefined') {
+			return localStorage;
+		}
 	} catch (error) {
 		// Swallow
 		// XXX (@Qix-) should we be logging these?
