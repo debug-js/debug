@@ -228,6 +228,16 @@ localStorage.debug = 'worker:*'
 
 And then refresh the page.
 
+Web Workers and SharedWorkers do not have access to `localStorage`. Instead, call
+[`debug.enable()`](#set-dynamically) inside the worker to enable the namespaces you
+want to log:
+
+```js
+debug.enable('worker:*');
+```
+
+This setting is not persisted, so enable the namespaces again when the worker starts.
+
 ```js
 a = debug('worker:a');
 b = debug('worker:b');
