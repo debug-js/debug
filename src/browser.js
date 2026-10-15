@@ -137,7 +137,9 @@ function useColors() {
 		// https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
 		(typeof navigator !== 'undefined' && navigator.userAgent && (m = navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)) && parseInt(m[1], 10) >= 31) ||
 		// Double check webkit in userAgent just in case we are in a worker
-		(typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
+		(typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/)) ||
+		// Check if we're being used in ReactNative 
+	    (typeof navigator !== 'undefined' && navigator.product && navigator.product.toLowerCase() === 'reactnative');
 }
 
 /**
