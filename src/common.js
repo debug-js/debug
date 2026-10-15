@@ -86,12 +86,32 @@ function setup(env) {
 				args.unshift('%O');
 			}
 
+			// Count how many arguments the downstream printf-style logger
+			// (`util.formatWithOptions` in Node, `console.*` in browsers) will be
+			// left with after our own `formatters` consume theirs. This decides how
+			// an escaped `%%` must be handled: those loggers only collapse `%%` to a
+			// literal `%` when at least one argument is present, so when arguments
+			// remain we must leave `%%` untouched and let them perform the single,
+			// correct collapse. Collapsing it here as well would re-process the
+			// escape and shift the boundary of any specifier that follows it (e.g.
+			// `debug('%%%s', 'X')` should render `%X`, matching `util.format`).
+			let downstreamArgs = args.length - 1;
+			args[0].replace(/%([a-zA-Z%])/g, (match, format) => {
+				if (match !== '%%' && typeof createDebug.formatters[format] === 'function') {
+					downstreamArgs--;
+				}
+				return match;
+			});
+
 			// Apply any `formatters` transformations
 			let index = 0;
 			args[0] = args[0].replace(/%([a-zA-Z%])/g, (match, format) => {
 				// If we encounter an escaped % then don't increase the array index
 				if (match === '%%') {
-					return '%';
+					// Defer collapsing to the downstream logger when it still has
+					// arguments to format; otherwise it would leave `%%` verbatim,
+					// so collapse it ourselves.
+					return downstreamArgs > 0 ? match : '%';
 				}
 				index++;
 				const formatter = createDebug.formatters[format];
