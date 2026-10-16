@@ -99,9 +99,13 @@ function setup(env) {
 					const val = args[index];
 					match = formatter.call(self, val);
 
-					// Now we need to remove `args[index]` since it's inlined in the `format`
-					args.splice(index, 1);
-					index--;
+					// Replace the original argument with the formatted string
+					// and use %s as a placeholder so that any `%` characters in
+					// the formatted output are not re-interpreted as format
+					// specifiers by the downstream logger (Node's
+					// `util.formatWithOptions` or the browser console).
+					args[index] = match;
+					match = '%s';
 				}
 				return match;
 			});
