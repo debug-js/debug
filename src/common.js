@@ -247,6 +247,10 @@ function setup(env) {
 	* @api public
 	*/
 	function enabled(name) {
+		if (name[name.length - 1] === '*') {
+			return true;
+		}
+
 		for (const skip of createDebug.skips) {
 			if (matchesTemplate(name, skip)) {
 				return false;

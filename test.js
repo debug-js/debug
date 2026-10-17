@@ -29,6 +29,22 @@ describe('debug', () => {
 		assert.deepStrictEqual(debug('test:67890').enabled, false);
 	});
 
+	describe('namespaces ending with *', () => {
+		it('are always enabled when no namespaces are enabled', () => {
+			debug.enable('');
+			assert.deepStrictEqual(debug.enabled('foo*'), true);
+			assert.deepStrictEqual(debug('foo*').enabled, true);
+			assert.deepStrictEqual(debug('foo').enabled, false);
+		});
+
+		it('are always enabled regardless of the enabled namespaces', () => {
+			debug.enable('something-else');
+			assert.deepStrictEqual(debug.enabled('foo*'), true);
+			assert.deepStrictEqual(debug('foo*').enabled, true);
+			assert.deepStrictEqual(debug('foo').enabled, false);
+		});
+	});
+
 	it('uses custom log function', () => {
 		const log = debug('test');
 		log.enabled = true;
