@@ -29,6 +29,22 @@ describe('debug', () => {
 		assert.deepStrictEqual(debug('test:67890').enabled, false);
 	});
 
+	it('allows an instance to opt out of a globally enabled namespace', () => {
+		const previous = debug.namespaces;
+		try {
+			debug.enable('app:*');
+			const log = debug('app:secret');
+			const messages = [];
+			log.log = message => messages.push(message);
+			log.enabled = false;
+			assert.strictEqual(log.enabled, false);
+			log('hidden');
+			assert.deepStrictEqual(messages, []);
+		} finally {
+			debug.enable(previous);
+		}
+	});
+
 	it('uses custom log function', () => {
 		const log = debug('test');
 		log.enabled = true;
