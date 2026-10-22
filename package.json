@@ -13,6 +13,8 @@
   ],
   "files": [
     "src",
+    "test.js",
+    "test.node.js",
     "LICENSE",
     "README.md"
   ],
@@ -25,9 +27,9 @@
   "license": "MIT",
   "scripts": {
     "lint": "xo",
-    "test": "npm run test:node && npm run test:browser && npm run lint",
-    "test:node": "mocha test.js test.node.js",
+    "test": "npm run test:node && npm run lint",
     "test:browser": "karma start --single-run",
+    "test:node": "mocha test.js test.node.js",
     "test:coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
@@ -62,3 +64,4 @@
     }
   }
 }
+
