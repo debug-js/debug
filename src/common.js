@@ -153,32 +153,64 @@ function setup(env) {
 	}
 
 	/**
+	* Parse a namespace list into individual tokens.
+	*
+	* @param {String} namespaces
+	* @return {Array}
+	* @api private
+	*/
+	function parseNamespaces(namespaces) {
+		return (typeof namespaces === 'string' ? namespaces : '')
+			.trim()
+			.replace(/\s+/g, ',')
+			.split(',')
+			.filter(Boolean);
+	}
+
+	/**
+	* Serialize the current names/skips into a namespace string.
+	*
+	* @return {String}
+	* @api private
+	*/
+	function formatNamespaces() {
+		return [
+			...createDebug.names,
+			...createDebug.skips.map(namespace => '-' + namespace)
+		].join(',');
+	}
+
+	/**
 	* Enables a debug mode by namespaces. This can include modes
 	* separated by a colon and wildcards.
+	*
+	* New namespaces are merged with those already enabled.
+	* Call `disable()` first to replace the set instead of extending it.
 	*
 	* @param {String} namespaces
 	* @api public
 	*/
 	function enable(namespaces) {
-		createDebug.save(namespaces);
-		createDebug.namespaces = namespaces;
-
-		createDebug.names = [];
-		createDebug.skips = [];
-
-		const split = (typeof namespaces === 'string' ? namespaces : '')
-			.trim()
-			.replace(/\s+/g, ',')
-			.split(',')
-			.filter(Boolean);
+		const split = parseNamespaces(namespaces);
 
 		for (const ns of split) {
 			if (ns[0] === '-') {
-				createDebug.skips.push(ns.slice(1));
+				const name = ns.slice(1);
+				createDebug.names = createDebug.names.filter(existing => existing !== name);
+				if (!createDebug.skips.includes(name)) {
+					createDebug.skips.push(name);
+				}
 			} else {
-				createDebug.names.push(ns);
+				createDebug.skips = createDebug.skips.filter(existing => existing !== ns);
+				if (!createDebug.names.includes(ns)) {
+					createDebug.names.push(ns);
+				}
 			}
 		}
+
+		const merged = formatNamespaces();
+		createDebug.save(merged);
+		createDebug.namespaces = merged;
 	}
 
 	/**
@@ -231,11 +263,11 @@ function setup(env) {
 	* @api public
 	*/
 	function disable() {
-		const namespaces = [
-			...createDebug.names,
-			...createDebug.skips.map(namespace => '-' + namespace)
-		].join(',');
-		createDebug.enable('');
+		const namespaces = formatNamespaces();
+		createDebug.names = [];
+		createDebug.skips = [];
+		createDebug.save('');
+		createDebug.namespaces = '';
 		return namespaces;
 	}
 
