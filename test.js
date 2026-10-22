@@ -20,6 +20,14 @@ describe('debug', () => {
 		assert.doesNotThrow(() => debug.enable(true));
 	});
 
+	it('enables multiple space-separated namespaces (#989)', () => {
+		debug.enable('APP_X APP_Y APP_Z');
+		assert.deepStrictEqual(debug('APP_X').enabled, true);
+		assert.deepStrictEqual(debug('APP_Y').enabled, true);
+		assert.deepStrictEqual(debug('APP_Z').enabled, true);
+		assert.deepStrictEqual(debug('APP_OTHER').enabled, false);
+	});
+
 	it('honors global debug namespace enable calls', () => {
 		assert.deepStrictEqual(debug('test:12345').enabled, false);
 		assert.deepStrictEqual(debug('test:67890').enabled, false);
