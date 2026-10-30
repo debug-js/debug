@@ -142,6 +142,8 @@ exports.inspectOpts = Object.keys(process.env).filter(key => {
 		val = null;
 	} else {
 		val = Number(val);
+		if (Number.isNaN(val))
+			log(`Cannot parse ${key}=${process.env[key]}`)
 	}
 
 	obj[prop] = val;
