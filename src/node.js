@@ -15,6 +15,7 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
+exports.timeFormat = timeFormat;
 exports.destroy = util.deprecate(
 	() => {},
 	'Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.'
@@ -140,7 +141,7 @@ exports.inspectOpts = Object.keys(process.env).filter(key => {
 		val = false;
 	} else if (val === 'null') {
 		val = null;
-	} else {
+	} else if (Number(val) == val) {
 		val = Number(val);
 	}
 
@@ -159,6 +160,16 @@ function useColors() {
 }
 
 /**
+ * Is stdout a TTY? Default timeFormat to 'diff', else 'iso'.
+ */
+
+function timeFormat() {
+	return 'timeFormat' in exports.inspectOpts ?
+		exports.inspectOpts.timeFormat :
+		(tty.isatty(process.stderr.fd) ? 'diff' : 'iso');
+}
+
+/**
  * Adds ANSI color escape codes if enabled.
  *
  * @api public
@@ -166,24 +177,27 @@ function useColors() {
 
 function formatArgs(args) {
 	const {namespace: name, useColors} = this;
+	const timeFormat = this.timeFormat;
+	const withTimeFormat = module.exports.withTimeFormat;
+	const wantsDiff = timeFormat === 'diff';
+	const date = wantsDiff ? this.diff : +(new Date());
 
 	if (useColors) {
 		const c = this.color;
 		const colorCode = '\u001B[3' + (c < 8 ? c : '8;5;' + c);
-		const prefix = `  ${colorCode};1m${name} \u001B[0m`;
+		const prefix = `${colorCode};1m${name} \u001B[0m`;
+	  const lines = args[0].split('\n')
 
-		args[0] = prefix + args[0].split('\n').join('\n' + prefix);
-		args.push(colorCode + 'm+' + module.exports.humanize(this.diff) + '\u001B[0m');
+		args[0] = (wantsDiff ? prefix : prefix + withTimeFormat(date, lines.length > 1 ? '\n' : '', timeFormat)) + lines
+	    .map(line => (lines.length > 1 ? prefix : '') + line)
+	    .join('\n');
+
+	  if (wantsDiff) {
+	    args.push(colorCode + 'm' + withTimeFormat(date, ' ', timeFormat) + '\u001B[0m');
+	  }
 	} else {
-		args[0] = getDate() + name + ' ' + args[0];
+		args[0] = withTimeFormat(date, name + ' ' + args[0], timeFormat);
 	}
-}
-
-function getDate() {
-	if (exports.inspectOpts.hideDate) {
-		return '';
-	}
-	return new Date().toISOString() + ' ';
 }
 
 /**
@@ -230,10 +244,20 @@ function load() {
 
 function init(debug) {
 	debug.inspectOpts = {};
+	const opts = exports.inspectOpts
 
-	const keys = Object.keys(exports.inspectOpts);
+	const keys = Object.keys(opts);
 	for (let i = 0; i < keys.length; i++) {
-		debug.inspectOpts[keys[i]] = exports.inspectOpts[keys[i]];
+		debug.inspectOpts[keys[i]] = opts[keys[i]];
+	}
+
+	// set defaults for backwards compatibility
+	if (!opts.timeFormat) {
+	  // equate opts.hideDate === true with opts.timeFormat === 'none'
+	  if (opts.hideDate) {
+	    opts.timeFormat = 'none';
+	  }
+	  opts.timeFormat = tty.isatty(process.stderr.fd) ? 'iso' : 'diff';
 	}
 }
 
