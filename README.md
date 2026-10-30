@@ -64,99 +64,47 @@ workb();
 The `DEBUG` environment variable is then used to enable these based on space or
 comma-delimited names.
 
-Here are some examples:
-
-<img width="647" alt="screen shot 2017-08-08 at 12 53 04 pm" src="https://user-images.githubusercontent.com/71256/29091703-a6302cdc-7c38-11e7-8304-7c0b3bc600cd.png">
-<img width="647" alt="screen shot 2017-08-08 at 12 53 38 pm" src="https://user-images.githubusercontent.com/71256/29091700-a62a6888-7c38-11e7-800b-db911291ca2b.png">
-<img width="647" alt="screen shot 2017-08-08 at 12 53 25 pm" src="https://user-images.githubusercontent.com/71256/29091701-a62ea114-7c38-11e7-826a-2692bedca740.png">
-
-#### Windows command prompt notes
-
-##### CMD
-
-On Windows the environment variable is set using the `set` command.
-
-```cmd
-set DEBUG=*,-not_this
 ```
-
-Example:
-
-```cmd
-set DEBUG=* & node app.js
+$ DEBUG=* node examples/node/app.js
 ```
-
-##### PowerShell (VS Code default)
-
-PowerShell uses different syntax to set environment variables.
-
-```cmd
-$env:DEBUG = "*,-not_this"
-```
-
-Example:
-
-```cmd
-$env:DEBUG='app';node app.js
-```
-
-Then, run the program to be debugged as usual.
-
-npm script example:
-```js
-  "windowsDebug": "@powershell -Command $env:DEBUG='*';node app.js",
-```
-
-## Namespace Colors
-
-Every debug instance has a color generated for it based on its namespace name.
-This helps when visually parsing the debug output to identify which debug instance
-a debug line belongs to.
-
-#### Node.js
-
-In Node.js, colors are enabled when stderr is a TTY. You also _should_ install
-the [`supports-color`](https://npmjs.org/supports-color) module alongside debug,
-otherwise debug will only use a small handful of basic colors.
-
-<img width="521" src="https://user-images.githubusercontent.com/71256/29092181-47f6a9e6-7c3a-11e7-9a14-1928d8a711cd.png">
-
-#### Web Browser
-
-Colors are also enabled on "Web Inspectors" that understand the `%c` formatting
-option. These are WebKit web inspectors, Firefox ([since version
-31](https://hacks.mozilla.org/2014/05/editable-box-model-multiple-selection-sublime-text-keys-much-more-firefox-developer-tools-episode-31/))
-and the Firebug plugin for Firefox (any version).
-
-<img width="524" src="https://user-images.githubusercontent.com/71256/29092033-b65f9f2e-7c39-11e7-8e32-f6f0d8e865c1.png">
-
 
 ## Millisecond diff
 
 When actively developing an application it can be useful to see when the time spent between one `debug()` call and the next. Suppose for example you invoke `debug()` before requesting a resource, and after as well, the "+NNNms" will show you how much time was spent between calls.
 
-<img width="647" src="https://user-images.githubusercontent.com/71256/29091486-fa38524c-7c37-11e7-895f-e7ec8e1039b6.png">
+```bash
+  $ DEBUG=* node examples/node/worker.js
+  worker:a doing lots of uninteresting work +0ms
+  worker:b doing some work + 0ms
+  http listening +23ms
+```
 
 When stdout is not a TTY, `Date#toISOString()` is used, making it more useful for logging the debug information as shown below:
 
-<img width="647" src="https://user-images.githubusercontent.com/71256/29091956-6bd78372-7c39-11e7-8c55-c948396d6edd.png">
+```bash
+  $ DEBUG=* node examples/node/worker.js 2>&1 | cat
+  2017-08-08T19:46:35.674Z worker:a doing lots of uninteresting work
+  2017-08-08T19:46:35.678Z worker:b doing some work
 
+```
 
 ## Conventions
 
-If you're using this in one or more of your libraries, you _should_ use the name of your library so that developers may toggle debugging as desired without guessing names. If you have more than one debuggers you _should_ prefix them with your library name and use ":" to separate features. For example "bodyParser" from Connect would then be "connect:bodyParser".  If you append a "*" to the end of your name, it will always be enabled regardless of the setting of the DEBUG environment variable.  You can then use it for normal output as well as debug output.
+Use the name of your library so that developers may toggle debugging as desired without guessing names. If you have more than one debuggers prefix them with your library name and use ":" to separate features. 
+
+Example for bodyParser from Connect
+```
+DEBUG=connect:bodyParser
+```
 
 ## Wildcards
 
-The `*` character may be used as a wildcard. Suppose for example your library has
-debuggers named "connect:bodyParser", "connect:compress", "connect:session",
-instead of listing all three with
-`DEBUG=connect:bodyParser,connect:compress,connect:session`, you may simply do
-`DEBUG=connect:*`, or to run everything using this module simply use `DEBUG=*`.
+The `*` character may be used as a wildcard
 
-You can also exclude specific debuggers by prefixing them with a "-" character.
-For example, `DEBUG=*,-connect:*` would include all debuggers except those
-starting with "connect:".
+Example for all from Connect
+```
+DEBUG=connect:*
+```
 
 ## Environment Variables
 
