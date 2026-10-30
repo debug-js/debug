@@ -80,6 +80,206 @@ describe('debug', () => {
 		});
 	});
 
+	describe('wildcard namespace matching', () => {
+		it('matches simple wildcard at end', () => {
+			debug.enable('app:*');
+			assert.deepStrictEqual(debug('app:server').enabled, true);
+			assert.deepStrictEqual(debug('app:database').enabled, true);
+			assert.deepStrictEqual(debug('app:').enabled, true);
+			assert.deepStrictEqual(debug('other:server').enabled, false);
+		});
+
+		it('matches single wildcard for everything', () => {
+			debug.enable('*');
+			assert.deepStrictEqual(debug('anything').enabled, true);
+			assert.deepStrictEqual(debug('app:server').enabled, true);
+			assert.deepStrictEqual(debug('').enabled, true);
+		});
+
+		it('matches wildcard in the middle', () => {
+			debug.enable('app:*:error');
+			assert.deepStrictEqual(debug('app:server:error').enabled, true);
+			assert.deepStrictEqual(debug('app:db:error').enabled, true);
+			assert.deepStrictEqual(debug('app::error').enabled, true);
+			assert.deepStrictEqual(debug('app:server:warn').enabled, false);
+		});
+
+		it('matches multiple wildcards', () => {
+			debug.enable('*:*:error');
+			assert.deepStrictEqual(debug('app:server:error').enabled, true);
+			assert.deepStrictEqual(debug('lib:db:error').enabled, true);
+			assert.deepStrictEqual(debug('app:server:warn').enabled, false);
+		});
+
+		it('handles exact match without wildcards', () => {
+			debug.enable('app:server');
+			assert.deepStrictEqual(debug('app:server').enabled, true);
+			assert.deepStrictEqual(debug('app:server:extra').enabled, false);
+			assert.deepStrictEqual(debug('app').enabled, false);
+		});
+
+		it('handles exclusion patterns', () => {
+			debug.enable('app:*,-app:secret');
+			assert.deepStrictEqual(debug('app:server').enabled, true);
+			assert.deepStrictEqual(debug('app:database').enabled, true);
+			assert.deepStrictEqual(debug('app:secret').enabled, false);
+		});
+
+		it('handles exclusion with wildcards', () => {
+			debug.enable('*,-app:*');
+			assert.deepStrictEqual(debug('lib:util').enabled, true);
+			assert.deepStrictEqual(debug('http').enabled, true);
+			assert.deepStrictEqual(debug('app:server').enabled, false);
+			assert.deepStrictEqual(debug('app:db').enabled, false);
+		});
+
+		it('skips take precedence over names', () => {
+			debug.enable('app:*,-app:*');
+			assert.deepStrictEqual(debug('app:server').enabled, false);
+		});
+
+		it('handles multiple comma-separated namespaces', () => {
+			debug.enable('app:auth,app:db,lib:cache');
+			assert.deepStrictEqual(debug('app:auth').enabled, true);
+			assert.deepStrictEqual(debug('app:db').enabled, true);
+			assert.deepStrictEqual(debug('lib:cache').enabled, true);
+			assert.deepStrictEqual(debug('app:server').enabled, false);
+		});
+
+		it('handles spaces as delimiters', () => {
+			debug.enable('app:auth app:db');
+			assert.deepStrictEqual(debug('app:auth').enabled, true);
+			assert.deepStrictEqual(debug('app:db').enabled, true);
+		});
+
+		it('handles leading/trailing whitespace', () => {
+			debug.enable('  app:server  ');
+			assert.deepStrictEqual(debug('app:server').enabled, true);
+		});
+	});
+
+	describe('enabled', () => {
+		it('returns false when nothing is enabled', () => {
+			debug.enable('');
+			assert.deepStrictEqual(debug.enabled('anything'), false);
+		});
+
+		it('returns true for exact namespace match', () => {
+			debug.enable('foo');
+			assert.deepStrictEqual(debug.enabled('foo'), true);
+			assert.deepStrictEqual(debug.enabled('bar'), false);
+		});
+
+		it('returns true for wildcard match', () => {
+			debug.enable('foo:*');
+			assert.deepStrictEqual(debug.enabled('foo:bar'), true);
+			assert.deepStrictEqual(debug.enabled('foo:'), true);
+			assert.deepStrictEqual(debug.enabled('bar:baz'), false);
+		});
+
+		it('returns false for skipped namespace', () => {
+			debug.enable('*,-foo');
+			assert.deepStrictEqual(debug.enabled('bar'), true);
+			assert.deepStrictEqual(debug.enabled('foo'), false);
+		});
+	});
+
+	describe('coerce', () => {
+		it('converts Error to stack trace', () => {
+			const log = debug('test');
+			log.enabled = true;
+
+			const messages = [];
+			log.log = (...args) => messages.push(args);
+
+			const err = new Error('test error');
+			log(err);
+
+			assert.deepStrictEqual(messages.length, 1);
+			assert(messages[0][0].includes('test error'));
+		});
+
+		it('converts Error without stack to message', () => {
+			const log = debug('test');
+			log.enabled = true;
+
+			const messages = [];
+			log.log = (...args) => messages.push(args);
+
+			const err = new Error('no stack');
+			err.stack = '';
+			log(err);
+
+			assert.deepStrictEqual(messages.length, 1);
+			assert(messages[0][0].includes('no stack'));
+		});
+
+		it('passes non-Error values through unchanged', () => {
+			const log = debug('test');
+			log.enabled = true;
+
+			const messages = [];
+			log.log = (...args) => messages.push(args);
+
+			log('plain string');
+			assert.deepStrictEqual(messages.length, 1);
+		});
+	});
+
+	describe('selectColor', () => {
+		it('returns consistent color for same namespace', () => {
+			const color1 = debug.selectColor('test');
+			const color2 = debug.selectColor('test');
+			assert.deepStrictEqual(color1, color2);
+		});
+
+		it('returns a color from the available colors array', () => {
+			const color = debug.selectColor('myapp');
+			assert(debug.colors.includes(color));
+		});
+	});
+
+	describe('formatters', () => {
+		it('handles %% escape sequence', () => {
+			const log = debug('test');
+			log.enabled = true;
+
+			const messages = [];
+			log.log = (...args) => messages.push(args);
+
+			log('100%% complete');
+			assert.deepStrictEqual(messages.length, 1);
+			assert(messages[0][0].includes('100% complete'));
+		});
+
+		it('prepends %O for non-string first argument', () => {
+			const log = debug('test');
+			log.enabled = true;
+
+			const messages = [];
+			log.log = (...args) => messages.push(args);
+
+			log({key: 'value'});
+			assert.deepStrictEqual(messages.length, 1);
+		});
+
+		it('supports custom formatters', () => {
+			debug.formatters.z = v => v.toUpperCase();
+
+			const log = debug('test');
+			log.enabled = true;
+
+			const messages = [];
+			log.log = (...args) => messages.push(args);
+
+			log('%z', 'hello');
+			assert.deepStrictEqual(messages.length, 1);
+			assert(messages[0][0].includes('HELLO'));
+
+			delete debug.formatters.z;
+		});
+	});
+
 	describe('rebuild namespaces string (disable)', () => {
 		it('handle names, skips, and wildcards', () => {
 			debug.enable('test,abc*,-abc');
