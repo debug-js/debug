@@ -11,7 +11,7 @@ function setup(env) {
 	createDebug.disable = disable;
 	createDebug.enable = enable;
 	createDebug.enabled = enabled;
-	createDebug.humanize = require('ms');
+	createDebug.humanize = humanize;
 	createDebug.destroy = destroy;
 
 	Object.keys(env).forEach(key => {
@@ -282,6 +282,19 @@ function setup(env) {
 	*/
 	function destroy() {
 		console.warn('Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.');
+	}
+
+	const s = 1000;
+	const m = s * 60;
+
+	function humanize(diff) {
+		if (diff >= m) {
+			return Math.round(diff / m) + 'm';
+		}
+		if (diff >= s) {
+			return Math.round(diff / s) + 's';
+		}
+		return diff + 'ms';
 	}
 
 	createDebug.enable(createDebug.load());
