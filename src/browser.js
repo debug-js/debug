@@ -182,14 +182,11 @@ function formatArgs(args) {
 }
 
 /**
- * Invokes `console.debug()` when available.
- * No-op when `console.debug` is not a "function".
- * If `console.debug` is not available, falls back
- * to `console.log`.
+ * Invokes `console.log` if available or no-op
  *
  * @api public
  */
-exports.log = console.debug || console.log || (() => {});
+exports.log = console.log || (() => {});
 
 /**
  * Save `namespaces`.
