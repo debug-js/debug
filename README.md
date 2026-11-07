@@ -137,7 +137,9 @@ When actively developing an application it can be useful to see when the time sp
 
 <img width="647" src="https://user-images.githubusercontent.com/71256/29091486-fa38524c-7c37-11e7-895f-e7ec8e1039b6.png">
 
-When stdout is not a TTY, `Date#toISOString()` is used, making it more useful for logging the debug information as shown below:
+In Node.js, `debug` writes to stderr and enables colors by default when stderr is a TTY. Colored output includes an elapsed-time suffix such as `+42ms`. Set `DEBUG_COLORS=1` to enable colors and the suffix when stderr is piped.
+
+When colors are disabled, `debug` prefixes messages with an ISO timestamp, as shown below. `DEBUG_HIDE_DATE=1` omits the timestamp. The elapsed-time suffix still requires colors.
 
 <img width="647" src="https://user-images.githubusercontent.com/71256/29091956-6bd78372-7c39-11e7-8c55-c948396d6edd.png">
 
